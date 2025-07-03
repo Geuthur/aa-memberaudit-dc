@@ -48,17 +48,17 @@ class DoctrineCheckerApiEndpoints:
                 return 403, _("Permission Denied")
 
             characters = get_alts_queryset(main)
-            
+
             # Get the skill lists for the main character
             skilllists = providers.skills.get_user_skill_list(
                 user_id=main.character_ownership.user_id
             )
-            
+
             # Active skill lists are the ones that are visible in the UI
             visibles = list(
                 SkillList.objects.filter(active=1).values_list("name", flat=True)
             )
-            
+
             output = {}
 
             for c in characters:
@@ -74,7 +74,7 @@ class DoctrineCheckerApiEndpoints:
                     if k in visibles:
                         output[s["character_id"]]["doctrines"][k] = d
                 # Add skills to the character
-                output[s['character_id']]["skills"] = s["skills"]
+                output[s["character_id"]]["skills"] = s["skills"]
 
             return list(output.values())
 
