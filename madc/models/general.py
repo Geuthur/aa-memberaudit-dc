@@ -19,15 +19,26 @@ logger = LoggerAddTag(get_extension_logger(__name__), __title__)
 
 
 class General(models.Model):
-    """A model defining commonly used properties and methods for Voices of War."""
+    """A model defining commonly used properties and methods for Memberaudit Doctrine Checker."""
 
     class Meta:
         managed = False
         default_permissions = ()
         permissions = (
-            ("basic_access", "Can access this app, Voices of War."),
-            ("manage_access", "Has access to moderation tools"),
-            ("admin_access", "Has access to all Administration tools"),
+            ("basic_access", "Can access this app, Memberaudit Doctrine Checker."),
+            (
+                "corp_access",
+                "Can view Characters from own Corporation, Memberaudit Doctrine Checker.",
+            ),
+            (
+                "alliance_access",
+                "Can view Characters from own Alliance, Memberaudit Doctrine Checker.",
+            ),
+            ("manage_access", "Can manage this app, Memberaudit Doctrine Checker."),
+            (
+                "admin_access",
+                "Gives full access to this app, Memberaudit Doctrine Checker.",
+            ),
         )
 
     @classmethod
@@ -39,5 +50,5 @@ class General(models.Model):
 
     @classmethod
     def users_with_basic_access(cls) -> models.QuerySet:
-        """Return users which have at least basic access to Voices of War."""
+        """Return users which have at least basic access to Memberaudit Doctrine Checker."""
         return users_with_permission(cls.basic_permission())

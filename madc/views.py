@@ -5,7 +5,7 @@ import json
 
 # Django
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required, permission_required
+from django.contrib.auth.decorators import login_required
 from django.core.handlers.wsgi import WSGIRequest
 from django.http import JsonResponse
 from django.shortcuts import redirect, render
@@ -28,15 +28,13 @@ logger = LoggerAddTag(get_extension_logger(__name__), __title__)
 
 
 @login_required
-@permission_required("madc.basic_access")
+@permissions_required(["madc.basic_access"])
 def index(request: WSGIRequest):
-    return redirect(
-        "madc:checker", request.user.profile.main_character.character_id
-    )
+    return redirect("madc:checker", request.user.profile.main_character.character_id)
 
 
 @login_required
-@permission_required("madc.basic_access")
+@permissions_required(["madc.basic_access"])
 def checker(request: WSGIRequest, character_id=None):
     if character_id is None:
         character_id = request.user.profile.main_character.character_id
@@ -52,7 +50,7 @@ def checker(request: WSGIRequest, character_id=None):
 
 
 @login_required
-@permission_required("madc.basic_access")
+@permissions_required(["madc.manage_access", "madc.admin_access"])
 def administration(request: WSGIRequest, character_id=None):
     if character_id is None:
         character_id = request.user.profile.main_character.character_id
@@ -68,7 +66,7 @@ def administration(request: WSGIRequest, character_id=None):
 
 
 @login_required
-@permission_required("madc.basic_access")
+@permissions_required(["madc.basic_access"])
 def doctrine(request: WSGIRequest, character_id=None):
     if character_id is None:
         character_id = request.user.profile.main_character.character_id
@@ -84,7 +82,7 @@ def doctrine(request: WSGIRequest, character_id=None):
 
 
 @login_required
-@permission_required("madc.admin_access")
+@permissions_required(["madc.manage_access", "madc.admin_access"])
 def ajax_doctrine(request: WSGIRequest):
     if request.method == "POST":
         form = forms.SkillListForm(request.POST)
@@ -142,7 +140,7 @@ def ajax_doctrine(request: WSGIRequest):
 
 
 @login_required
-@permissions_required(["madc.admin_access"])
+@permissions_required(["madc.manage_access", "madc.admin_access"])
 @require_POST
 def delete_doctrine(request: WSGIRequest):
     msg = _("Invalid Method")
