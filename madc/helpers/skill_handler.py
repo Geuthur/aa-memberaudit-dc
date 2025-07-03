@@ -96,7 +96,7 @@ class SkillListHandler:
                     character_data["doctrines"][skill_list_name]["html"] = format_html(
                         """
                             <div role="group" class="btn-group">
-                                <button type="button" class="btn btn-danger btn-sm" id="missing-{}-{}" data->
+                                <button type="button" class="btn btn-danger btn-sm" id="missing-{}-{}">
                                     {}
                                 </button>
                                 <button type="button" class="flex-one btn btn-danger btn-sm" id="copy-{}-{}">
@@ -104,6 +104,8 @@ class SkillListHandler:
                                 </button>
                             </div>
                         """,
+                        skill_list_name,
+                        character_data["character_id"],
                         skill_list_name,
                         character_data["character_id"],
                         md5(skill_list_name.encode()).hexdigest(),
@@ -155,7 +157,7 @@ class SkillListHandler:
             "characters": account_key,
             "skills_list": self.check_skill_lists(skill_lists, linked_characters),
         }
-        
+
         output_json = json.dumps(output)
 
         cache.set(
