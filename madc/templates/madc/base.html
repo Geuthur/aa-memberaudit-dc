@@ -1,0 +1,43 @@
+{% extends 'allianceauth/base-bs5.html' %}
+{% load i18n %}
+{% load vow %}
+{% block main_css %}
+{% endblock main_css %}
+{% block extra_css %}
+{% endblock extra_css %}
+
+{% block page_title %}
+    {% translate "Doctrine Checker" %}
+{% endblock %}
+
+{% block header_nav_brand %}
+    {% translate "Doctrine Checker" %}
+{% endblock header_nav_brand %}
+
+{% block header_nav_collapse_left %}
+
+{% include 'madc/partials/navigation.html' %}
+
+{% endblock header_nav_collapse_left %}
+
+{% block header_nav_collapse_right %}
+
+{% include 'madc/partials/administration.html' %}
+
+{% endblock header_nav_collapse_right %}
+
+{% block content %}
+
+<div class="allianceauth-plugin">
+    <div class="card">
+    {% block view_block %}{% endblock %}
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_javascript %}
+{% endblock %}
+
+{% block extra_script %}
+{% endblock %}

@@ -1,0 +1,103 @@
+{% extends 'madc/base.html' %}
+{% load i18n %}
+{% load humanize %}
+{% load bootstrap %}
+
+{% block view_block %}
+<div class="card-body bg-primary rounded-top d-flex align-items-center">
+    <h3 class="me-3">{% translate "Administration" %}</h3>
+</div>
+<div class="card-body rounded-bottom">
+    {% include 'madc/partials/table/skill-list.html' %}
+</div>
+{% endblock %}
+
+{% block extra_javascript %}
+    {% include 'bundles/datatables-js-bs5.html' %}
+    {% include 'madc/bundles/settings-bundles.html' %}
+    {% include 'madc/modals/skilllist-delete.html' %}
+
+    {% include 'madc/bundles/administration-bundles.html' %}
+
+    <script type="application/javascript">
+        $(document).ready(function() {
+            const skillListTableVar = $('#skill-list-table');
+            // Initialisierung der DataTable
+            const tableSkilllist = skillListTableVar.DataTable({
+                ajax: {
+                    url: VoWSettings.urls.administration,
+                    type: 'GET',
+                    dataSrc: function (data) {
+                        return Object.values(data);
+                    },
+                    error: function (xhr, error, thrown) {
+                        console.error('Error loading data:', error);
+                        tableSkilllist.clear().draw();
+                    }
+                },
+                columns: [
+                    {
+                        data: 'name',
+                        render: function (data, type) {
+                            return data;
+                        }
+                    },
+                    {
+                        data: 'skills',
+                        render: function (data, type) {
+                            if (type === 'display') {
+                                // Skills als Liste anzeigen oder Anzahl der Skills
+                                var skillCount = Object.keys(data).length;
+                                return skillCount + ' Skills';
+                            }
+                            return data;
+                        }
+                    },
+                    {
+                        data: 'active',
+                        render: function (data, type) {
+                            if (type === 'display') {
+                                return data ? '<span class="badge bg-success">Active</span>' : '<span class="badge bg-secondary">Inactive</span>';
+                            }
+                            return data;
+                        }
+                    },
+                    {
+                        data: 'ordering',
+                        render: function (data, type) {
+                            return data;
+                        }
+                    },
+                    {
+                        data: 'actions',
+                        render: function (data, type) {
+                            return data.delete;
+                        }
+                    },
+                ],
+                columnDefs: [
+                    {
+                        targets: 0,
+                        render: function (data, type, row) {
+                            return '<img src="https://images.evetech.net/characters/' + row.character_id + '/portrait?size=32" class="rounded-circle" title="' + row.character_name + '" height="30" data-tooltip-toggle="char-tooltip" data-bs-placement="top">';
+                        },
+                        sortable: false,
+                    },
+                ],
+                order: [[1, 'asc']],
+            });
+
+            tableSkilllist.on('draw', function (row, data) {
+                $('[data-tooltip-toggle="doctrine-tooltip"]').tooltip({
+                    trigger: 'hover',
+                });
+            });
+        });
+    </script>
+{% endblock %}
+
+{% block extra_css %}
+{% endblock %}
+
+{% block extra_script %}
+{% endblock %}

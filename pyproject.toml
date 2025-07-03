@@ -1,0 +1,58 @@
+[build-system]
+build-backend = "hatchling.build"
+requires = [
+    "hatchling",
+]
+
+[project]
+name = "aa-memberaudit-dc"
+description = "Doctrine Checker Addon module for AllianceAuth"
+readme = "README.md"
+license = { file = "LICENSE" }
+authors = [
+    { name = "Geuthur", email = "devgeuthur@gmail.com" },
+]
+requires-python = ">=3.10"
+classifiers = [
+    "Environment :: Web Environment",
+    "Framework :: Django",
+    "Framework :: Django :: 4.2",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Internet :: WWW/HTTP",
+    "Topic :: Internet :: WWW/HTTP :: Dynamic Content",
+]
+dynamic = [
+    "version",
+]
+dependencies = [
+    "aa-memberaudit>=3.15",
+    "allianceauth>=4.6,<5",
+    "allianceauth-app-utils>=1.26",
+    "django-eveuniverse>=1.5.7",
+    "django-ninja",
+]
+optional-dependencies.tests-allianceauth-latest = [
+    "coverage",
+    "django-webtest",
+    "factory-boy",
+]
+urls.Changelog = "https://github.com/Geuthur/aa-memberaudit-dc/blob/master/CHANGELOG.md"
+urls.Homepage = "https://github.com/Geuthur/aa-memberaudit-dc"
+urls.Source = "https://github.com/Geuthur/aa-memberaudit-dc"
+urls.Tracker = "https://github.com/Geuthur/aa-memberaudit-dc/issues"
+
+[tool.hatch.build]
+include = [
+    "/madc",
+]
+
+[tool.hatch.version]
+path = "madc/__init__.py"

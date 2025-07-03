@@ -1,0 +1,172 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-07-03 12:07+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != "
+"11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % "
+"100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || "
+"(n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+#: api/core/skillchecker.py:48 api/core/skillchecker.py:88 views.py:154
+msgid "Permission Denied"
+msgstr ""
+
+#: api/core/skillchecker.py:100
+msgid "Delete Skill Plan"
+msgstr ""
+
+#: api/core/skillchecker.py:103
+msgid "Are you sure you want to delete this skill plan?"
+msgstr ""
+
+#: auth_hooks.py:21 templates/madc/base.html:10 templates/madc/base.html:14
+#: templates/madc/index.html:7 templates/madc/index.html:18
+#: templates/madc/partials/navigation.html:7 views.py:45
+msgid "Doctrine Checker"
+msgstr ""
+
+#: forms.py:41
+msgid "Skill list cannot be empty."
+msgstr ""
+
+#: forms.py:64 forms.py:74
+msgid "Line {}: Skill name cannot be empty"
+msgstr ""
+
+#: forms.py:81
+msgid ""
+"Line {}: '{}' - Invalid format. Use 'Skill Name Level' (Level 1-5) or EVE "
+"localized format"
+msgstr ""
+
+#: models/skillchecker.py:35
+#, python-brace-format
+msgid "{skill} is not a valid skill."
+msgstr ""
+
+#: models/skillchecker.py:44
+#, python-brace-format
+msgid "{skill} level must be between 0 and 5."
+msgstr ""
+
+#: models/skillchecker.py:48
+msgid "Please provide a valid skill list in JSON format."
+msgstr ""
+
+#: models/skillchecker.py:57
+msgid "Order Weight"
+msgstr ""
+
+#: models/skillchecker.py:61 templates/madc/partials/table/skill-list.html:8
+msgid "Active"
+msgstr ""
+
+#: models/skillchecker.py:63
+msgid "If unchecked, this skill list will not be used in the skill checker."
+msgstr ""
+
+#: models/skillchecker.py:70
+msgid "Category"
+msgstr ""
+
+#: models/skillchecker.py:71
+msgid "Category of the skill list, used for grouping."
+msgstr ""
+
+#: templates/madc/admin/add.html:8
+#: templates/madc/partials/administration.html:7 views.py:77
+msgid "Add Doctrine"
+msgstr ""
+
+#: templates/madc/admin/add.html:16
+msgid "Submit"
+msgstr ""
+
+#: templates/madc/manage.html:8
+msgid "Administration"
+msgstr ""
+
+#: templates/madc/modals/skilllist-delete.html:29
+msgid "Cancel"
+msgstr ""
+
+#: templates/madc/modals/skilllist-delete.html:33
+msgid "Confirm"
+msgstr ""
+
+#: templates/madc/partials/administration.html:13
+msgid "Adminstration"
+msgstr ""
+
+#: templates/madc/partials/table/skill-checker.html:6
+msgid "Character"
+msgstr ""
+
+#: templates/madc/partials/table/skill-checker.html:7
+msgid "Doctrines"
+msgstr ""
+
+#: templates/madc/partials/table/skill-list.html:6
+msgid "Name"
+msgstr ""
+
+#: templates/madc/partials/table/skill-list.html:7
+msgid "Skills"
+msgstr ""
+
+#: templates/madc/partials/table/skill-list.html:9
+msgid "Order-Weight"
+msgstr ""
+
+#: templates/madc/partials/table/skill-list.html:10
+msgid "Actions"
+msgstr ""
+
+#: views.py:61
+msgid "Doctrine Administration"
+msgstr ""
+
+#: views.py:100
+msgid ""
+"A skill plan with the name '{}' already exists. Please choose a different "
+"name."
+msgstr ""
+
+#: views.py:114
+msgid "Your skill plan is empty. Please add skills."
+msgstr ""
+
+#: views.py:125
+msgid "Skill plan '{}' with {} skills saved successfully."
+msgstr ""
+
+#: views.py:134
+msgid ""
+"There was an error with your skill plan. Please check the form and try again."
+msgstr ""
+
+#: views.py:139
+msgid "There was an error processing your request. Please try again."
+msgstr ""
+
+#: views.py:148
+msgid "Invalid Method"
+msgstr ""
+
+#: views.py:163
+#, python-brace-format
+msgid "Skilllist: {skilllist_obj.name} deleted"
+msgstr ""

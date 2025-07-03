@@ -1,0 +1,207 @@
+{% extends 'madc/base.html' %}
+{% load i18n %}
+{% load humanize %}
+{% load bootstrap %}
+
+{% block page_title %}
+    {{ title }} ⋗ {% translate "Doctrine Checker" %}
+{% endblock %}
+
+{% block page_topic %}
+    <h1 class="page-header text-center">
+        {{ title }}
+    </h1>
+{% endblock page_topic %}
+
+{% block view_block %}
+<div class="card-body bg-primary rounded-top d-flex align-items-center">
+    <h3 class="me-3">{% translate "Doctrine Checker" %}</h3>
+
+</div>
+<div class="card-body rounded-bottom">
+    {% include 'madc/partials/table/skill-checker.html' %}
+</div>
+{% endblock %}
+
+{% block extra_javascript %}
+    {% include 'bundles/datatables-js-bs5.html' %}
+    {% include 'bundles/clipboard-js.html' %}
+    {% include 'madc/bundles/settings-bundles.html' %}
+    {% include 'madc/bundles/skill-checker-bundles.html' %}
+
+    <script>
+        function createDoctrineTable(data) {
+            const tableContainer = document.getElementById('skill-checker-table');
+
+            if (!tableContainer) {
+                console.error('Table container not found');
+                return;
+            }
+
+            // Destroy existing DataTable if it exists
+            if ($.fn.DataTable.isDataTable('#skill-checker-table')) {
+                $('#skill-checker-table').DataTable().destroy();
+            }
+
+            // Get existing table elements
+            const tbody = tableContainer.querySelector('tbody');
+            tbody.innerHTML = '';
+
+            // Iterate over each character in the data
+            data.forEach(characterData => {
+                // Check if character has any doctrines, if not skip this row
+                if (Object.keys(characterData.doctrines).length === 0) {
+                    return; // Skip this character completely
+                }
+
+                const row = document.createElement('tr');
+
+                // Character name cell
+                const nameCell = document.createElement('td');
+                nameCell.textContent = characterData.character.character_name;
+                row.appendChild(nameCell);
+
+                // Doctrine cell (all doctrines in one cell)
+                const doctrineCell = document.createElement('td');
+                doctrineCell.className = 'd-flex flex-wrap gap-2'; // Add flexbox layout
+
+                // Collect all doctrine names for search
+                const doctrineNames = Object.keys(characterData.doctrines);
+                doctrineCell.setAttribute('data-search', doctrineNames.join(' '));
+                // Also add character name to doctrine cell for search
+                row.setAttribute('data-character-name', characterData.character.character_name.toLowerCase());
+
+                // Add all doctrines as separate div elements
+                Object.entries(characterData.doctrines).forEach(([doctrineName, doctrine]) => {
+                    const doctrineDiv = document.createElement('div');
+                    doctrineDiv.className = 'doctrine-item';
+                    doctrineDiv.setAttribute('data-doctrine', doctrineName);
+
+                    if (doctrine.html) {
+                        doctrineDiv.innerHTML = doctrine.html;
+
+                        // Add clipboard functionality for missing skills (red buttons)
+                        if (doctrine.html.includes('btn-danger')) {
+                            const missingSkills = [];
+                            Object.keys(doctrine).forEach(skillName => {
+                                if (skillName !== 'html') {
+                                    const skillLevel = doctrine[skillName];
+                                    missingSkills.push(`${skillName} ${skillLevel}`);
+                                }
+                            });
+                            const clipboardText = missingSkills.join('\n');
+
+                            setTimeout(() => {
+                                const parser = new DOMParser();
+                                const tempDoc = parser.parseFromString(doctrine.html, 'text/html');
+                                const copyButtonInHtml = tempDoc.querySelector('button[id^="copy-"]');
+
+                                if (copyButtonInHtml) {
+                                    const buttonId = copyButtonInHtml.id;
+                                    const actualCopyButton = doctrineDiv.querySelector(`#${buttonId}`);
+
+                                    if (actualCopyButton) {
+                                        actualCopyButton.setAttribute('data-clipboard-text', clipboardText);
+
+                                        new ClipboardJS(actualCopyButton).on('success', function(e) {
+                                            const originalIcon = actualCopyButton.innerHTML;
+                                            const originalClass = actualCopyButton.className;
+
+                                            actualCopyButton.innerHTML = '<i class="fa-solid fa-check"></i>';
+                                            actualCopyButton.className = actualCopyButton.className.replace('btn-danger', 'btn-success');
+
+                                            setTimeout(() => {
+                                                actualCopyButton.innerHTML = originalIcon;
+                                                actualCopyButton.className = originalClass;
+                                            }, 1500);
+
+                                            e.clearSelection();
+                                        });
+                                    }
+                                }
+                            }, 100);
+                        }
+                    }
+
+                    doctrineCell.appendChild(doctrineDiv);
+                });
+
+                row.appendChild(doctrineCell);
+                tbody.appendChild(row);
+            });
+
+            // Initialize DataTable with custom search
+            const table = $('#skill-checker-table').DataTable({
+                responsive: true,
+                pageLength: 25,
+                order: [[0, 'asc']], // Sort by character name
+                columnDefs: [
+                    {
+                        targets: 1, // Doctrine column
+                        render: function(data, type, row, meta) {
+                            if (type === 'display') {
+                                return data; // Return HTML for display
+                            }
+                            if (type === 'search') {
+                                const cell = row[1];
+                                const doctrineSearch = $(cell).attr('data-search') || '';
+                                const characterName = $(row[0]).text() || '';
+                                return characterName + ' ' + doctrineSearch;
+                            }
+                            if (type === 'type' || type === 'sort') {
+                                const cell = row[1];
+                                return $(cell).attr('data-search') || '';
+                            }
+                            return data;
+                        }
+                    }
+                ]
+            });
+
+            // Custom search function to hide/show doctrine divs
+            table.on('search.dt', function() {
+                const searchTerm = table.search().toLowerCase();
+
+                // Show/hide doctrine divs based on search
+                $('#skill-checker-table tbody .doctrine-item').each(function() {
+                    const $this = $(this);
+                    const doctrineName = $this.attr('data-doctrine').toLowerCase();
+                    const characterName = $this.closest('tr').attr('data-character-name') || '';
+
+                    // Show doctrine if search term matches character name OR doctrine name
+                    if (searchTerm === '' ||
+                        doctrineName.includes(searchTerm) ||
+                        characterName.includes(searchTerm)) {
+                        $this.removeClass('d-none');
+                    } else {
+                        $this.addClass('d-none');
+                    }
+                });
+            });
+
+        }
+
+        // Function to fetch and display doctrine data
+        function loadDoctrineData() {
+            fetch(VoWSettings.urls.skillChecker)
+                .then(response => response.json())
+                .then(data => {
+                    createDoctrineTable(data);
+                })
+                .catch(error => {
+                    console.error('Error loading doctrine data:', error);
+                });
+        }
+
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            loadDoctrineData();
+        });
+    </script>
+{% endblock %}
+
+{% block extra_css %}
+{% endblock %}
+
+{% block extra_script %}
+{% endblock %}

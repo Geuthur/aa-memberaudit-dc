@@ -1,0 +1,12 @@
+{% load i18n %}
+{% load static %}
+
+<script type="application/javascript">
+    let VoWSettings = {
+        csrfToken: '{% csrf_token %}',
+        urls: {
+            skillChecker: '{% url "madc:api:get_doctrines" character_id=character_id %}',
+            administration: '{% url "madc:api:admin_doctrines" %}',
+        },
+    };
+</script>
