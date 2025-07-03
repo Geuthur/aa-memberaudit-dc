@@ -1,12 +1,12 @@
-# Tax System module for AllianceAuth.<a name="aa-madc"></a>
+# Tax System module for AllianceAuth.<a name="aa-memberaudit-dc"></a>
 
-![Release](https://img.shields.io/pypi/v/aa-madc?label=release)
-![Licence](https://img.shields.io/github/license/geuthur/aa-madc)
-![Python](https://img.shields.io/pypi/pyversions/aa-madc)
-![Django](https://img.shields.io/pypi/frameworkversions/django/aa-madc.svg?label=django)
-[![pre-commit.ci status](https://results.pre-commit.ci/badge/github/Geuthur/aa-madc/master.svg)](https://results.pre-commit.ci/latest/github/Geuthur/aa-madc/master)
+![Release](https://img.shields.io/pypi/v/aa-memberaudit-dc?label=release)
+![Licence](https://img.shields.io/github/license/geuthur/aa-memberaudit-dc)
+![Python](https://img.shields.io/pypi/pyversions/aa-memberaudit-dc)
+![Django](https://img.shields.io/pypi/frameworkversions/django/aa-memberaudit-dc.svg?label=django)
+[![pre-commit.ci status](https://results.pre-commit.ci/badge/github/Geuthur/aa-memberaudit-dc/master.svg)](https://results.pre-commit.ci/latest/github/Geuthur/aa-memberaudit-dc/master)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
-[![Tests](https://github.com/Geuthur/aa-madc/actions/workflows/autotester.yml/badge.svg)](https://github.com/Geuthur/aa-madc/actions/workflows/autotester.yml)
+[![Tests](https://github.com/Geuthur/aa-memberaudit-dc/actions/workflows/autotester.yml/badge.svg)](https://github.com/Geuthur/aa-memberaudit-dc/actions/workflows/autotester.yml)
 [![codecov](https://codecov.io/gh/Geuthur/aa-memberaudit-dc/graph/badge.svg?token=YfJSsDECUm)](https://codecov.io/gh/Geuthur/aa-memberaudit-dc)
 
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/W7W810Q5J4)
@@ -15,7 +15,7 @@ A Doctrine Checker Addon for Memberaudit
 
 ______________________________________________________________________
 
-- [AA Memberaudit Doctrine Checker](#aa-madc)
+- [AA Memberaudit Doctrine Checker](#aa-memberaudit-dc)
   - [Features](#features)
   - [Upcoming](#upcoming)
   - [Screenshots](#screenshots)
@@ -122,5 +122,5 @@ The Following Settings can be setting up in the `local.py`
 > [!NOTE]
 > Contributing
 > You want to improve the project?
-> Just Make a [Pull Request](https://github.com/Geuthur/aa-madc/pulls) with the Guidelines.
+> Just Make a [Pull Request](https://github.com/Geuthur/aa-memberaudit-dc/pulls) with the Guidelines.
 > We Using pre-commit
