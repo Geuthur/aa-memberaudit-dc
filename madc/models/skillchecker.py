@@ -70,7 +70,7 @@ class SkillList(models.Model):
         verbose_name=_("Category"),
         help_text=_("Category of the skill list, used for grouping."),
     )
-    
+
     objects = SkillListManager()
 
     def __str__(self):
@@ -79,3 +79,6 @@ class SkillList(models.Model):
     def get_skills(self):
         """Return the skills in the skill list as a dictionary."""
         return json.loads(self.skill_list)
+
+    class Meta:
+        default_permissions = ()
