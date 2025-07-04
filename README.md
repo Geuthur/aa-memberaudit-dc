@@ -1,4 +1,4 @@
-# Tax System module for AllianceAuth.<a name="aa-memberaudit-dc"></a>
+# Memberaudit Doctrine Checker for AllianceAuth.<a name="aa-memberaudit-dc"></a>
 
 ![Release](https://img.shields.io/pypi/v/aa-memberaudit-dc?label=release)
 ![Licence](https://img.shields.io/github/license/geuthur/aa-memberaudit-dc)
@@ -51,7 +51,7 @@ ______________________________________________________________________
 ## Installation<a name="installation"></a>
 
 > [!NOTE]
-> AA Tax System needs at least Alliance Auth v4.6.0
+> AA Memberaudit Doctrine Checker needs at least Alliance Auth v4.6.0
 > Please make sure to update your Alliance Auth before you install this APP
 
 ### Step 1 - Install the Package<a name="step1"></a>
@@ -107,7 +107,7 @@ python manage.py migrate
 
 ### Step 5 - Setting up Permissions<a name="step5"></a>
 
-With the Following IDs you can set up the permissions for the Tax System
+With the Following IDs you can set up the permissions for the AA Memberaudit Doctrine Checker
 
 | ID                | Description                                                  |                                                        |
 | :---------------- | :----------------------------------------------------------- | :----------------------------------------------------- |
