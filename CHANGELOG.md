@@ -1,5 +1,20 @@
 # Changelog
 
+## [0.0.5] - 2025-07-04
+
+### Added
+
+- Preview Images for Github
+
+### Changed
+
+- moved Main View to `header_nav_brand`
+
+### Fixed
+
+- README Naming Issues
+- Missing Migration for `Remove Standard Permissions`
+
 ## [0.0.4] - 2025-07-04
 
 ### Added

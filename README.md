@@ -22,7 +22,7 @@ ______________________________________________________________________
   - [Installation](#features)
     - [Step 1 - Install the Package](#step1)
     - [Step 2 - Configure Alliance Auth](#step2)
-    - [Step 3 - Add the Scheduled Tasks and Settings](#step3)
+    - [Step 3 - Add own Logger File](#step3)
     - [Step 4 - Migration to AA](#step4)
     - [Step 5 - Setting up Permissions](#step5)
     - [Step 6 - (Optional) Setting up Compatibilies](#step6)
@@ -33,10 +33,15 @@ ______________________________________________________________________
   - Doctrine Overview
     - Check if Character met criteria for Doctrines
     - Ingame supported copy clipboard skill-queue
+    - Copy Clipboard `missing` Skills
+  - Doctrine Administration
+    - Simple Add Skill-Plans per Copy/Paste via Ingame Plans (copy to clipboard)
+    - Language Localized Supported (Test Phase)
+    - Doctrine Overview
+    - Account Overview
 
 ## Upcoming<a name="upcoming"></a>
 
-- Account Overview
 - Detailed Modal-Overview for missing Skills
 - Optimize Search Field
 - Ordering Doctrines
@@ -71,14 +76,7 @@ Configure your Alliance Auth settings (`local.py`) as follows:
 - Add `'memberaudit',` to `INSTALLED_APPS`
 - Add `'madc',` to `INSTALLED_APPS`
 
-### Step 3 - Add the Scheduled Tasks<a name="step3"></a>
-
-To set up the Scheduled Tasks add following code to your `local.py`
-
-```python
-```
-
-### Step 3.1 - (Optional) Add own Logger File
+### Step 3 - (Optional) Add own Logger File<a name="step3"></a>
 
 To set up the Logger add following code to your `local.py`
 Ensure that you have writing permission in logs folder.
