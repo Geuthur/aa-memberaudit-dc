@@ -11,7 +11,9 @@
 {% endblock %}
 
 {% block header_nav_brand %}
-    {% translate "Doctrine Checker" %}
+    <a class="nav-link text-white link-light" href="{% url 'madc:index' %}">
+        {% translate "Doctrine Checker" %}
+    </a>
 {% endblock header_nav_brand %}
 
 {% block header_nav_collapse_left %}
