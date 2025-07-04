@@ -50,6 +50,19 @@ def checker(request: WSGIRequest, character_id=None):
 
 
 @login_required
+@permissions_required(["madc.basic_access"])
+def overview(request: WSGIRequest, character_id=None):
+    if character_id is None:
+        character_id = request.user.profile.main_character.character_id
+
+    context = {
+        "title": _("Account Overview"),
+        "character_id": character_id,
+    }
+    return render(request, "madc/admin/overview.html", context=context)
+
+
+@login_required
 @permissions_required(["madc.manage_access", "madc.admin_access"])
 def administration(request: WSGIRequest, character_id=None):
     if character_id is None:

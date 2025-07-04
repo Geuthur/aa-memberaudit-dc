@@ -15,6 +15,10 @@ class Character(Schema):
     alliance_name: str | None = None
 
 
+class CharacterOverview(Schema):
+    character: Character
+
+
 class CharacterDoctrines(Schema):
     character: Character
     doctrines: dict

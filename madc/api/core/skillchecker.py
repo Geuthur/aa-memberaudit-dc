@@ -10,6 +10,7 @@ from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
 
 # Alliance Auth
+from allianceauth.authentication.models import UserProfile
 from allianceauth.services.hooks import get_extension_logger
 
 # Alliance Auth (External Libs)
@@ -129,3 +130,39 @@ class DoctrineCheckerApiEndpoints:
                 }
 
             return skilllist_dict
+
+        @api.get(
+            "character/overview/",
+            response={200: list[schema.CharacterOverview], 403: str},
+            tags=self.tags,
+        )
+        def get_character_overview(request):
+            chars_visible = SkillList.objects.visible_eve_characters(request.user)
+
+            if chars_visible is None:
+                return 403, "Permission Denied"
+
+            chars_ids = chars_visible.values_list("character_id", flat=True)
+
+            users_char_ids = UserProfile.objects.filter(
+                main_character__isnull=False, main_character__character_id__in=chars_ids
+            )
+
+            output = []
+
+            for character in users_char_ids:
+                # pylint: disable=broad-exception-caught
+                try:
+                    character_data = {
+                        "character_id": character.main_character.character_id,
+                        "character_name": character.main_character.character_name,
+                        "corporation_id": character.main_character.corporation_id,
+                        "corporation_name": character.main_character.corporation_name,
+                        "alliance_id": character.main_character.alliance_id,
+                        "alliance_name": character.main_character.alliance_name,
+                    }
+                    output.append({"character": character_data})
+                except AttributeError:
+                    continue
+
+            return output

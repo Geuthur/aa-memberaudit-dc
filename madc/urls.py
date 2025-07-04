@@ -23,6 +23,11 @@ urlpatterns = [
         name="add_doctrine",
     ),
     path(
+        "<int:character_id>/view/overview/",
+        views.overview,
+        name="overview",
+    ),
+    path(
         "<int:character_id>/view/administration/",
         views.administration,
         name="administration",
