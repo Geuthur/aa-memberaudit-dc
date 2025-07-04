@@ -44,6 +44,10 @@ ______________________________________________________________________
 
 ## Screenshots<a name="screenshots"></a>
 
+![Characters](https://raw.githubusercontent.com/geuthur/aa-memberaudit-dc/master/madc/images/characters.png "Characters")
+![Doctrine](https://raw.githubusercontent.com/geuthur/aa-memberaudit-dc/master/madc/images/doctrine.png "Doctrine")
+![Administration](https://raw.githubusercontent.com/geuthur/aa-memberaudit-dc/master/madc/images/admin.png "Administration")
+
 ## Installation<a name="installation"></a>
 
 > [!NOTE]
