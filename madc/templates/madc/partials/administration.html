@@ -1,7 +1,7 @@
 {% load i18n %}
 {% load navactive %}
 
-{% if perms.madc.admin_access %}
+{% if perms.madc.admin_access or perms.madc.manage_access %}
     <li class="nav-item">
         <a class="nav-link py-0" href="{% url 'madc:add_doctrine' character_id=character_id %}">
             <span class="btn btn-success">{% translate 'Add Doctrine' %}</span>
