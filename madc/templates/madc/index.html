@@ -30,6 +30,114 @@
     {% include 'madc/bundles/skill-checker-bundles.html' %}
 
     <script>
+        $(document).ready(function() {
+            const skillListTableVar = $('#skill-checker-table');
+
+            const tableSkilllist = skillListTableVar.DataTable({
+                ajax: {
+                    url: VoWSettings.urls.skillChecker,
+                    type: 'GET',
+                    dataSrc: function (data) {
+                        // Filter out characters without doctrines
+                        const filteredData = Object.values(data).filter(character => {
+                            return character.doctrines && Object.keys(character.doctrines).length > 0;
+                        });
+                        return filteredData;
+                    },
+                    error: function (xhr, error, thrown) {
+                        console.error('Error loading data:', error);
+                        tableSkilllist.clear().draw();
+                    }
+                },
+                columns: [
+                    {
+                        data: 'character.character_name',
+                        render: function (data, type) {
+                            return data;
+                        }
+                    },
+                    {
+                        data: 'doctrines',
+                        render: function (data, type) {
+                            if (type === 'display') {
+                                // Render doctrines as a list of divs with flex layout
+                                let html = '<div class="d-flex flex-wrap gap-2">';
+                                Object.entries(data).forEach(([doctrineName, doctrine]) => {
+                                    html += `<div class="doctrine-item" data-doctrine="${doctrineName}">${doctrine.html || doctrineName}</div>`;
+                                });
+                                html += '</div>';
+                                return html;
+                            }
+                            return data;
+                        }
+                    },
+                ],
+                order: [
+                    [0, 'asc']
+                ], // Sort by character name
+                pageLength: 25,
+            });
+
+            tableSkilllist.on('draw', function() {
+                $('[data-tooltip-toggle="madc-tooltip"]').tooltip({
+                    trigger: 'hover',
+                });
+
+                // Add clipboard functionality for missing skills (red buttons)
+                setTimeout(() => {
+                    $('.doctrine-item').each(function() {
+                        const doctrineDiv = $(this);
+                        const copyButton = doctrineDiv.find('button[id^="copy-"]');
+
+                        if (copyButton.length && copyButton.hasClass('btn-danger')) {
+                            const doctrineName = doctrineDiv.attr('data-doctrine');
+                            const doctrineHtml = doctrineDiv.html();
+
+                            // Find the doctrine data from the table row
+                            const row = doctrineDiv.closest('tr');
+                            const rowData = tableSkilllist.row(row).data();
+
+                            if (rowData && rowData.doctrines && rowData.doctrines[doctrineName]) {
+                                const doctrine = rowData.doctrines[doctrineName];
+                                const missingSkills = [];
+
+                                if (doctrine.skills) {
+                                    Object.keys(doctrine.skills).forEach(skillName => {
+                                        const skillLevel = doctrine.skills[skillName];
+                                        missingSkills.push(`${skillName} ${skillLevel}`);
+                                    });
+                                }
+
+                                const clipboardText = missingSkills.join('\n');
+                                copyButton.attr('data-clipboard-text', clipboardText);
+
+                                // Initialize ClipboardJS if not already initialized
+                                if (!copyButton.data('clipboard-initialized')) {
+                                    new ClipboardJS(copyButton[0]).on('success', function(e) {
+                                        const originalIcon = copyButton.html();
+                                        const originalClass = copyButton.attr('class');
+
+                                        copyButton.html('<i class="fa-solid fa-check"></i>');
+                                        copyButton.removeClass('btn-danger').addClass('btn-success');
+
+                                        setTimeout(() => {
+                                            copyButton.html(originalIcon);
+                                            copyButton.attr('class', originalClass);
+                                        }, 1500);
+
+                                        e.clearSelection();
+                                    });
+
+                                    copyButton.data('clipboard-initialized', true);
+                                }
+                            }
+                        }
+                    });
+                }, 100);
+            });
+        });
+
+
         function createDoctrineTable(data) {
             const tableContainer = document.getElementById('skill-checker-table');
 
@@ -83,12 +191,12 @@
                         // Add clipboard functionality for missing skills (red buttons)
                         if (doctrine.html.includes('btn-danger')) {
                             const missingSkills = [];
-                            Object.keys(doctrine).forEach(skillName => {
-                                if (skillName !== 'html') {
-                                    const skillLevel = doctrine[skillName];
+                            if (doctrine.skills) {
+                                Object.keys(doctrine.skills).forEach(skillName => {
+                                    const skillLevel = doctrine.skills[skillName];
                                     missingSkills.push(`${skillName} ${skillLevel}`);
-                                }
-                            });
+                                });
+                            }
                             const clipboardText = missingSkills.join('\n');
 
                             setTimeout(() => {
@@ -195,7 +303,7 @@
 
         // Initialize when page loads
         document.addEventListener('DOMContentLoaded', function() {
-            loadDoctrineData();
+            //loadDoctrineData();
         });
     </script>
 {% endblock %}
