@@ -66,7 +66,7 @@ def administration(request: WSGIRequest, character_id=None):
 
 
 @login_required
-@permissions_required(["madc.basic_access"])
+@permissions_required(["madc.manage_access", "madc.admin_access"])
 def doctrine(request: WSGIRequest, character_id=None):
     if character_id is None:
         character_id = request.user.profile.main_character.character_id
