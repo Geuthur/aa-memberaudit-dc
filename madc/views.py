@@ -102,6 +102,8 @@ def ajax_doctrine(request: WSGIRequest):
         if form.is_valid():
             # skill_list = form.cleaned_data["skill_list"]
             name = form.cleaned_data["name"]
+            category = form.cleaned_data["category"]
+            ordering = form.cleaned_data["ordering"]
 
             # Check if a skill list with the same name already exists
             if SkillList.objects.filter(name=name).exists():
@@ -129,6 +131,8 @@ def ajax_doctrine(request: WSGIRequest):
             SkillList.objects.create(
                 name=name,
                 skill_list=json.dumps(parsed_skills, ensure_ascii=False),
+                category=category,
+                ordering=ordering,
             )
 
             messages.success(

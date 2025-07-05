@@ -54,6 +54,7 @@ class SkillListHandler:
 
         skill_dict = {}
         skill_list_dict = {}
+        skill_list_misc = {}
 
         for skill in skills:
             character = skill.character.eve_character.character_name
@@ -75,10 +76,11 @@ class SkillListHandler:
             }
 
         # Get the skill lists and their skills
-        skill_list_ordering = {}
         for skill_list in skill_lists:
             skill_list_dict[skill_list.name] = skill_list.get_skills()
-            skill_list_ordering[skill_list.name] = skill_list.ordering
+            skill_list_misc[skill_list.name] = {}
+            skill_list_misc[skill_list.name]["order-weight"] = skill_list.ordering
+            skill_list_misc[skill_list.name]["category"] = skill_list.category
 
         for character, character_data in skill_dict.items():
             character_data["doctrines"] = {}
@@ -94,9 +96,12 @@ class SkillListHandler:
                             skill
                         ] = level
 
-                # Create Order-Weighted Skill List
-                character_data["doctrines"][skill_list_name]["order"] = (
-                    skill_list_ordering[skill_list_name]
+                # Add metadata for the doctrine
+                character_data["doctrines"][skill_list_name]["order"] = skill_list_misc[
+                    skill_list_name
+                ]["order-weight"]
+                character_data["doctrines"][skill_list_name]["category"] = (
+                    skill_list_misc[skill_list_name]["category"]
                 )
 
                 # TODO: Make a Helper to Handle HTML Formatting
@@ -105,7 +110,7 @@ class SkillListHandler:
                 if character_data["doctrines"][skill_list_name]["skills"]:
                     character_data["doctrines"][skill_list_name]["html"] = format_html(
                         """
-                            <div role="group" class="btn-group">
+                            <div class="doctrine-item btn-group" role="group" data-doctrine="{}">
                                 <button type="button" class="btn btn-danger btn-sm" id="missing-{}-{}">
                                     {}
                                 </button>
@@ -115,6 +120,7 @@ class SkillListHandler:
                             </div>
                         """,
                         skill_list_name,
+                        skill_list_name,
                         character_data["character_id"],
                         skill_list_name,
                         character_data["character_id"],
@@ -123,7 +129,7 @@ class SkillListHandler:
                 else:
                     character_data["doctrines"][skill_list_name]["html"] = format_html(
                         """
-                            <div role="group" class="btn-group">
+                            <div class="doctrine-item btn-group" role="group" data-doctrine="{}">
                                 <button type="button" class="btn btn-success btn-sm">
                                     {}
                                 </button>
@@ -132,6 +138,7 @@ class SkillListHandler:
                                 </button>
                             </div>
                         """,
+                        skill_list_name,
                         skill_list_name,
                     )
         return skill_dict
