@@ -34,18 +34,20 @@ ______________________________________________________________________
     - Check if Character met criteria for Doctrines
     - Ingame supported copy clipboard skill-queue
     - Copy Clipboard `missing` Skills
+    - Search for specific Doctrine per Search Field
+    - Filter by Category example: (Capital, Black OP Group, Mining)
   - Doctrine Administration
     - Simple Add Skill-Plans per Copy/Paste via Ingame Plans (copy to clipboard)
     - Language Localized Supported (Test Phase)
     - Doctrine Overview
     - Account Overview
+    - Order-Weight
 
 ## Upcoming<a name="upcoming"></a>
 
 - Detailed Modal-Overview for missing Skills
-- Optimize Search Field
-- Ordering Doctrines
-- Filter by Category example: (Capital, Black OP Group, Mining)
+- Display min. req and recommended skill level
+- Multi-Language Translation
 
 ## Screenshots<a name="screenshots"></a>
 

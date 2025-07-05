@@ -21,11 +21,30 @@ class DeleteForm(forms.Form):
 class SkillListForm(forms.Form):
     name = forms.CharField(
         required=True,
-        max_length=255,
+        max_length=50,
         widget=forms.TextInput(attrs={"class": "form-control"}),
         label="Skill Plan Name",
         help_text="Enter a name for your skill plan.",
     )
+
+    category = forms.CharField(
+        required=False,
+        max_length=20,
+        widget=forms.TextInput(attrs={"class": "form-control"}),
+        label="Category",
+        help_text="Enter a category for your skill plan (e.g., 'Combat', 'Industry').",
+    )
+
+    ordering = forms.IntegerField(
+        required=False,
+        initial=0,
+        min_value=0,
+        max_value=999,
+        widget=forms.NumberInput(attrs={"class": "form-control"}),
+        label="Order Weight",
+        help_text="Enter a weight for ordering this skill plan. Lower numbers appear first.",
+    )
+
     skill_list = forms.CharField(
         required=True,
         max_length=10000,

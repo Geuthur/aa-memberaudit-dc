@@ -54,6 +54,7 @@ class SkillListHandler:
 
         skill_dict = {}
         skill_list_dict = {}
+        skill_list_misc = {}
 
         for skill in skills:
             character = skill.character.eve_character.character_name
@@ -77,25 +78,39 @@ class SkillListHandler:
         # Get the skill lists and their skills
         for skill_list in skill_lists:
             skill_list_dict[skill_list.name] = skill_list.get_skills()
+            skill_list_misc[skill_list.name] = {}
+            skill_list_misc[skill_list.name]["order-weight"] = skill_list.ordering
+            skill_list_misc[skill_list.name]["category"] = skill_list.category
 
         for character, character_data in skill_dict.items():
             character_data["doctrines"] = {}
             for skill_list_name, skills in skill_list_dict.items():
                 character_data["doctrines"][skill_list_name] = {}
+                character_data["doctrines"][skill_list_name]["skills"] = {}
                 for skill, level in skills.items():
                     level = int(level)
                     if level > character_data["skills"].get(skill, {}).get(
                         "active_level", 0
                     ):
-                        character_data["doctrines"][skill_list_name][skill] = level
+                        character_data["doctrines"][skill_list_name]["skills"][
+                            skill
+                        ] = level
+
+                # Add metadata for the doctrine
+                character_data["doctrines"][skill_list_name]["order"] = skill_list_misc[
+                    skill_list_name
+                ]["order-weight"]
+                character_data["doctrines"][skill_list_name]["category"] = (
+                    skill_list_misc[skill_list_name]["category"]
+                )
 
                 # TODO: Make a Helper to Handle HTML Formatting
                 # Add Modal Overview for missing skills for each Character
                 # Add HTML to each individual doctrine
-                if character_data["doctrines"][skill_list_name]:
+                if character_data["doctrines"][skill_list_name]["skills"]:
                     character_data["doctrines"][skill_list_name]["html"] = format_html(
                         """
-                            <div role="group" class="btn-group">
+                            <div class="doctrine-item btn-group" role="group" data-doctrine="{}">
                                 <button type="button" class="btn btn-danger btn-sm" id="missing-{}-{}">
                                     {}
                                 </button>
@@ -105,6 +120,7 @@ class SkillListHandler:
                             </div>
                         """,
                         skill_list_name,
+                        skill_list_name,
                         character_data["character_id"],
                         skill_list_name,
                         character_data["character_id"],
@@ -113,7 +129,7 @@ class SkillListHandler:
                 else:
                     character_data["doctrines"][skill_list_name]["html"] = format_html(
                         """
-                            <div role="group" class="btn-group">
+                            <div class="doctrine-item btn-group" role="group" data-doctrine="{}">
                                 <button type="button" class="btn btn-success btn-sm">
                                     {}
                                 </button>
@@ -123,10 +139,11 @@ class SkillListHandler:
                             </div>
                         """,
                         skill_list_name,
+                        skill_list_name,
                     )
         return skill_dict
 
-    def get_user_skill_list(self, user_id: int, force_rebuild=False) -> dict:
+    def get_user_skill_list(self, user_id: int, force_rebuild=True) -> dict:
         """Get the skill list for a user."""
         linked_characters = (
             User.objects.get(id=user_id)
