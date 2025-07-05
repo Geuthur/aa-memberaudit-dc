@@ -34,6 +34,12 @@
     {% include 'bundles/clipboard-js.html' %}
     {% include 'madc/bundles/settings-bundles.html' %}
     {% include 'madc/bundles/skill-checker-bundles.html' %}
+
+    {% include 'madc/partials/modals/modal.html' with name="ViewMissing" %}
+
+    <script type="application/javascript">
+        setupModal('#modalViewMissingContainer', 'ajax_missing', '#modalViewMissingContent', '#modalViewMissingLoader');
+    </script>
 {% endblock %}
 
 {% block extra_css %}

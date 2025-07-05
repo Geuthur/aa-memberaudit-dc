@@ -5,6 +5,7 @@ from hashlib import md5
 # Django
 from django.contrib.auth.models import User
 from django.core.cache import cache
+from django.urls import reverse
 from django.utils.html import format_html
 
 # Alliance Auth
@@ -38,6 +39,39 @@ class SkillListHandler:
     def _build_account_cache_key(self, characters):
         """Build a cache key based on the character IDs."""
         return SKILL_CACHE_USER_KEY.format(self._get_chars_hash(characters))
+
+    def _generate_doctrine_html(
+        self,
+        skill_list_name: str,
+        character_id: int,
+        has_missing_skills: bool,
+        skill_list_pk: int = None,
+    ) -> str:
+        """Generate HTML for doctrine buttons based on skill status."""
+        html = f"<div class='doctrine-item btn-group' role='group' data-doctrine='{skill_list_name}'>"
+        html += "<button type='button' "
+
+        if has_missing_skills:
+            url = reverse(
+                viewname="madc:api:get_missing_skills",
+                kwargs={"character_id": character_id, "pk": skill_list_pk},
+            )
+            html += f"class='btn btn-danger btn-sm' id='missing-{skill_list_name}-{character_id}' data-bs-toggle='modal' data-bs-target='#modalViewMissingContainer' data-ajax_missing='{url}'>"
+        else:
+            html += "class='btn btn-success btn-sm'>"
+
+        html += f"{skill_list_name}</button>"
+        html += "<button type='button' class='flex-one btn "
+
+        if has_missing_skills:
+            html += f"btn-danger btn-sm' id='copy-{skill_list_name}-{character_id}'>"
+            html += "<i class='fa-solid fa-copy'></i>"
+        else:
+            html += "btn-success btn-sm'>"
+            html += "<i class='fa-solid fa-check'></i>"
+        html += "</button></div>"
+
+        return format_html(html)
 
     def check_skill_lists(self, skill_lists: list[SkillList], linked_characters):
         """Check if the skill lists are up to date."""
@@ -79,6 +113,7 @@ class SkillListHandler:
         for skill_list in skill_lists:
             skill_list_dict[skill_list.name] = skill_list.get_skills()
             skill_list_misc[skill_list.name] = {}
+            skill_list_misc[skill_list.name]["pk"] = skill_list.pk
             skill_list_misc[skill_list.name]["order-weight"] = skill_list.ordering
             skill_list_misc[skill_list.name]["category"] = skill_list.category
 
@@ -107,40 +142,17 @@ class SkillListHandler:
                 # TODO: Make a Helper to Handle HTML Formatting
                 # Add Modal Overview for missing skills for each Character
                 # Add HTML to each individual doctrine
-                if character_data["doctrines"][skill_list_name]["skills"]:
-                    character_data["doctrines"][skill_list_name]["html"] = format_html(
-                        """
-                            <div class="doctrine-item btn-group" role="group" data-doctrine="{}">
-                                <button type="button" class="btn btn-danger btn-sm" id="missing-{}-{}">
-                                    {}
-                                </button>
-                                <button type="button" class="flex-one btn btn-danger btn-sm" id="copy-{}-{}">
-                                    <i class="fa-solid fa-copy"></i>
-                                </button>
-                            </div>
-                        """,
-                        skill_list_name,
-                        skill_list_name,
-                        character_data["character_id"],
-                        skill_list_name,
-                        character_data["character_id"],
-                        md5(skill_list_name.encode()).hexdigest(),
+                has_missing_skills = bool(
+                    character_data["doctrines"][skill_list_name]["skills"]
+                )
+                character_data["doctrines"][skill_list_name]["html"] = (
+                    self._generate_doctrine_html(
+                        skill_list_name=skill_list_name,
+                        character_id=character_data["character_id"],
+                        has_missing_skills=has_missing_skills,
+                        skill_list_pk=skill_list_misc[skill_list_name]["pk"],
                     )
-                else:
-                    character_data["doctrines"][skill_list_name]["html"] = format_html(
-                        """
-                            <div class="doctrine-item btn-group" role="group" data-doctrine="{}">
-                                <button type="button" class="btn btn-success btn-sm">
-                                    {}
-                                </button>
-                                <button type="button" class="flex-one btn btn-success btn-sm">
-                                    <i class="fa-solid fa-check"></i>
-                                </button>
-                            </div>
-                        """,
-                        skill_list_name,
-                        skill_list_name,
-                    )
+                )
         return skill_dict
 
     def get_user_skill_list(self, user_id: int, force_rebuild=True) -> dict:
