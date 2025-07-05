@@ -146,3 +146,19 @@ class SkillListForm(forms.Form):
                     skills_dict[skill_name] = level
 
         return skills_dict
+
+    def clean_name(self):
+        name = self.cleaned_data["name"]
+
+        # pylint: disable=import-outside-toplevel
+        # AA Memberaudit Doctrine Checker
+        from madc.models.skillchecker import SkillList
+
+        if SkillList.objects.filter(name=name).exists():
+            raise forms.ValidationError(
+                _(
+                    "A skill plan with the name '{}' already exists. Please choose a different name."
+                ).format(name)
+            )
+
+        return name
