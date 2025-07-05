@@ -39,6 +39,7 @@ class SkillListForm(forms.Form):
         required=False,
         initial=0,
         min_value=0,
+        max_value=999,
         widget=forms.NumberInput(attrs={"class": "form-control"}),
         label="Order Weight",
         help_text="Enter a weight for ordering this skill plan. Lower numbers appear first.",
