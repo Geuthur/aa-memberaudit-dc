@@ -1,5 +1,20 @@
 # Changelog
 
+## [0.1.0] - 2025-07-05
+
+### Added
+
+- Category Filter
+- Form Update
+  - Ordering Field
+  - Category Field
+
+### Changed
+
+- Limit letters for Name and Category
+- Optimized DataTable Search Field
+- Disable Character Searching
+
 ## [0.0.5] - 2025-07-04
 
 ### Added
