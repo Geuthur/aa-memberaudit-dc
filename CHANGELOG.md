@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.2.0] - 2025-07-05
+
+### Added
+
+- Missing Skills Dialog
+
+### Changed
+
+- Optimized Form
+
 ## [0.1.0] - 2025-07-05
 
 ### Added
