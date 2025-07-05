@@ -105,19 +105,6 @@ def ajax_doctrine(request: WSGIRequest):
             category = form.cleaned_data["category"]
             ordering = form.cleaned_data["ordering"]
 
-            # Check if a skill list with the same name already exists
-            if SkillList.objects.filter(name=name).exists():
-                messages.error(
-                    request,
-                    _(
-                        "A skill plan with the name '{}' already exists. Please choose a different name."
-                    ).format(name),
-                )
-                return redirect(
-                    "madc:add_doctrine",
-                    character_id=request.user.profile.main_character.character_id,
-                )
-
             # Get parsed skills from the form
             parsed_skills = form.get_parsed_skills()
 
@@ -143,12 +130,29 @@ def ajax_doctrine(request: WSGIRequest):
             )
             return redirect("madc:index")
 
-        messages.error(
-            request,
-            _(
-                "There was an error with your skill plan. Please check the form and try again."
-            ),
-        )
+        # Collect form errors and display them
+        error_messages = []
+        for field, errors in form.errors.items():
+            for error in errors:
+                if field == "__all__":
+                    error_messages.append(str(error))
+                else:
+                    field_label = form.fields[field].label or field
+                    error_messages.append(f"{field_label}: {error}")
+
+        if error_messages:
+            messages.error(
+                request,
+                _("There was an error with your skill plan: ")
+                + " ".join(error_messages),
+            )
+        else:
+            messages.error(
+                request,
+                _(
+                    "There was an error with your skill plan. Please check the form and try again."
+                ),
+            )
     else:
         messages.error(
             request, _("There was an error processing your request. Please try again.")
