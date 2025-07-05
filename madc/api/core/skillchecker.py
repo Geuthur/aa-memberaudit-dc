@@ -5,6 +5,7 @@ from typing import Any
 from ninja import NinjaAPI
 
 # Django
+from django.shortcuts import render
 from django.urls import reverse
 from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
@@ -78,6 +79,66 @@ class DoctrineCheckerApiEndpoints:
                 output[s["character_id"]]["skills"] = s["skills"]
 
             return list(output.values())
+
+        # pylint: disable=too-many-locals
+        @api.get(
+            "{character_id}/doctrines/{pk}/",
+            response={200: Any, 403: str},
+            tags=self.tags,
+        )
+        def get_missing_skills(request, character_id: int, pk: int):
+            if character_id == 0:
+                character_id = request.user.profile.main_character.character_id
+            response, character = get_main_character(request, character_id)
+
+            if not response:
+                return 403, _("Permission Denied")
+
+            # Get the skill lists for the main character
+            user_skilllists = providers.skills.get_user_skill_list(
+                user_id=character.character_ownership.user_id
+            )
+
+            try:
+                skilllist = SkillList.objects.get(pk=pk)
+            except SkillList.DoesNotExist:
+                return render(
+                    request,
+                    "madc/partials/modal/error.html",
+                )
+
+            doctrine_skills = skilllist.get_skills()
+
+            # Find the character in the skill lists
+            character_skills = None
+            for __, character_data in user_skilllists["skills_list"].items():
+                if character_data["character_id"] == character_id:
+                    character_skills = character_data["skills"]
+                    break
+
+            if character_skills is None:
+                return 403, _("Character not found in skill lists")
+
+            # Compare required skills with character skills
+            missing_skills = []
+            for skill_name, required_level in doctrine_skills.items():
+                trained_level = 0
+                if skill_name in character_skills:
+                    trained_level = character_skills[skill_name].get("trained_level", 0)
+
+                missing_skills.append(
+                    {
+                        "skill": skill_name,
+                        "trained": trained_level,
+                        "needed": required_level,
+                    }
+                )
+
+            context = {"doctrine": skilllist, "skills": missing_skills}
+
+            logger.debug(context)
+
+            return render(request, "madc/partials/modals/missing.html", context=context)
 
         @api.get(
             "administration/",

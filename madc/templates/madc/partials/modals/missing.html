@@ -1,0 +1,34 @@
+{% load i18n %}
+{% load static %}
+{% load humanize %}
+{% load evelinks %}
+
+{% if doctrine %}
+    <div>
+        <h4 id="modal-title">
+            {{ doctrine.name }} ⋗ {% translate "Missing Skills" %}
+        </h4>
+    </div>
+    <div class="card bg-secondary rounded mb-3">
+        {% for skill in skills %}
+            <div class="w-100">
+                <div class="d-flex flex-row justify-content-between align-items-center text-nowrap my-1 mx-3">
+                    <span class="flex-grow-1 text-nowrap">{{ skill.skill }}</span>
+                    <div class="text-no-wrap">
+                        {% for level in "12345" %}
+                            {% if forloop.counter <= skill.trained %}
+                                <i class="fa-solid fa-circle text-success"></i>
+                            {% elif forloop.counter <= skill.needed %}
+                                <i class="fa-solid fa-circle text-danger"></i>
+                            {% else %}
+                                <i class="fa-regular fa-circle text-white"></i>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    {% trans "No data found..." %}
+{% endif %}
