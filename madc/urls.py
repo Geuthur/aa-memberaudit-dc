@@ -23,6 +23,11 @@ urlpatterns = [
         name="add_doctrine",
     ),
     path(
+        "<int:character_id>/view/overview/",
+        views.overview,
+        name="overview",
+    ),
+    path(
         "<int:character_id>/view/administration/",
         views.administration,
         name="administration",
@@ -37,6 +42,11 @@ urlpatterns = [
         "admin/delete/",
         views.delete_doctrine,
         name="delete_doctrine",
+    ),
+    path(
+        "admin/update/<int:pk>/",
+        views.edit_doctrine,
+        name="update_skilllist",
     ),
     # -- API System
     re_path(r"^api/", api.urls),

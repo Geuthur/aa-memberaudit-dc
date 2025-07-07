@@ -51,7 +51,7 @@ def skillvalidator(value):
 
 class SkillList(models.Model):
     last_update = models.DateTimeField(auto_now=True)
-    name = models.CharField(max_length=500, null=True, default=None)
+    name = models.CharField(max_length=50, null=True, default=None)
     skill_list = models.TextField(null=True, default="", validators=[skillvalidator])
     ordering = models.IntegerField(
         default=0, validators=[MinValueValidator(0)], verbose_name=_("Order Weight")
@@ -64,7 +64,7 @@ class SkillList(models.Model):
         ),
     )
     category = models.CharField(
-        max_length=100,
+        max_length=20,
         null=True,
         default=None,
         verbose_name=_("Category"),

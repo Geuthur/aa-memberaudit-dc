@@ -1,4 +1,4 @@
-# Tax System module for AllianceAuth.<a name="aa-memberaudit-dc"></a>
+# Memberaudit Doctrine Checker for AllianceAuth.<a name="aa-memberaudit-dc"></a>
 
 ![Release](https://img.shields.io/pypi/v/aa-memberaudit-dc?label=release)
 ![Licence](https://img.shields.io/github/license/geuthur/aa-memberaudit-dc)
@@ -22,7 +22,7 @@ ______________________________________________________________________
   - [Installation](#features)
     - [Step 1 - Install the Package](#step1)
     - [Step 2 - Configure Alliance Auth](#step2)
-    - [Step 3 - Add the Scheduled Tasks and Settings](#step3)
+    - [Step 3 - Add own Logger File](#step3)
     - [Step 4 - Migration to AA](#step4)
     - [Step 5 - Setting up Permissions](#step5)
     - [Step 6 - (Optional) Setting up Compatibilies](#step6)
@@ -33,21 +33,32 @@ ______________________________________________________________________
   - Doctrine Overview
     - Check if Character met criteria for Doctrines
     - Ingame supported copy clipboard skill-queue
+    - Copy Clipboard `missing` Skills
+    - Search for specific Doctrine per Search Field
+    - Filter by Category example: (Capital, Black OP Group, Mining)
+  - Doctrine Administration
+    - Simple Add Skill-Plans per Copy/Paste via Ingame Plans (copy to clipboard)
+    - Language Localized Supported (Test Phase)
+    - Doctrine Overview
+    - Account Overview
+    - Order-Weight
 
 ## Upcoming<a name="upcoming"></a>
 
-- Account Overview
 - Detailed Modal-Overview for missing Skills
-- Optimize Search Field
-- Ordering Doctrines
-- Filter by Category example: (Capital, Black OP Group, Mining)
+- Display min. req and recommended skill level
+- Multi-Language Translation
 
 ## Screenshots<a name="screenshots"></a>
+
+![Characters](https://raw.githubusercontent.com/geuthur/aa-memberaudit-dc/master/madc/images/characters.png "Characters")
+![Doctrine](https://raw.githubusercontent.com/geuthur/aa-memberaudit-dc/master/madc/images/doctrine.png "Doctrine")
+![Administration](https://raw.githubusercontent.com/geuthur/aa-memberaudit-dc/master/madc/images/admin.png "Administration")
 
 ## Installation<a name="installation"></a>
 
 > [!NOTE]
-> AA Tax System needs at least Alliance Auth v4.6.0
+> AA Memberaudit Doctrine Checker needs at least Alliance Auth v4.6.0
 > Please make sure to update your Alliance Auth before you install this APP
 
 ### Step 1 - Install the Package<a name="step1"></a>
@@ -67,14 +78,7 @@ Configure your Alliance Auth settings (`local.py`) as follows:
 - Add `'memberaudit',` to `INSTALLED_APPS`
 - Add `'madc',` to `INSTALLED_APPS`
 
-### Step 3 - Add the Scheduled Tasks<a name="step3"></a>
-
-To set up the Scheduled Tasks add following code to your `local.py`
-
-```python
-```
-
-### Step 3.1 - (Optional) Add own Logger File
+### Step 3 - (Optional) Add own Logger File<a name="step3"></a>
 
 To set up the Logger add following code to your `local.py`
 Ensure that you have writing permission in logs folder.
@@ -103,7 +107,7 @@ python manage.py migrate
 
 ### Step 5 - Setting up Permissions<a name="step5"></a>
 
-With the Following IDs you can set up the permissions for the Tax System
+With the Following IDs you can set up the permissions for the AA Memberaudit Doctrine Checker
 
 | ID                | Description                                                  |                                                        |
 | :---------------- | :----------------------------------------------------------- | :----------------------------------------------------- |

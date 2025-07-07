@@ -2,9 +2,7 @@
 {% load navactive %}
 
 {% if perms.madc.basic_access %}
-
     <li class="nav-item">
-        <a class="nav-link" href="{% url 'madc:checker' character_id=character_id %}">{% translate "Doctrine Checker" %}</a>
+        <a class="nav-link" href="{% url 'madc:overview' character_id=character_id %}">{% translate "Account Overview" %}</a>
     </li>
-
 {% endif %}
