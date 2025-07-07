@@ -14,6 +14,7 @@
 - dataTable CSS
 - Doctrine Skills API
 - Doctrine View for Doctrine Administration
+- Category to Doctrine Administration
 
 ## Removed
 
