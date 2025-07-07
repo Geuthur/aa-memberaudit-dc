@@ -28,7 +28,7 @@ TASK_DEFAULTS = {
 # Default params for tasks that need run once only.
 TASK_DEFAULTS_ONCE = {**TASK_DEFAULTS, **{"base": QueueOnce}}
 
-_update_voicesofwar_params = {
+_update_nadc_params = {
     **TASK_DEFAULTS_ONCE,
     **{"once": {"keys": ["corporation_id", "force_refresh"], "graceful": True}},
 }
