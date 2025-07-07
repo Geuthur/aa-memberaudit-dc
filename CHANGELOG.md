@@ -1,5 +1,29 @@
 # Changelog
 
+## [0.2.1] - 2025-07-07
+
+### Changed
+
+- Use Checkbox filtering instead of Dropdown
+- Optimized CSS
+
+### Added
+
+- X-Editable 1.5.8
+- Interactive Editing for Doctrine Administration
+- dataTable CSS
+- Doctrine Skills API
+- Doctrine View for Doctrine Administration
+- Category to Doctrine Administration
+
+## Removed
+
+- Debug Logs in API
+
+### Fixed
+
+- Modal Error Handling
+
 ## [0.2.0] - 2025-07-05
 
 ### Added
