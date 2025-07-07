@@ -213,11 +213,15 @@ class DoctrineCheckerApiEndpoints:
                     kwargs={"pk": skill_list.pk},
                 )
 
-                name_html = f"<a class='editable' href='#' data-type='text' data-pk='{skill_list.pk}' data-name='name' data-url='{url}' data-title='Enter name'>{skill_list.name}</a>"
-
                 # Get translated texts
                 active_text = _("Active")
                 inactive_text = _("Inactive")
+                enter_name_text = _("Enter name")
+                enter_category_text = _("Enter category")
+                enter_ordering_text = _("Enter ordering")
+
+                name_html = f"<a class='editable' href='#' data-type='text' data-pk='{skill_list.pk}' data-name='name' data-url='{url}' data-title='{enter_name_text}'>{skill_list.name}</a>"
+                skills_html = f'<button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalViewDoctrineContainer" data-ajax_doctrine="{url_doctrine}">{len(skill_list.get_skills())} Skills</button>'
 
                 # Correctly handle the boolean editable with proper escaping
                 if skill_list.active:
@@ -231,9 +235,8 @@ class DoctrineCheckerApiEndpoints:
                     f'<a href="#" class="editable-boolean no_underline" data-type="select" data-pk="{skill_list.pk}" data-name="active" data-url="{url}" data-source=\'[{{"value": true, "text": "{active_text}"}}, {{"value": false, "text": "{inactive_text}"}}]\' data-value="{str(skill_list.active).lower()}">{active_badge}</a>'
                 )
 
-                ordering_html = f'<a class="editable" href="#" data-type="text" data-pk="{skill_list.pk}" data-name="ordering" data-url="{url}" data-title="Enter ordering">{skill_list.ordering}</a>'
-
-                skills_html = f'<button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalViewDoctrineContainer" data-ajax_doctrine="{url_doctrine}">{len(skill_list.get_skills())} Skills</button>'
+                ordering_html = f'<a class="editable" href="#" data-type="text" data-pk="{skill_list.pk}" data-name="ordering" data-url="{url}" data-title="{enter_ordering_text}">{skill_list.ordering}</a>'
+                category_html = f'<a class="editable" href="#" data-type="text" data-pk="{skill_list.pk}" data-name="category" data-url="{url}" data-title="{enter_category_text}">{skill_list.category}</a>'
 
                 skilllist_dict[skill_list.name] = {
                     "name": {
@@ -248,6 +251,10 @@ class DoctrineCheckerApiEndpoints:
                     "ordering": {
                         "html": format_html(ordering_html),
                         "sort": skill_list.ordering,
+                    },
+                    "category": {
+                        "html": format_html(category_html),
+                        "sort": skill_list.category,
                     },
                     "actions": {
                         "delete": format_html(edit_btn),

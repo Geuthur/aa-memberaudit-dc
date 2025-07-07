@@ -58,6 +58,13 @@ $(document).ready(function() {
                 }
             },
             {
+                data: 'category',
+                render: {
+                    display: 'html',
+                    sort: 'sort',
+                }
+            },
+            {
                 data: 'actions',
                 className: 'd-flex justify-content-end',
                 render: function (data, type) {
@@ -67,7 +74,7 @@ $(document).ready(function() {
         ],
         columnDefs: [
             {
-                targets: [1, 4],
+                targets: [1, 5],
                 sortable: false,
             },
         ],

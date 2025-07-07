@@ -255,6 +255,8 @@ def _update_skilllist_field(skilllist, field_name, field_value):
         return _update_active_field(skilllist, field_value)
     if field_name == "ordering":
         return _update_ordering_field(skilllist, field_value)
+    if field_name == "category":
+        return _update_category_field(skilllist, field_value)
     return {"success": False, "message": _("Invalid field name")}
 
 
@@ -300,3 +302,12 @@ def _update_ordering_field(skilllist, field_value):
         return {"success": True, "message": _("Ordering updated successfully")}
     except ValueError:
         return {"success": False, "message": _("Ordering must be a valid number")}
+
+
+def _update_category_field(skilllist, field_value):
+    """Update the category field of a skilllist"""
+    if not field_value.strip():
+        return {"success": False, "message": _("Category cannot be empty")}
+
+    skilllist.category = field_value.strip()
+    return {"success": True, "message": _("Category updated successfully")}
