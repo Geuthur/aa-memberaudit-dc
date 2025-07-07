@@ -8,6 +8,7 @@ from ninja import NinjaAPI
 from django.shortcuts import render
 from django.urls import reverse
 from django.utils.html import format_html
+from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
 
 # Alliance Auth
@@ -104,7 +105,7 @@ class DoctrineCheckerApiEndpoints:
             except SkillList.DoesNotExist:
                 return render(
                     request,
-                    "madc/partials/modal/error.html",
+                    "madc/partials/modals/missing.html",
                 )
 
             doctrine_skills = skilllist.get_skills()
@@ -136,9 +137,33 @@ class DoctrineCheckerApiEndpoints:
 
             context = {"doctrine": skilllist, "skills": missing_skills}
 
-            logger.debug(context)
-
             return render(request, "madc/partials/modals/missing.html", context=context)
+
+        # pylint: disable=too-many-locals
+        @api.get(
+            "doctrines/{pk}/",
+            response={200: Any, 403: str},
+            tags=self.tags,
+        )
+        def get_doctrine_skills(request, pk: int):
+            perms = request.user.has_perm("madc.basic_access")
+
+            if not perms:
+                return 403, _("Permission Denied")
+
+            try:
+                skilllist = SkillList.objects.get(pk=pk)
+            except SkillList.DoesNotExist:
+                return render(
+                    request,
+                    "madc/partials/modals/missing.html",
+                )
+
+            context = {"doctrine": skilllist}
+
+            return render(
+                request, "madc/partials/modals/doctrine.html", context=context
+            )
 
         @api.get(
             "administration/",
@@ -179,12 +204,51 @@ class DoctrineCheckerApiEndpoints:
                     settings=settings_dict,
                     request=request,
                 )
+                url = reverse(
+                    viewname="madc:update_skilllist",
+                    kwargs={"pk": skill_list.pk},
+                )
+                url_doctrine = reverse(
+                    viewname="madc:api:get_doctrine_skills",
+                    kwargs={"pk": skill_list.pk},
+                )
+
+                name_html = f"<a class='editable' href='#' data-type='text' data-pk='{skill_list.pk}' data-name='name' data-url='{url}' data-title='Enter name'>{skill_list.name}</a>"
+
+                # Get translated texts
+                active_text = _("Active")
+                inactive_text = _("Inactive")
+
+                # Correctly handle the boolean editable with proper escaping
+                if skill_list.active:
+                    active_badge = f"<span class='badge bg-success'>{active_text}"
+                else:
+                    active_badge = f"<span class='badge bg-secondary'>{inactive_text}"
+                active_badge += "</span>"
+
+                # Use mark_safe for complex HTML to avoid format_html issues
+                active_html = mark_safe(
+                    f'<a href="#" class="editable-boolean no_underline" data-type="select" data-pk="{skill_list.pk}" data-name="active" data-url="{url}" data-source=\'[{{"value": true, "text": "{active_text}"}}, {{"value": false, "text": "{inactive_text}"}}]\' data-value="{str(skill_list.active).lower()}">{active_badge}</a>'
+                )
+
+                ordering_html = f'<a class="editable" href="#" data-type="text" data-pk="{skill_list.pk}" data-name="ordering" data-url="{url}" data-title="Enter ordering">{skill_list.ordering}</a>'
+
+                skills_html = f'<button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalViewDoctrineContainer" data-ajax_doctrine="{url_doctrine}">{len(skill_list.get_skills())} Skills</button>'
 
                 skilllist_dict[skill_list.name] = {
-                    "name": skill_list.name,
-                    "skills": skill_list.get_skills(),
-                    "active": skill_list.active,
-                    "ordering": skill_list.ordering,
+                    "name": {
+                        "html": format_html(name_html),
+                        "sort": skill_list.name,
+                    },
+                    "skills": format_html(skills_html),
+                    "active": {
+                        "html": active_html,
+                        "sort": skill_list.active,
+                    },
+                    "ordering": {
+                        "html": format_html(ordering_html),
+                        "sort": skill_list.ordering,
+                    },
                     "actions": {
                         "delete": format_html(edit_btn),
                     },

@@ -6,6 +6,7 @@ import json
 # Django
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.core.exceptions import ValidationError
 from django.core.handlers.wsgi import WSGIRequest
 from django.http import JsonResponse
 from django.shortcuts import redirect, render
@@ -189,3 +190,113 @@ def delete_doctrine(request: WSGIRequest):
             data={"success": True, "message": msg}, status=200, safe=False
         )
     return JsonResponse(data={"success": False, "message": msg}, status=400, safe=False)
+
+
+# pylint: disable=too-many-return-statements
+@login_required
+@permissions_required(["madc.manage_access", "madc.admin_access"])
+def edit_doctrine(request: WSGIRequest, pk: int):
+    """Handle x-editable updates for skill lists"""
+    # Validate request method
+    if request.method != "POST":
+        return JsonResponse({"message": _("Invalid request method")}, status=405)
+
+    # Check permissions
+    perms = get_manage_permission(
+        request, request.user.profile.main_character.character_id
+    )[0]
+    if not perms:
+        return JsonResponse({"message": _("Permission Denied")}, status=403)
+
+    # Get skilllist object
+    try:
+        skilllist = SkillList.objects.get(pk=pk)
+    except SkillList.DoesNotExist:
+        return JsonResponse({"message": _("Skill list not found")}, status=404)
+
+    # Get field data
+    field_name = request.POST.get("name")
+    field_value = request.POST.get("value")
+    if not field_name or field_value is None:
+        return JsonResponse({"message": _("Invalid field data")}, status=400)
+
+    # Process field update
+    try:
+        result = _update_skilllist_field(skilllist, field_name, field_value)
+        if not result["success"]:
+            return JsonResponse({"message": result["message"]}, status=400)
+
+        # Save changes
+        skilllist.save()
+        logger.info(
+            "Skilllist %s field '%s' updated to '%s' by %s",
+            skilllist.name,
+            field_name,
+            field_value,
+            request.user.username,
+        )
+        return JsonResponse({"message": result["message"]}, status=200)
+
+    except ValidationError as e:
+        return JsonResponse({"message": str(e)}, status=400)
+    # pylint: disable=broad-except
+    except Exception as e:
+        logger.error("Error updating skilllist: %s", str(e))
+        return JsonResponse(
+            {"message": _("An error occurred while updating")}, status=500
+        )
+
+
+def _update_skilllist_field(skilllist, field_name, field_value):
+    """Helper function to update a specific field of a skilllist"""
+    if field_name == "name":
+        return _update_name_field(skilllist, field_value)
+    if field_name == "active":
+        return _update_active_field(skilllist, field_value)
+    if field_name == "ordering":
+        return _update_ordering_field(skilllist, field_value)
+    return {"success": False, "message": _("Invalid field name")}
+
+
+def _update_name_field(skilllist, field_value):
+    """Update the name field of a skilllist"""
+    if not field_value.strip():
+        return {"success": False, "message": _("Name cannot be empty")}
+
+    name = field_value.strip()
+    names = SkillList.objects.filter(name__iexact=name)
+    if names.exists() and names.first().pk != skilllist.pk:
+        return {
+            "success": False,
+            "message": _("Skill list with this name already exists"),
+        }
+
+    skilllist.name = name
+    return {"success": True, "message": _("Name updated successfully")}
+
+
+def _update_active_field(skilllist, field_value):
+    """Update the active field of a skilllist"""
+    if field_value.lower() in ["true", "1", "yes", "on"]:
+        skilllist.active = True
+    elif field_value.lower() in ["false", "0", "no", "off"]:
+        skilllist.active = False
+    else:
+        return {"success": False, "message": _("Invalid active value")}
+
+    return {"success": True, "message": _("Active status updated successfully")}
+
+
+def _update_ordering_field(skilllist, field_value):
+    """Update the ordering field of a skilllist"""
+    try:
+        ordering_value = int(field_value)
+        if ordering_value < 0 or ordering_value >= 1000:
+            return {
+                "success": False,
+                "message": _("Ordering must be between 0 and 999"),
+            }
+        skilllist.ordering = ordering_value
+        return {"success": True, "message": _("Ordering updated successfully")}
+    except ValueError:
+        return {"success": False, "message": _("Ordering must be a valid number")}

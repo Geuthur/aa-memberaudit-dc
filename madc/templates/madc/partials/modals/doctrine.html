@@ -1,0 +1,32 @@
+{% load i18n %}
+{% load static %}
+{% load humanize %}
+{% load evelinks %}
+
+{% if doctrine %}
+    <div>
+        <h4 id="modal-title">
+            {{ doctrine.name }} ⋗ {% translate "Doctrine Skills" %}
+        </h4>
+    </div>
+    <div class="card bg-secondary rounded mb-3">
+        {% for skill_name, required_level in doctrine.get_skills.items %}
+            <div class="w-100">
+                <div class="d-flex flex-row justify-content-between align-items-center text-nowrap my-1 mx-3">
+                    <span class="flex-grow-1 text-nowrap">{{ skill_name }}</span>
+                    <div class="text-no-wrap">
+                        {% for level in "12345" %}
+                            {% if forloop.counter <= required_level %}
+                                <i class="fa-solid fa-circle text-warning"></i>
+                            {% else %}
+                                <i class="fa-regular fa-circle text-white"></i>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    {% trans "No data found..." %}
+{% endif %}

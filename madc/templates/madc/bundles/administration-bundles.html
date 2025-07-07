@@ -1,3 +1,10 @@
 {% load sri %}
 
+{% include 'bundles/datatables-css-bs5.html' %}
+{% include 'bundles/datatables-js-bs5.html' %}
+
+{% sri_static 'madc/libs/x-editable/1.5.8/css/bootstrap-editable.css' %}
+{% sri_static 'madc/libs/x-editable/1.5.8/js/bootstrap-editable.js' %}
 {% sri_static "madc/js/modals/skilllist-delete.js" %}
+{% sri_static 'madc/js/modal-system.js' %}
+{% sri_static "madc/js/manage.js" %}
