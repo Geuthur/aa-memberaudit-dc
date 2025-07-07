@@ -20,17 +20,23 @@
 </div>
 <div class="card-body rounded-bottom">
     <div class="mb-3">
-        <label for="category-filter" class="form-label">{% translate "Filter by Category" %}</label>
-        <select id="category-filter" class="form-select" style="width: 200px;">
-            <option value="">{% translate "All Categories" %}</option>
-        </select>
+        <div id="category-filter" class="d-flex flex-wrap gap-2">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="all-categories" checked>
+                <label class="form-check-label" for="all-categories">
+                    {% translate "All Categories" %}
+                </label>
+            </div>
+        </div>
     </div>
     {% include 'madc/partials/table/skill-checker.html' %}
 </div>
 {% endblock %}
 
 {% block extra_javascript %}
+    {% include 'bundles/datatables-css-bs5.html' %}
     {% include 'bundles/datatables-js-bs5.html' %}
+    {% include "bundles/filterdropdown-js.html" %}
     {% include 'bundles/clipboard-js.html' %}
     {% include 'madc/bundles/settings-bundles.html' %}
     {% include 'madc/bundles/skill-checker-bundles.html' %}

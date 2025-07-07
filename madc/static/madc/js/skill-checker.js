@@ -1,4 +1,4 @@
-/* global VoWSettings, allTableData, tableSkilllist, populateCategoryFilter, filterByCategory, filterDoctrineItems, ClipboardJS */
+/* global VoWSettings, allTableData, tableSkilllist, populateCategoryFilter, filterByCategories, filterDoctrineItems, ClipboardJS */
 
 // Global variables for cross-file access
 window.allTableData = [];
@@ -87,12 +87,6 @@ $(document).ready(function() {
 
     // Make tableSkilllist globally accessible
     window.tableSkilllist = tableSkilllist;
-
-    // Category filter change handler
-    $('#category-filter').on('change', function() {
-        const selectedCategory = $(this).val();
-        filterByCategory(selectedCategory);
-    });
 
     // Listen for search input changes
     $(document).on('keyup', '.dataTables_filter input', function() {
