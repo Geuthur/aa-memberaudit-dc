@@ -2,7 +2,7 @@
 {% load static %}
 
 <script type="application/javascript">
-    let VoWSettings = {
+    let MaDCSettings = {
         csrfToken: '{% csrf_token %}',
         urls: {
             skillChecker: '{% url "madc:api:get_doctrines" character_id=character_id %}',

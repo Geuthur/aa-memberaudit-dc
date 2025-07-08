@@ -73,7 +73,6 @@ pip install aa-memberaudit-dc
 
 Configure your Alliance Auth settings (`local.py`) as follows:
 
-- Add `'allianceauth.corputils',` to `INSTALLED_APPS`
 - Add `'eveuniverse',` to `INSTALLED_APPS`
 - Add `'memberaudit',` to `INSTALLED_APPS`
 - Add `'madc',` to `INSTALLED_APPS`

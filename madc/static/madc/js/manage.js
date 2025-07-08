@@ -1,12 +1,12 @@
-/* global VoWSettings */
+/* global MaDCSettings */
 
 $(document).ready(function() {
-    // Extract CSRF token from VoWSettings.csrfToken HTML
+    // Extract CSRF token from MaDCSettings.csrfToken HTML
     function getCsrfToken() {
-        if (VoWSettings && VoWSettings.csrfToken) {
+        if (MaDCSettings && MaDCSettings.csrfToken) {
             // Parse the HTML to get the value attribute
             const parser = new DOMParser();
-            const doc = parser.parseFromString(VoWSettings.csrfToken, 'text/html');
+            const doc = parser.parseFromString(MaDCSettings.csrfToken, 'text/html');
             const input = doc.querySelector('input[name="csrfmiddlewaretoken"]');
             return input ? input.value : '';
         }
@@ -19,7 +19,7 @@ $(document).ready(function() {
     // Initialisierung der DataTable
     const tableSkilllist = skillListTableVar.DataTable({
         ajax: {
-            url: VoWSettings.urls.administration,
+            url: MaDCSettings.urls.administration,
             type: 'GET',
             dataSrc: function (data) {
                 return Object.values(data);

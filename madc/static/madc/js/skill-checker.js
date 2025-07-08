@@ -1,4 +1,4 @@
-/* global VoWSettings, allTableData, tableSkilllist, populateCategoryFilter, filterByCategories, filterDoctrineItems, ClipboardJS */
+/* global MaDCSettings, allTableData, tableSkilllist, populateCategoryFilter, filterByCategories, filterDoctrineItems, ClipboardJS */
 
 // Global variables for cross-file access
 window.allTableData = [];
@@ -9,7 +9,7 @@ $(document).ready(function() {
 
     const tableSkilllist = skillListTableVar.DataTable({
         ajax: {
-            url: VoWSettings.urls.skillChecker,
+            url: MaDCSettings.urls.skillChecker,
             type: 'GET',
             dataSrc: function (data) {
                 const filteredData = data.filter(character => {

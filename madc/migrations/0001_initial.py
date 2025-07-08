@@ -30,7 +30,10 @@ class Migration(migrations.Migration):
             ],
             options={
                 "permissions": (
-                    ("basic_access", "Can access this app, Voices of War."),
+                    (
+                        "basic_access",
+                        "Can access this app, Memberaudit Doctrine Checker.",
+                    ),
                     ("manage_access", "Has access to moderation tools"),
                     ("admin_access", "Has access to all Administration tools"),
                 ),
