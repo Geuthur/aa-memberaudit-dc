@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.2.2] - 2025-07-08
+
+### Changed
+
+- Clean Code from Old Stuff
+
 ## [0.2.1] - 2025-07-07
 
 ### Changed

@@ -20,4 +20,4 @@ AA_MADC_APP_NAME = clean_setting("AA_DC_APP_NAME", "Doctrine Checker")
 
 # Task Settings
 # Global timeout for tasks in seconds to reduce task accumulation during outages.
-AA_MADC_TASKS_TIME_LIMIT = clean_setting("TAXSYSTEM_TASKS_TIME_LIMIT", 7200)
+AA_MADC_TASKS_TIME_LIMIT = clean_setting("AA_MADC_TASKS_TIME_LIMIT", 7200)

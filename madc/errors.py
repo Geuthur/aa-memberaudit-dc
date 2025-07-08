@@ -1,4 +1,4 @@
-"""Custom exceptions for Voices of War."""
+"""Custom exceptions for Memberaudit Doctrine Checker."""
 
 # Alliance Auth
 from esi.errors import TokenError

@@ -1,6 +1,6 @@
 $(document).ready(() => {
     /* global tableSkilllist */
-    /* global VoWSettings */
+    /* global MaDCSettings */
     const modalRequestApprove = $('#skillplan-delete');
 
     // Approve Request Modal
