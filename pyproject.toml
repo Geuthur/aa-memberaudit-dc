@@ -6,7 +6,7 @@ requires = [
 
 [project]
 name = "aa-memberaudit-dc"
-description = "Doctrine Checker Addon module for AllianceAuth"
+description = "Doctrine Checker Addon module for Memberaudit"
 readme = "README.md"
 license = { file = "LICENSE" }
 authors = [
