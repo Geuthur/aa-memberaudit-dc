@@ -36,12 +36,12 @@ dependencies = [
     "aa-memberaudit>=3.15",
     "allianceauth>=4.6,<5",
     "allianceauth-app-utils>=1.26",
+    "django-esi>=7.0.1",
     "django-eveuniverse>=1.5.7",
     "django-ninja",
 ]
 optional-dependencies.tests-allianceauth-latest = [
     "coverage",
-    "django-webtest",
     "factory-boy",
 ]
 urls.Changelog = "https://github.com/Geuthur/aa-memberaudit-dc/blob/master/CHANGELOG.md"

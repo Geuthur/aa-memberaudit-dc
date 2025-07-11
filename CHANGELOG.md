@@ -1,5 +1,15 @@
 # Changelog
 
+# [0.2.3] - 2025-07-11
+
+## Added
+
+- `django-esi` dependency
+
+## Changed
+
+- Use `django-esi` new User Agent Guidelines
+
 ## [0.2.2] - 2025-07-08
 
 ### Changed
