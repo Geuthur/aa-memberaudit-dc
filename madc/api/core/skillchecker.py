@@ -13,17 +13,21 @@ from django.utils.translation import gettext_lazy as _
 
 # Alliance Auth
 from allianceauth.authentication.models import UserProfile
+from allianceauth.eveonline.models import EveCorporationInfo
 from allianceauth.services.hooks import get_extension_logger
 
 # Alliance Auth (External Libs)
 from app_utils.logging import LoggerAddTag
+from memberaudit.models import Character
 
 # AA Memberaudit Doctrine Checker
 from madc import __title__, providers
 from madc.api import schema
 from madc.api.helpers import (
+    _collect_user_doctrines,
     generate_button,
     get_alts_queryset,
+    get_corporation,
     get_main_character,
     get_manage_permission,
 )
@@ -48,7 +52,7 @@ class DoctrineCheckerApiEndpoints:
             response, main = get_main_character(request, character_id)
 
             if not response:
-                return 403, _("Permission Denied")
+                return 403, str(_("Permission Denied"))
 
             characters = get_alts_queryset(main)
 
@@ -83,6 +87,114 @@ class DoctrineCheckerApiEndpoints:
 
         # pylint: disable=too-many-locals
         @api.get(
+            "{corporation_id}/doctrines/view/corporation/",
+            response={200: list[schema.CorporationDoctrines], 403: str},
+            tags=self.tags,
+        )
+        def get_corporation_doctrines(request, corporation_id: int):
+            if corporation_id == 0:
+                corporation_id = request.user.profile.main_character.corporation_id
+            perm, __ = get_corporation(request, corporation_id)
+
+            if not perm:
+                return 403, str(_("Permission Denied"))
+
+            # Get all characters in the corporation
+            corporation_characters = Character.objects.filter(
+                eve_character__corporation_id=corporation_id,
+            ).select_related("eve_character")
+
+            # Active skill lists are the ones that are visible in the UI
+            active_skilllists = list(
+                SkillList.objects.filter(active=1).values_list("name", flat=True)
+            )
+
+            # Helper function to create character data
+            def create_character_data(character):
+                return {
+                    "character_name": character.character_name,
+                    "character_id": character.character_id,
+                    "corporation_id": character.corporation_id,
+                    "corporation_name": character.corporation_name,
+                    "alliance_id": character.alliance_id,
+                    "alliance_name": character.alliance_name,
+                }
+
+            # Collect users and their main characters
+            users = set()
+            main_characters = {}
+            all_characters = {}
+
+            for member in corporation_characters:
+                # Store all character data for later use
+                all_characters[member.eve_character.character_id] = (
+                    create_character_data(member.eve_character)
+                )
+
+                # Process users with main characters
+                if (
+                    member.user
+                    and hasattr(member.user, "profile")
+                    and member.user.profile.main_character
+                ):
+
+                    users.add(member.user)
+                    main_char = member.user.profile.main_character
+
+                    # Only add if we haven't processed this main character yet
+                    if main_char.character_id not in main_characters:
+                        main_characters[main_char.character_id] = {
+                            "user_id": member.user.id,
+                            "character": create_character_data(main_char),
+                            "alts": [],
+                            "doctrines": {},
+                        }
+
+            # Get skill lists for all users
+            skilllists = providers.skills.get_users_skill_list(users)
+            corp_character_ids = set(all_characters.keys())
+
+            # Process skill data for each user
+            for user_id, corp_data in skilllists.items():
+                if not ("data" in corp_data and "skills_list" in corp_data["data"]):
+                    continue
+
+                # Filter to corporation characters only
+                corp_skills_list = {
+                    char_key: char_data
+                    for char_key, char_data in corp_data["data"]["skills_list"].items()
+                    if char_data["character_id"] in corp_character_ids
+                }
+
+                if not corp_skills_list:
+                    continue
+
+                # Find the main character for this user
+                main_char_id = None
+                for char_id, char_data in main_characters.items():
+                    if char_data["user_id"] == user_id:
+                        main_char_id = char_id
+                        break
+
+                if main_char_id and main_char_id in main_characters:
+                    # Collect doctrines
+                    user_doctrines = _collect_user_doctrines(
+                        corp_skills_list, active_skilllists
+                    )
+                    main_characters[main_char_id]["doctrines"] = user_doctrines
+
+                    # Collect alts (all corp characters except main)
+                    alts = [
+                        all_characters[char_data["character_id"]]
+                        for char_data in corp_skills_list.values()
+                        if char_data["character_id"] != main_char_id
+                    ]
+                    main_characters[main_char_id]["alts"] = alts
+
+            return list(main_characters.values())
+
+        # pylint: disable=too-many-locals
+        @api.get(
             "{character_id}/doctrines/{pk}/",
             response={200: Any, 403: str},
             tags=self.tags,
@@ -93,7 +205,7 @@ class DoctrineCheckerApiEndpoints:
             response, character = get_main_character(request, character_id)
 
             if not response:
-                return 403, _("Permission Denied")
+                return 403, str(_("Permission Denied"))
 
             # Get the skill lists for the main character
             user_skilllists = providers.skills.get_user_skill_list(
@@ -149,7 +261,7 @@ class DoctrineCheckerApiEndpoints:
             perms = request.user.has_perm("madc.basic_access")
 
             if not perms:
-                return 403, _("Permission Denied")
+                return 403, str(_("Permission Denied"))
 
             try:
                 skilllist = SkillList.objects.get(pk=pk)
@@ -175,7 +287,7 @@ class DoctrineCheckerApiEndpoints:
             response, __ = get_manage_permission(request, character_id)
 
             if not response:
-                return 403, _("Permission Denied")
+                return 403, str(_("Permission Denied"))
 
             skilllist_obj = SkillList.objects.all().order_by("ordering", "name")
 
@@ -294,6 +406,58 @@ class DoctrineCheckerApiEndpoints:
                         "alliance_name": character.main_character.alliance_name,
                     }
                     output.append({"character": character_data})
+                except AttributeError:
+                    continue
+
+            return output
+
+        @api.get(
+            "corporation/overview/",
+            response={200: list[schema.CorporationOverview], 403: str},
+            tags=self.tags,
+        )
+        def get_corporation_overview(request):
+            corps_visible = SkillList.objects.visible_eve_corporations(request.user)
+
+            if corps_visible is None:
+                return 403, "Permission Denied"
+
+            # Collect unique corporation IDs from visible corporations
+            corp_ids = corps_visible.distinct().values_list("corporation_id", flat=True)
+
+            # Get existing corporation IDs from characters
+            existing_corp_ids = (
+                Character.objects.filter(
+                    eve_character__corporation_id__in=corp_ids,
+                )
+                .select_related(
+                    "eve_character",
+                )
+                .distinct()
+                .values_list("eve_character__corporation_id", flat=True)
+            )
+
+            # Get Corporations from Existing Members
+            corps = EveCorporationInfo.objects.filter(
+                corporation_id__in=existing_corp_ids,
+            )
+
+            output = []
+
+            for corporation in corps:
+                # pylint: disable=broad-exception-caught
+                try:
+                    corporation_data = {
+                        "corporation_id": corporation.corporation_id,
+                        "corporation_name": corporation.corporation_name,
+                        "alliance_id": getattr(
+                            corporation.alliance, "alliance_id", None
+                        ),
+                        "alliance_name": getattr(
+                            corporation.alliance, "alliance_name", "N/A"
+                        ),
+                    }
+                    output.append({"corporation": corporation_data})
                 except AttributeError:
                     continue
 

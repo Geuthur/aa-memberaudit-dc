@@ -18,6 +18,11 @@ urlpatterns = [
         name="checker",
     ),
     path(
+        "<int:corporation_id>/view/corporation_checker/",
+        views.corporation_checker,
+        name="corporation_checker",
+    ),
+    path(
         "<int:character_id>/view/add/",
         views.doctrine,
         name="add_doctrine",
@@ -26,6 +31,11 @@ urlpatterns = [
         "<int:character_id>/view/overview/",
         views.overview,
         name="overview",
+    ),
+    path(
+        "<int:character_id>/view/corporation_overview/",
+        views.corporation_overview,
+        name="corporation_overview",
     ),
     path(
         "<int:character_id>/view/administration/",

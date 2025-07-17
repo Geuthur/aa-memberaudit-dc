@@ -9,6 +9,7 @@ from django.urls import reverse
 from django.utils.html import format_html
 
 # Alliance Auth
+from allianceauth.authentication.models import CharacterOwnership
 from allianceauth.services.hooks import get_extension_logger
 
 # Alliance Auth (External Libs)
@@ -139,9 +140,6 @@ class SkillListHandler:
                     skill_list_misc[skill_list_name]["category"]
                 )
 
-                # TODO: Make a Helper to Handle HTML Formatting
-                # Add Modal Overview for missing skills for each Character
-                # Add HTML to each individual doctrine
                 has_missing_skills = bool(
                     character_data["doctrines"][skill_list_name]["skills"]
                 )
@@ -155,6 +153,41 @@ class SkillListHandler:
                 )
         return skill_dict
 
+    def get_users_skill_list(self, users):
+        """Get the skill list for multiple users."""
+        linked_characters = CharacterOwnership.objects.filter(user__in=users).values(
+            "user_id", "character__character_name", "character__character_id"
+        )
+
+        skill_lists = SkillList.objects.all().order_by("ordering", "name")
+        skill_list_hash = self._get_skill_list_hash(skill_lists.values_list("name"))
+        cached_header = cache.get(SKILL_CACHE_HEADERS_KEY, False)
+        skill_lists_up_to_date = cached_header == skill_list_hash
+
+        user_chars = {}
+        for u in linked_characters:
+            if u["user_id"] not in user_chars:
+                user_chars[u["user_id"]] = {"chars": []}
+            user_chars[u["user_id"]]["chars"].append(u["character__character_id"])
+
+        for uid, c in user_chars.items():
+            if skill_lists_up_to_date:
+                cache_key = self._build_account_cache_key(c["chars"])
+                cached_skills = cache.get(cache_key, False)
+
+                if cached_skills is not False:  # check if cached at all?
+                    cached_skills = json.loads(cached_skills)
+                    if cached_skills.get("doctrines", False) != skill_list_hash:
+                        c["data"] = self.get_user_skill_list(uid)
+                    else:
+                        c["data"] = cached_skills
+                else:
+                    c["data"] = self.get_user_skill_list(uid)
+            else:
+                c["data"] = self.get_user_skill_list(uid)
+
+        return user_chars
+
     def get_user_skill_list(self, user_id: int, force_rebuild=True) -> dict:
         """Get the skill list for a user."""
         linked_characters = (
@@ -162,11 +195,13 @@ class SkillListHandler:
             .character_ownerships.all()
             .values_list("character__character_id", flat=True)
         )
+
         skill_lists = SkillList.objects.all().order_by("ordering", "name")
         skill_list_hash = self._get_skill_list_hash(skill_lists.values_list("name"))
-        account_key = self._build_account_cache_key(linked_characters)
         cached_header = cache.get(SKILL_CACHE_HEADERS_KEY, False)
         skill_lists_up_to_date = cached_header == skill_list_hash
+
+        account_key = self._build_account_cache_key(linked_characters)
 
         if skill_lists_up_to_date and not force_rebuild:
             cached_skills = cache.get(account_key, False)

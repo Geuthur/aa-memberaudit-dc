@@ -36,11 +36,12 @@ ______________________________________________________________________
     - Copy Clipboard `missing` Skills
     - Search for specific Doctrine per Search Field
     - Filter by Category example: (Capital, Black OP Group, Mining)
+    - Account Overview
+    - Corporation Overview
   - Doctrine Administration
     - Simple Add Skill-Plans per Copy/Paste via Ingame Plans (copy to clipboard)
     - Language Localized Supported (Test Phase)
     - Doctrine Overview
-    - Account Overview
     - Order-Weight
 
 ## Upcoming<a name="upcoming"></a>
