@@ -39,29 +39,29 @@ $(document).ready(function() {
                 data: 'character',
                 render: function (data, type, row) {
                     if (type === 'display') {
-                        let altsContent = '';
+                        let infoIcon = '';
 
                         if (row.alts && row.alts.length > 0) {
-                            altsContent = row.alts.map(alt =>
+                            const altsContent = row.alts.map(alt =>
                                 `<div class="d-flex align-items-center mb-1">
                                     <img width="24" height="24" class="rounded-circle me-2" src="https://images.evetech.net/characters/${alt.character_id}/portrait?size=256">
                                     <span>${alt.character_name}</span>
                                 </div>`
                             ).join('');
-                        } else {
-                            altsContent = '<span class="text-muted">No alts</span>';
-                        }
 
-                        // Escape HTML properly for data attribute
-                        const escapedContent = altsContent.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+                            // Escape HTML properly for data attribute
+                            const escapedContent = altsContent.replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+
+                            infoIcon = `<i class="fa-solid fa-circle-question fa-fw ms-2 alt-info-icon"
+                                          data-character-id="${data.character_id}"
+                                          data-alts-content="${escapedContent}"
+                                          style="cursor: pointer;"></i>`;
+                        }
 
                         return `
                             <img width="32" height="32" class="rounded-circle" src="https://images.evetech.net/characters/${data.character_id}/portrait?size=256">
                             ${data.character_name}
-                            <i class="fa-solid fa-circle-question fa-fw ms-2 alt-info-icon"
-                               data-character-id="${data.character_id}"
-                               data-alts-content="${escapedContent}"
-                               style="cursor: pointer;"></i>
+                            ${infoIcon}
                         `;
                     }
                     // For sorting/filtering, return character name and alt names
