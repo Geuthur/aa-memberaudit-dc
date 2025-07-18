@@ -96,7 +96,7 @@ def get_alts_queryset(main_char):
 
 
 def generate_button(pk: int, template, queryset, settings, request) -> mark_safe:
-    """Generate a html button for the tax system"""
+    """Generate a html button with the given template and queryset."""
     return format_html(
         render_to_string(
             template,

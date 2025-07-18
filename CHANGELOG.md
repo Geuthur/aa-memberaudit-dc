@@ -6,6 +6,10 @@
 
 - Corporation Overview
 
+### Fixed
+
+- API schema Issue with 403 errors
+
 # [0.2.3] - 2025-07-11
 
 ## Added
