@@ -51,6 +51,24 @@ def checker(request: WSGIRequest, character_id=None):
 
 
 @login_required
+@permissions_required(["madc.corp_access"])
+def corporation_checker(request: WSGIRequest, corporation_id=None):
+    character_id = request.user.profile.main_character.character_id
+    if corporation_id is None:
+        corporation_id = request.user.profile.main_character.corporation_id
+
+    context = {
+        "title": _("Doctrine Checker"),
+        "character_id": character_id,
+        "corporation_id": corporation_id,
+        "forms": {
+            "skilllist": forms.SkillListForm(),
+        },
+    }
+    return render(request, "madc/corporation.html", context=context)
+
+
+@login_required
 @permissions_required(["madc.basic_access"])
 def overview(request: WSGIRequest, character_id=None):
     if character_id is None:
@@ -61,6 +79,19 @@ def overview(request: WSGIRequest, character_id=None):
         "character_id": character_id,
     }
     return render(request, "madc/admin/overview.html", context=context)
+
+
+@login_required
+@permissions_required(["madc.corp_access"])
+def corporation_overview(request: WSGIRequest, character_id=None):
+    if character_id is None:
+        character_id = request.user.profile.main_character.character_id
+
+    context = {
+        "title": _("Corporation Overview"),
+        "character_id": character_id,
+    }
+    return render(request, "madc/admin/corporation_overview.html", context=context)
 
 
 @login_required

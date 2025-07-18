@@ -5,7 +5,7 @@ from django.utils.html import format_html
 from django.utils.safestring import mark_safe
 
 # Alliance Auth
-from allianceauth.eveonline.models import EveCharacter
+from allianceauth.eveonline.models import EveCharacter, EveCorporationInfo
 from allianceauth.services.hooks import get_extension_logger
 
 # Alliance Auth (External Libs)
@@ -68,6 +68,20 @@ def get_main_character(request, character_id):
     return perms, main_char
 
 
+def get_corporation(request, corporation_id) -> tuple[bool, EveCorporationInfo | None]:
+    perms = True
+    try:
+        corporation = EveCorporationInfo.objects.get(corporation_id=corporation_id)
+    except ObjectDoesNotExist:
+        return False, None
+
+    # check access
+    visible = models.SkillList.objects.visible_eve_corporations(request.user)
+    if corporation not in visible:
+        perms = False
+    return perms, corporation
+
+
 def get_alts_queryset(main_char):
     try:
         linked_characters = (
@@ -82,7 +96,7 @@ def get_alts_queryset(main_char):
 
 
 def generate_button(pk: int, template, queryset, settings, request) -> mark_safe:
-    """Generate a html button for the tax system"""
+    """Generate a html button with the given template and queryset."""
     return format_html(
         render_to_string(
             template,
@@ -94,3 +108,34 @@ def generate_button(pk: int, template, queryset, settings, request) -> mark_safe
             request=request,
         )
     )
+
+
+def _collect_user_doctrines(skills_list: dict, active_skilllists) -> dict:
+    """Collect all doctrines for a user across all their characters."""
+    user_doctrines = {}
+
+    # Process each character's skill data
+    for __, character_data in skills_list.items():
+        if "doctrines" not in character_data:
+            continue
+
+        for doctrine_key, doctrine_data in character_data["doctrines"].items():
+            # Filter out inactive skill lists
+            if doctrine_key not in active_skilllists:
+                continue
+
+            if doctrine_key not in user_doctrines:
+                user_doctrines[doctrine_key] = doctrine_data
+            else:
+                # Take the best result (fewer missing skills) across all chars
+                # Empty skills dict means all skills are trained
+                current_missing_count = len(doctrine_data.get("skills", {}))
+                existing_missing_count = len(
+                    user_doctrines[doctrine_key].get("skills", {})
+                )
+
+                # Prefer the character with fewer missing skills (0 is best)
+                if current_missing_count < existing_missing_count:
+                    user_doctrines[doctrine_key] = doctrine_data
+
+    return user_doctrines

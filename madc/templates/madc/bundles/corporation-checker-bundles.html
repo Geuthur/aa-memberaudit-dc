@@ -1,0 +1,11 @@
+{% load i18n %}
+{% load static %}
+{% load sri %}
+
+<script>
+    MaDCSettings.urls.skillChecker = '{% url "madc:api:get_corporation_doctrines" corporation_id=corporation_id %}';
+</script>
+
+{% sri_static "madc/js/skill-system.js" %}
+{% sri_static "madc/js/corporation-checker.js" %}
+{% sri_static 'madc/js/modal-system.js' %}

@@ -16,7 +16,7 @@
 {% block view_block %}
 
 <div class="bg-primary rounded-top px-2 py-2 mb-4">
-    <h3 class="text-white">{% translate "Account Overview" %}</h3>
+    <h3 class="text-white">{% translate "Corporation Overview" %}</h3>
 </div>
 <div class="card-body">
     <div class="row">
@@ -24,8 +24,8 @@
             <br>
             <thead>
                 <th class="col-portrait" style="width: 10%;"></th>
-                <th class="col-user" style="width: 20%;">Character</th>
                 <th class="col-group" style="width: 20%;">Corporation</th>
+                <th class="col-ally-portrait" style="width: 10%;"></th>
                 <th class="col-group" style="width: 20%;">Alliance</th>
                 <th class="col-actions" style="width: 10%;">{% trans "Actions" %}</th>
             </thead>
@@ -41,8 +41,8 @@
 {% include 'bundles/datatables-js-bs5.html' %}
     <script type="application/javascript">
         $(document).ready(function() {
-            const AdminUrl = "{% url 'madc:api:get_character_overview' %}"
-            let CharacterOverviewUrl = "{% url 'madc:checker' character_id=1337 %}"
+            const AdminUrl = "{% url 'madc:api:get_corporation_overview' %}"
+            let CorporationOverviewUrl = "{% url 'madc:corporation_checker' corporation_id=1337 %}"
             const accountOverviewTableVar = $('#accounts-overview-table');
             // Initialisierung der DataTable
             const tableAccount = accountOverviewTableVar.DataTable({
@@ -58,17 +58,24 @@
                     }
                 },
                 columns: [
-                    { data: 'character.character_id' },
-                    { data: 'character.character_name' },
-                    { data: 'character.corporation_name' },
-                    { data: 'character.alliance_name' },
+                    { data: 'corporation.corporation_id' },
+                    { data: 'corporation.corporation_name' },
+                    { data: 'corporation.alliance_id' },
+                    { data: 'corporation.alliance_name' },
                     { data: 'actions' },
                 ],
                 columnDefs: [
                     {
                         targets: 0,
                         render: function (data, type, row) {
-                            return '<img src="https://images.evetech.net/characters/' + row.character.character_id + '/portrait?size=32" class="rounded-circle" title="' + row.character.character_name + '" height="30" data-tooltip-toggle="char-tooltip" data-bs-placement="top">';
+                            return '<img src="https://images.evetech.net/corporations/' + row.corporation.corporation_id + '/logo?size=32" class="rounded-circle" title="' + row.corporation.corporation_name + '" height="30" data-tooltip-toggle="madc-tooltip" data-bs-placement="top">';
+                        },
+                        sortable: false,
+                    },
+                    {
+                        targets: 2,
+                        render: function (data, type, row) {
+                            return '<img src="https://images.evetech.net/alliances/' + row.corporation.alliance_id + '/logo?size=32" class="rounded-circle" title="' + row.corporation.alliance_name + '" height="30" data-tooltip-toggle="madc-tooltip" data-bs-placement="top">';
                         },
                         sortable: false,
                     },
@@ -77,11 +84,11 @@
                         className: 'text-end',
                         sortable: false,
                         render: function (data, type, row) {
-                            var OverviewUrl = CharacterOverviewUrl.replace('1337', row.character.character_id);
+                            var OverviewUrl = CorporationOverviewUrl.replace('1337', row.corporation.corporation_id);
                             return `<a href="${OverviewUrl}">
                                 <button class="btn btn-primary btn-sm"
                                     title="{% trans "Show" %}"
-                                    data-tooltip-toggle="char-tooltip"
+                                    data-tooltip-toggle="madc-tooltip"
                                     data-bs-placement="left"
                                 >
                                     <i class="fa-solid fa-eye"></i>
