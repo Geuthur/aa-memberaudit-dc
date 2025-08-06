@@ -1,5 +1,11 @@
 # Changelog
 
+# [0.2.5] - 2025-08.06
+
+### Fixed
+
+- Wrong TemplateTag
+
 # [0.2.4] - 2025-07-17
 
 ### Added
