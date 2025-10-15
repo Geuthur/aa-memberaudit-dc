@@ -1,12 +1,24 @@
 # Changelog
 
-# [0.2.5] - 2025-08.06
+## [0.2.6] - 2025-10-15
+
+### Added
+
+- Makefile System
+- Automatic Release Workflow
+
+### Changed
+
+- Updated Translations
+- Updated Dependencies
+
+## [0.2.5] - 2025-08.06
 
 ### Fixed
 
 - Wrong TemplateTag
 
-# [0.2.4] - 2025-07-17
+## [0.2.4] - 2025-07-17
 
 ### Added
 
@@ -16,7 +28,7 @@
 
 - API schema Issue with 403 errors
 
-# [0.2.3] - 2025-07-11
+## [0.2.3] - 2025-07-11
 
 ## Added
 

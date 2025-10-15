@@ -6,8 +6,9 @@
 ![Django](https://img.shields.io/pypi/frameworkversions/django/aa-memberaudit-dc.svg?label=django)
 [![pre-commit.ci status](https://results.pre-commit.ci/badge/github/Geuthur/aa-memberaudit-dc/master.svg)](https://results.pre-commit.ci/latest/github/Geuthur/aa-memberaudit-dc/master)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
-[![Tests](https://github.com/Geuthur/aa-memberaudit-dc/actions/workflows/autotester.yml/badge.svg)](https://github.com/Geuthur/aa-memberaudit-dc/actions/workflows/autotester.yml)
+[![Checks](https://github.com/Geuthur/aa-memberaudit-dc/actions/workflows/autotester.yml/badge.svg)](https://github.com/Geuthur/aa-memberaudit-dc/actions/workflows/autotester.yml)
 [![codecov](https://codecov.io/gh/Geuthur/aa-memberaudit-dc/graph/badge.svg?token=YfJSsDECUm)](https://codecov.io/gh/Geuthur/aa-memberaudit-dc)
+[![Translation status](https://weblate.voices-of-war.de/widget/allianceauth/aa-memberaudit-doctrine-checker/svg-badge.svg)](https://weblate.voices-of-war.de/engage/allianceauth/)
 
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/W7W810Q5J4)
 
@@ -26,6 +27,8 @@ ______________________________________________________________________
     - [Step 4 - Migration to AA](#step4)
     - [Step 5 - Setting up Permissions](#step5)
     - [Step 6 - (Optional) Setting up Compatibilies](#step6)
+  - [Translations](#translations)
+  - [Contributing](#contributing)
 
 ## Features<a name="features"></a>
 
@@ -124,8 +127,13 @@ The Following Settings can be setting up in the `local.py`
 
 - AA_DC_APP_NAME: `"YOURNAME"` - Set the name of the APP
 
-> [!NOTE]
-> Contributing
-> You want to improve the project?
-> Just Make a [Pull Request](https://github.com/Geuthur/aa-memberaudit-dc/pulls) with the Guidelines.
-> We Using pre-commit
+## Translations<a name="translations"></a>
+
+[![Translations](https://weblate.voices-of-war.de/widget/allianceauth/aa-memberaudit-doctrine-checker/multi-auto.svg)](https://weblate.voices-of-war.de/engage/allianceauth/)
+
+Help us translate this app into your language or improve existing translations. Join our team!"
+
+## Contributing <a name="contributing"></a>
+
+You want to improve the project?
+Please ensure you read the [contribution guidelines](https://github.com/Geuthur/aa-memberaudit-dashboard/blob/master/CONTRIBUTING.md)
