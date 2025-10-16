@@ -6,10 +6,8 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: AA Memberaudit Doctrine Checker 0.2.6
-"
-"Report-Msgid-Bugs-To: https://github.com/Geuthur/aa-memberaudit-dc/issues
-"
+"Project-Id-Version: AA Memberaudit Doctrine Checker 0.2.6"
+"Report-Msgid-Bugs-To: https://github.com/Geuthur/aa-memberaudit-dc/issues"
 "POT-Creation-Date: 2025-10-15 14:41+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
