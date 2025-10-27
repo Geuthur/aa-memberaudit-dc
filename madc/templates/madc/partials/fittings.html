@@ -1,0 +1,64 @@
+{% load i18n %}
+{% load sri %}
+
+{% sri_static "madc/css/progress.css" %}
+
+<div class="card card-primary mb-3">
+    <div class="card-header">
+        <div class="card-title mb-0">
+            {% translate "Character Base Skill Checks" %}
+        </div>
+    </div>
+
+    <div class="card-body">
+        <div class="progress h-100 mb-3">
+                <div class="progress-bar progress-bar-striped progress-bar-animated bg-warning">
+                    <span>
+                        {% translate "Basic skills required to <b>sit in the hull</b> and <b>fit the modules</b>." %}
+                    </span>
+                    <span>
+                        {% translate "Extra skills <b>will</b> be required to use this fitting properly in fleets" %}.
+                    </span>
+                </div>
+        </div>
+
+        {% for c, d in skills.chars.items %}
+            <p>
+                {{ c }}
+                <span class="float-end">
+                    <span class="badge {% if d.doctrines.fit.skills|length > 0 %}bg-danger{% else %}bg-success{% endif %}">
+                        <span class="fa-solid {% if d.doctrines.fit.skills|length > 0 %}fa-times{% else %}fa-check{% endif %} fa-fw"></span>
+                    </span>
+                </span>
+            </p>
+        {% endfor %}
+    </div>
+</div>
+
+<div class="card card-primary mb-3">
+    <div class="card-header">
+        <div class="card-title mb-0">
+            {% translate "Base Skills Required" %}
+        </div>
+    </div>
+
+    <div class="card-body">
+        <div class="progress h-100 mb-3">
+                <div class="progress-bar progress-bar-striped progress-bar-animated bg-warning">
+                    <span>
+                        {% translate "Basic skills required to <b>sit in the hull</b> and <b>fit the modules</b>." %}
+                    </span>
+                    <span>
+                        {% translate "Extra skills <b>will</b> be required to use this fitting properly in fleets" %}.
+                    </span>
+                </div>
+        </div>
+
+        {% for skill in skills.skills %}
+            <p>
+                {{ skill.name }}
+                <span class="float-end">&nbsp;{{ skill.level | floatformat:"-10" }}</span>
+            </p>
+        {% endfor %}
+    </div>
+</div>

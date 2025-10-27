@@ -1,0 +1,27 @@
+.progress {
+    width: 100%;
+    min-height: 48px;
+    display: flex;
+    align-items: center;
+}
+
+.progress-bar {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    white-space: normal;
+    overflow-wrap: break-word;
+    min-height: 48px;
+    font-size: clamp(0.8rem, 2vw, 1rem);
+    padding: 0.5rem;
+}
+
+.progress-bar span {
+    width: 100%;
+    text-align: center;
+    white-space: normal;
+    overflow-wrap: break-word;
+    display: block;
+}
