@@ -74,7 +74,6 @@ def madc_skill_overview(context) -> dict:
                     if s["level"] > skills[s["skill"]]["level"]:
                         skills[s["skill"]]["level"] = s["level"]
     sk_check = {}
-    logger.debug(sids)
     for t in EveType.objects.filter(id__in=list(sids)):
         skills[t.id]["name"] = t.name
         sk_check[t.name] = skills[t.id]["level"]
@@ -85,7 +84,6 @@ def madc_skill_overview(context) -> dict:
         )[:15]
     )
 
-    logger.debug(f"Checking characters {char_ids} for fitting skills {sk_check}")
     checks = SkillListHandler().check_skill_lists(
         [SkillList(name="fit", skill_list=json.dumps(sk_check))], char_ids
     )
