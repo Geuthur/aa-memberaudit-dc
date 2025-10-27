@@ -3,6 +3,7 @@ import json
 from hashlib import md5
 
 # Django
+from django.apps import apps
 from django.contrib.auth.models import User
 from django.core.cache import cache
 from django.urls import reverse
@@ -25,6 +26,10 @@ SKILL_CACHE_HEADERS_KEY = "SKILL_HEADER"
 SKILL_CACHE_USER_KEY = "SKILL_LISTS_{}"
 
 logger = LoggerAddTag(get_extension_logger(__name__), __title__)
+
+
+def fittings_installed() -> bool:
+    return apps.is_installed(app_name="fittings")
 
 
 class SkillListHandler:

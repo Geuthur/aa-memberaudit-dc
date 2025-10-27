@@ -66,13 +66,17 @@ def madc_skill_overview(context) -> dict:
                 required[t.eve_type_id][indx]["level"] = v
 
         for t in required.values():
-            for s in t.values():
-                if s["skill"]:
-                    if s["skill"] not in skills:
-                        skills[s["skill"]] = {"s": s["skill"], "level": 0, "name": ""}
-                        sids.add(s["skill"])
-                    if s["level"] > skills[s["skill"]]["level"]:
-                        skills[s["skill"]]["level"] = s["level"]
+            for skill in t.values():
+                if skill["skill"]:
+                    if skill["skill"] not in skills:
+                        skills[skill["skill"]] = {
+                            "skill": skill["skill"],
+                            "level": 0,
+                            "name": "",
+                        }
+                        sids.add(skill["skill"])
+                    if skill["level"] > skills[skill["skill"]]["level"]:
+                        skills[skill["skill"]]["level"] = skill["level"]
     sk_check = {}
     for t in EveType.objects.filter(id__in=list(sids)):
         skills[t.id]["name"] = t.name
