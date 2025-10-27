@@ -8,15 +8,17 @@ from django import template
 from allianceauth.services.hooks import get_extension_logger
 
 # Alliance Auth (External Libs)
+from app_utils.logging import LoggerAddTag
 from eveuniverse.models import EveType, EveTypeDogmaAttribute
 
 # AA Memberaudit Doctrine Checker
+from madc import __title__
 from madc.helpers.skill_handler import SkillListHandler
 from madc.models.skillchecker import SkillList
 
 register = template.Library()
 
-logger = get_extension_logger(__name__)
+logger = LoggerAddTag(get_extension_logger(__name__), __title__)
 
 
 # pylint: disable=too-many-locals
