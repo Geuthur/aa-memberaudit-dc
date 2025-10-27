@@ -57,6 +57,7 @@ INSTALLED_APPS += [
     PACKAGE,
     "eveuniverse",
     "memberaudit",
+    "fittings",  # optional integration
 ]
 # By default, apps are prevented from having public views for security reasons.
 # If you want to allow specific apps to have public views,

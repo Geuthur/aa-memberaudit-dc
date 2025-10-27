@@ -1,0 +1,166 @@
+{
+    "EveCategory": [
+        {
+            "id": 2,
+            "name": "Celestial",
+            "published": true
+        },
+        {
+            "id": 4,
+            "name": "Material",
+            "published": true
+        },
+        {
+            "id": 6,
+            "name": "Ship",
+            "published": true
+        },
+        {
+            "id": 16,
+            "name": "Skill",
+            "last_updated": "2025-10-27 07:44:58.759679",
+            "published": 1
+        },
+        {
+            "id": 25,
+            "name": "Asteroid",
+            "published": true
+        },
+        {
+            "id": 65,
+            "name": "Structure",
+            "published": true
+        }
+    ],
+    "EveGroup": [
+        {
+            "eve_category_id": 4,
+            "id": 1,
+            "name": "Ship",
+            "published": true
+        },
+        {
+            "eve_category_id": 2,
+            "id": 7,
+            "name": "Planet",
+            "published": false
+        },
+        {
+            "id": 257,
+            "name": "Spaceship Command",
+            "last_updated": "2025-10-27 07:47:07.658541",
+            "published": 1,
+            "eve_category_id": 16
+        },
+        {
+            "eve_category_id": 25,
+            "id": 450,
+            "name": "Arkonor",
+            "published": true
+        },
+        {
+            "id": 463,
+            "name": "Mining Barge",
+            "last_updated": "2025-03-10 20:48:14.397019",
+            "published": 1,
+            "eve_category_id": 6
+        }
+    ],
+    "EveType": [
+        {
+            "capacity": 0.0,
+            "description": "It's a test ship.",
+            "enabled_sections": 0,
+            "eve_graphic_id": null,
+            "eve_group_id": 1,
+            "eve_market_group_id": null,
+            "icon_id": 10139,
+            "id": 7001,
+            "mass": 1000,
+            "name": "Test Ship I",
+            "packaged_volume": 1.0,
+            "portion_size": 1,
+            "published": false,
+            "radius": 10000.0,
+            "volume": 1.0
+        },
+        {
+            "id": 17478,
+            "name": "Retriever",
+            "last_updated": "2025-03-10 20:49:33.499353",
+            "capacity": 450,
+            "icon_id": null,
+            "mass": 1750000,
+            "packaged_volume": 3750,
+            "portion_size": 1,
+            "radius": 202,
+            "published": 1,
+            "volume": 150000,
+            "eve_graphic_id": null,
+            "eve_group_id": 463,
+            "eve_market_group_id": null,
+            "enabled_sections": 29,
+            "description": "The mining barge was designed by <a href=showinfo:30\/\/500014>ORE<\/a> to facilitate advancing the mining profession to a new level. Each barge was created to excel at a specific function, the Retriever's being storage. A massive ore hold allows the Retriever to operate for extended periods without requiring as much support as other barges.\r\n\r\nMining barges are equipped with electronic subsystems specifically designed to accommodate Strip Mining and Ice Harvesting modules."
+        },
+        {
+            "id": 17940,
+            "name": "Mining Barge",
+            "last_updated": "2025-10-27 09:17:17.065762",
+            "capacity": 0,
+            "icon_id": 33,
+            "mass": 0,
+            "packaged_volume": 0.01,
+            "portion_size": 1,
+            "radius": 1,
+            "published": 1,
+            "volume": 0.01,
+            "eve_graphic_id": null,
+            "eve_group_id": 257,
+            "eve_market_group_id": null,
+            "enabled_sections": 25,
+            "description": "Skill at operating ORE Mining Barges."
+        }
+    ],
+    "EveDogmaAttribute": [
+        {
+            "id": 182,
+            "name": "requiredSkill1",
+            "last_updated": "2024-06-08 09:42:01.778247",
+            "default_value": 0,
+            "description": "The type ID of the skill that is required.",
+            "display_name": "Primary Skill required",
+            "high_is_good": 1,
+            "icon_id": null,
+            "published": 1,
+            "stackable": 1,
+            "eve_unit_id": 116
+        },
+        {
+            "id": 277,
+            "name": "requiredSkill1Level",
+            "last_updated": "2024-06-08 09:42:01.501093",
+            "default_value": "0",
+            "description": "Required skill level for skill 1",
+            "display_name": "",
+            "high_is_good": 1,
+            "icon_id": null,
+            "published": null,
+            "stackable": 1,
+            "eve_unit_id": null
+        }
+    ],
+    "EveTypeDogmaAttribute": [
+        {
+            "id": 100559,
+            "value": 17940,
+            "eve_dogma_attribute_id": 182,
+            "eve_type_id": 17478
+        },
+        {
+            "id": 100721,
+            "value": 1,
+            "eve_dogma_attribute_id": 277,
+            "eve_type_id": 17478
+        }
+    ]
+}

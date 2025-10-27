@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.2.8] - 2025-10-27
+
+### Added
+
+- Skill Overview from [Allianceauth Corp Tools](https://github.com/Solar-Helix-Independent-Transport/allianceauth-corp-tools/blob/master/corptools/templatetags/fittings_skill_tree.py)
+
 ## [0.2.7] - 2025-10-21
 
 ### Changed
