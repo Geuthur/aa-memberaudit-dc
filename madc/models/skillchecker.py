@@ -34,11 +34,12 @@ def skillvalidator(value):
                 raise ValidationError(
                     _("{skill} is not a valid skill.").format(skill=skill)
                 )
-            lvl = -1
             try:
-                level = int(level)
-            except ValueError:
-                pass
+                lvl = int(level)
+            except ValueError as exc:
+                raise ValidationError(
+                    _("{skill} level must be an integer.").format(skill=skill)
+                ) from exc
             if lvl < 0 or lvl > 5:
                 raise ValidationError(
                     _("{skill} level must be between 0 and 5.").format(skill=skill)
