@@ -18,8 +18,6 @@ from madc.templatetags.doctrinechecker import madc_skill_overview
 from madc.tests.testdata.load_allianceauth import load_allianceauth
 from madc.tests.testdata.load_eveuniverse import load_eveuniverse
 
-INDEX_PATH = "madc.templatetags.doctrinechecker"
-
 
 class TestSkillOverviewView(TestCase):
     @classmethod

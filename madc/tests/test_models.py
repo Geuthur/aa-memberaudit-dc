@@ -16,8 +16,6 @@ from madc.tests.testdata.load_allianceauth import load_allianceauth
 from madc.tests.testdata.load_eveuniverse import load_eveuniverse
 from madc.tests.testdata.load_memberaudit import load_memberaudit
 
-DECORATOR_PATH = "madc.helpers."
-
 
 class TestModelsSkillChecker(NoSocketsTestCase):
     @classmethod

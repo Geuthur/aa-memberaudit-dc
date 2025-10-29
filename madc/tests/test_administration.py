@@ -17,8 +17,6 @@ from madc.models.skillchecker import SkillList
 from madc.tests.testdata.load_allianceauth import load_allianceauth
 from madc.tests.testdata.load_eveuniverse import load_eveuniverse
 
-INDEX_PATH = "madc.views"
-
 
 class TestAdministrationView(TestCase):
     @classmethod
