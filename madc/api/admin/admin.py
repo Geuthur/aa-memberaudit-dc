@@ -7,7 +7,6 @@ from ninja import NinjaAPI
 # Django
 from django.urls import reverse
 from django.utils.html import format_html
-from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
 
 # Alliance Auth
@@ -24,6 +23,8 @@ from madc import __title__
 from madc.api import schema
 from madc.api.helpers import (
     generate_button,
+    generate_editable_bool_html,
+    generate_editable_html,
     get_manage_permission,
 )
 from madc.models import SkillList
@@ -53,56 +54,19 @@ class DoctrineCheckerAdminApiEndpoints:
             skilllist_dict = {}
 
             btn_template = "madc/partials/form/button.html"
-            url = reverse(
-                viewname="madc:delete_doctrine",
-            )
-
             settings_dict = {
                 "title": _("Delete Skill Plan"),
                 "color": "danger",
                 "icon": "fa fa-trash",
                 "text": _("Are you sure you want to delete this skill plan?"),
                 "modal": "skillplan-delete",
-                "action": url,
+                "action": reverse(
+                    viewname="madc:delete_doctrine",
+                ),
                 "ajax": "action",
             }
 
             for skill_list in skilllist_obj:
-
-                def generate_html(
-                    skill_list: SkillList,
-                    field_name: str,
-                    name: str,
-                    title: str = "",
-                    url: str = reverse(
-                        viewname="madc:update_skilllist",
-                        kwargs={"pk": skill_list.pk},
-                    ),
-                ) -> str:
-
-                    html = f"<a class='editable' href='#' data-type='text' data-pk='{skill_list.pk}' data-name='{field_name}' data-url='{url}' data-title='{str(title)}'>{name}</a>"
-                    return format_html(html)
-
-                def generate_boolean_html(
-                    skill_list: SkillList,
-                    name: str,
-                    title: str = "",
-                    url: str = reverse(
-                        viewname="madc:update_skilllist",
-                        kwargs={"pk": skill_list.pk},
-                    ),
-                ) -> str:
-                    """Generate HTML for a boolean field with editable functionality."""
-                    active_text = _("Active")
-                    inactive_text = _("Inactive")
-                    if skill_list.active:
-                        button_html = f"<button class='btn btn-success btn-sm'>{active_text}</button>"
-                    else:
-                        button_html = f"<button class='btn btn-danger btn-sm'>{inactive_text}</button>"
-
-                    html = f"<a class='editable-boolean no_underline' data-type='select' data-pk='{skill_list.pk}' data-name='{name}' data-url='{url}' data-title='{str(title)}' data-source='[{{\"value\": true, \"text\": \"{active_text}\"}}, {{\"value\": false, \"text\": \"{inactive_text}\"}}]' data-value='{str(skill_list.active).lower()}'>{button_html}</a>"
-                    return mark_safe(html)
-
                 url_doctrine = reverse(
                     viewname="madc:api:get_doctrine_skills",
                     kwargs={"pk": skill_list.pk},
@@ -120,35 +84,53 @@ class DoctrineCheckerAdminApiEndpoints:
 
                 skilllist_dict[skill_list.name] = {
                     "name": {
-                        "html": generate_html(
+                        "html": generate_editable_html(
                             skill_list,
                             field_name="name",
                             name=skill_list.name,
+                            url=reverse(
+                                viewname="madc:update_skilllist",
+                                kwargs={"pk": skill_list.pk},
+                            ),
                             title=_("Enter name"),
                         ),
                         "sort": skill_list.name,
                     },
                     "skills": format_html(skills_html),
                     "active": {
-                        "html": generate_boolean_html(
-                            skill_list, name="active", title=_("Toggle active status")
+                        "html": generate_editable_bool_html(
+                            skill_list,
+                            name="active",
+                            title=_("Toggle active status"),
+                            url=reverse(
+                                viewname="madc:update_skilllist",
+                                kwargs={"pk": skill_list.pk},
+                            ),
                         ),
                         "sort": skill_list.active,
                     },
                     "ordering": {
-                        "html": generate_html(
+                        "html": generate_editable_html(
                             skill_list,
                             field_name="ordering",
                             name=str(skill_list.ordering),
+                            url=reverse(
+                                viewname="madc:update_skilllist",
+                                kwargs={"pk": skill_list.pk},
+                            ),
                             title=_("Enter ordering"),
                         ),
                         "sort": skill_list.ordering,
                     },
                     "category": {
-                        "html": generate_html(
+                        "html": generate_editable_html(
                             skill_list,
                             field_name="category",
                             name=str(skill_list.category),
+                            url=reverse(
+                                viewname="madc:update_skilllist",
+                                kwargs={"pk": skill_list.pk},
+                            ),
                             title=_("Enter category"),
                         ),
                         "sort": skill_list.category,
