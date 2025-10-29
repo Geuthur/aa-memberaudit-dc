@@ -342,7 +342,6 @@ class TestAPIHelper(TestCase):
         doctrines = helpers._collect_user_doctrines(
             skills_list=skills_list, active_skilllists=active_skilllists
         )
-        print(doctrines)
         # then
         self.assertIn("Test Skill Ready", doctrines)
         self.assertIn("XL Torpedoes", doctrines["Test Skill Ready"]["skills"])
