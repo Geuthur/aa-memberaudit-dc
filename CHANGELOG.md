@@ -1,10 +1,19 @@
 # Changelog
 
-## [0.2.8] - 2025-10-27
+## [0.2.8] - 2025-10-29
 
 ### Added
 
+- Application Tests
 - Skill Overview from [Allianceauth Corp Tools](https://github.com/Solar-Helix-Independent-Transport/allianceauth-corp-tools/blob/master/corptools/templatetags/fittings_skill_tree.py)
+
+### Fixed
+
+- Level Check in `skillchecker`
+
+### Removed
+
+- Unused stuff
 
 ## [0.2.7] - 2025-10-21
 

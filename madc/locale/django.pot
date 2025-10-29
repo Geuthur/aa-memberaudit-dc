@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: AA Memberaudit Doctrine Checker 0.2.7\n"
+"Project-Id-Version: AA Memberaudit Doctrine Checker 0.2.8\n"
 "Report-Msgid-Bugs-To: https://github.com/Geuthur/aa-memberaudit-dc/issues\n"
-"POT-Creation-Date: 2025-10-21 11:48+0200\n"
+"POT-Creation-Date: 2025-10-29 12:06+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,43 +17,43 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: madc/api/admin/admin.py:49 madc/api/skill/skillchecker.py:48
+#: madc/api/admin/admin.py:50 madc/api/skill/skillchecker.py:48
 #: madc/api/skill/skillchecker.py:92 madc/api/skill/skillchecker.py:134
 #: madc/api/skill/skillchecker.py:175 madc/views.py:205 madc/views.py:240
 msgid "Permission Denied"
 msgstr ""
 
-#: madc/api/admin/admin.py:61
+#: madc/api/admin/admin.py:58
 msgid "Delete Skill Plan"
 msgstr ""
 
-#: madc/api/admin/admin.py:64
+#: madc/api/admin/admin.py:61
 msgid "Are you sure you want to delete this skill plan?"
 msgstr ""
 
-#: madc/api/admin/admin.py:96 madc/models/skillchecker.py:61
+#: madc/api/admin/admin.py:95
+msgid "Enter name"
+msgstr ""
+
+#: madc/api/admin/admin.py:104
+msgid "Toggle active status"
+msgstr ""
+
+#: madc/api/admin/admin.py:121
+msgid "Enter ordering"
+msgstr ""
+
+#: madc/api/admin/admin.py:134
+msgid "Enter category"
+msgstr ""
+
+#: madc/api/helpers.py:130 madc/models/skillchecker.py:62
 #: madc/templates/madc/partials/table/skill-list.html:8
 msgid "Active"
 msgstr ""
 
-#: madc/api/admin/admin.py:97
+#: madc/api/helpers.py:131
 msgid "Inactive"
-msgstr ""
-
-#: madc/api/admin/admin.py:127
-msgid "Enter name"
-msgstr ""
-
-#: madc/api/admin/admin.py:134
-msgid "Toggle active status"
-msgstr ""
-
-#: madc/api/admin/admin.py:143
-msgid "Enter ordering"
-msgstr ""
-
-#: madc/api/admin/admin.py:152
-msgid "Enter category"
 msgstr ""
 
 #: madc/api/skill/skillchecker.py:157
@@ -93,29 +93,34 @@ msgstr ""
 msgid "{skill} is not a valid skill."
 msgstr ""
 
-#: madc/models/skillchecker.py:44
+#: madc/models/skillchecker.py:41
+#, python-brace-format
+msgid "{skill} level must be an integer."
+msgstr ""
+
+#: madc/models/skillchecker.py:45
 #, python-brace-format
 msgid "{skill} level must be between 0 and 5."
 msgstr ""
 
-#: madc/models/skillchecker.py:48
+#: madc/models/skillchecker.py:49
 msgid "Please provide a valid skill list in JSON format."
 msgstr ""
 
-#: madc/models/skillchecker.py:57
+#: madc/models/skillchecker.py:58
 msgid "Order Weight"
 msgstr ""
 
-#: madc/models/skillchecker.py:63
+#: madc/models/skillchecker.py:64
 msgid "If unchecked, this skill list will not be used in the skill checker."
 msgstr ""
 
-#: madc/models/skillchecker.py:70
+#: madc/models/skillchecker.py:71
 #: madc/templates/madc/partials/table/skill-list.html:10
 msgid "Category"
 msgstr ""
 
-#: madc/models/skillchecker.py:71
+#: madc/models/skillchecker.py:72
 msgid "Category of the skill list, used for grouping."
 msgstr ""
 
@@ -159,6 +164,26 @@ msgstr ""
 
 #: madc/templates/madc/partials/administration.html:13
 msgid "Adminstration"
+msgstr ""
+
+#: madc/templates/madc/partials/fittings.html:9
+msgid "Character Base Skill Checks"
+msgstr ""
+
+#: madc/templates/madc/partials/fittings.html:17
+#: madc/templates/madc/partials/fittings.html:49
+msgid ""
+"Basic skills required to <b>sit in the hull</b> and <b>fit the modules</b>."
+msgstr ""
+
+#: madc/templates/madc/partials/fittings.html:20
+#: madc/templates/madc/partials/fittings.html:52
+msgid ""
+"Extra skills <b>will</b> be required to use this fitting properly in fleets"
+msgstr ""
+
+#: madc/templates/madc/partials/fittings.html:41
+msgid "Base Skills Required"
 msgstr ""
 
 #: madc/templates/madc/partials/modals/doctrine.html:9
