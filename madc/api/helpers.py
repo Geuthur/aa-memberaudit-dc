@@ -3,6 +3,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.template.loader import render_to_string
 from django.utils.html import format_html
 from django.utils.safestring import mark_safe
+from django.utils.translation import gettext_lazy as _
 
 # Alliance Auth
 from allianceauth.eveonline.models import EveCharacter, EveCorporationInfo
@@ -43,7 +44,7 @@ def get_manage_permission(request, character_id):
     return perms, main_char
 
 
-def get_main_character(request, character_id):
+def get_main_character(request, character_id) -> tuple[bool, EveCharacter | None]:
     perms = True
     main_char = EveCharacter.objects.select_related(
         "character_ownership",
@@ -110,8 +111,35 @@ def generate_button(pk: int, template, queryset, settings, request) -> mark_safe
     )
 
 
-def _collect_user_doctrines(skills_list: dict, active_skilllists) -> dict:
-    """Collect all doctrines for a user across all their characters."""
+def generate_editable_html(
+    skill_list: models.SkillList,
+    field_name: str,
+    name: str,
+    url: str,
+    title: str = "",
+) -> str:
+    """Generate HTML for an editable field."""
+    html = f"<a class='editable' href='#' data-type='text' data-pk='{skill_list.pk}' data-name='{field_name}' data-url='{url}' data-title='{str(title)}'>{name}</a>"
+    return format_html(html)
+
+
+def generate_editable_bool_html(
+    skill_list: models.SkillList, name: str, url: str, title: str = ""
+) -> str:
+    """Generate HTML for a boolean field with editable functionality."""
+    active_text = _("Active")
+    inactive_text = _("Inactive")
+    if skill_list.active:
+        button_html = f"<button class='btn btn-success btn-sm'>{active_text}</button>"
+    else:
+        button_html = f"<button class='btn btn-danger btn-sm'>{inactive_text}</button>"
+
+    html = f"<a class='editable-boolean no_underline' data-type='select' data-pk='{skill_list.pk}' data-name='{name}' data-url='{url}' data-title='{str(title)}' data-source='[{{\"value\": true, \"text\": \"{active_text}\"}}, {{\"value\": false, \"text\": \"{inactive_text}\"}}]' data-value='{str(skill_list.active).lower()}'>{button_html}</a>"
+    return mark_safe(html)
+
+
+def _collect_user_doctrines(skills_list: dict, active_skilllists: list) -> dict:
+    """Collect the best doctrine skill data for the user across all their characters."""
     user_doctrines = {}
 
     # Process each character's skill data

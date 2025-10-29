@@ -22,6 +22,7 @@ def create_memberaudit(eve_character: EveCharacter, **kwargs) -> Character:
 
 def load_memberaudit():
     Character.objects.all().delete()
+    create_memberaudit(EveCharacter.objects.get(character_id=1000), is_disabled=False)
     create_memberaudit(EveCharacter.objects.get(character_id=1001), is_disabled=False)
     create_memberaudit(EveCharacter.objects.get(character_id=1002), is_disabled=False)
     create_memberaudit(EveCharacter.objects.get(character_id=1003), is_disabled=False)

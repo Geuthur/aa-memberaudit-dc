@@ -11,8 +11,6 @@ from madc.decorators import (
     log_timing,
 )
 
-DECORATOR_PATH = "madc.decorators."
-
 
 class TestDecorators(NoSocketsTestCase):
     def test_log_timing(self):
