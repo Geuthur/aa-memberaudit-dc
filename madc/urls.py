@@ -7,7 +7,7 @@ from django.urls import path, re_path
 from madc import views
 from madc.api import api
 
-app_name: str = "madc"
+app_name: str = "madc"  # pylint: disable=invalid-name
 
 urlpatterns = [
     # -- Main URLs
