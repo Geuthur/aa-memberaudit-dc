@@ -1,6 +1,6 @@
 """Initialize the app"""
 
-__version__ = "0.3.0"
+__version__ = "0.3.1"
 __title__ = "AA Memberaudit Doctrine Checker"
 
 __package_name__ = "aa-memberaudit-dc"
