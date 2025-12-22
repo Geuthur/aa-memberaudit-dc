@@ -11,6 +11,18 @@ Section Order:
 ### Removed
 -->
 
+## [0.3.3] - 2025-12-22
+
+### Changed
+
+- Updated German Translations
+- Bump the npm-dependencies group with 2 updates
+- Bump actions/checkout from 5 to 6
+
+### Fixed
+
+- Remove incorrect 'Adminstration' translations from multiple language files
+
 ## [0.3.2] - 2025-11-16
 
 ### Changed
@@ -202,3 +214,9 @@ Section Order:
 ## [0.0.1] - 2025-07-03
 
 - Initial Release
+
+[0.3.0]: https://github.com/Geuthur/aa-memberaudit-dc/compare/v0.2.8...v0.3.0 "0.3.0"
+[0.3.1]: https://github.com/Geuthur/aa-memberaudit-dc/compare/v0.3.0...v0.3.1 "0.3.1"
+[0.3.2]: https://github.com/Geuthur/aa-memberaudit-dc/compare/v0.3.1...v0.3.2 "0.3.2"
+[0.3.3]: https://github.com/Geuthur/aa-memberaudit-dc/compare/v0.3.2...v0.3.3 "0.3.3"
+[in development]: https://github.com/Geuthur/aa-memberaudit-dc/compare/v0.3.3...HEAD "In Development"
