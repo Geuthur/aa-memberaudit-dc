@@ -123,9 +123,6 @@ msgstr "Alle Kategorien"
 msgid "Administration"
 msgstr "Verwaltung"
 
-msgid "Adminstration"
-msgstr "Verwaltung"
-
 msgid "Doctrine Skills"
 msgstr "Doktrin Skills"
 

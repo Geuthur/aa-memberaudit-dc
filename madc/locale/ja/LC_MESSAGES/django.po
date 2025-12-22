@@ -115,9 +115,6 @@ msgstr ""
 msgid "Administration"
 msgstr ""
 
-msgid "Adminstration"
-msgstr ""
-
 msgid "Doctrine Skills"
 msgstr ""
 
