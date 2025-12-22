@@ -5,12 +5,12 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: AA Memberaudit Doctrine Checker \n"
+"Project-Id-Version: AA Memberaudit Doctrine Checker\n"
 "Report-Msgid-Bugs-To: https://github.com/Geuthur/aa-memberaudit-dc/issues\n"
 "POT-Creation-Date: 2025-12-22 08:52+0100\n"
-"PO-Revision-Date: 2025-12-22 07:36+0000\n"
-"Last-Translator: Weblate Admin <geuthur@users.noreply.weblate.voices-of-war."
-"de>\n"
+"PO-Revision-Date: 2025-12-22 08:13+0000\n"
+"Last-Translator: Weblate Admin <geuthur@users.noreply.weblate.voices-of-"
+"war.de>\n"
 "Language-Team: German <https://weblate.geuthur.de/projects/allianceauth/aa-"
 "memberaudit-doctrine-checker/de/>\n"
 "Language: de\n"
@@ -28,7 +28,7 @@ msgstr "Zugriff verweigert"
 
 #: madc/api/admin/admin.py:58
 msgid "Delete Skill Plan"
-msgstr "Lösche Skillplan"
+msgstr "Lösche Skill Plan"
 
 #: madc/api/admin/admin.py:61
 msgid "Are you sure you want to delete this skill plan?"
@@ -101,10 +101,9 @@ msgid "{skill} is not a valid skill."
 msgstr "{skill} ist kein gültiger Skill."
 
 #: madc/models/skillchecker.py:41
-#, fuzzy, python-brace-format
-#| msgid "{skill} level must be between 0 and 5."
+#, python-brace-format
 msgid "{skill} level must be an integer."
-msgstr "{skill} Level muss zwischen 0 und 5 sein."
+msgstr "{skill} Level muss eine ganze Zahl sein."
 
 #: madc/models/skillchecker.py:45
 #, python-brace-format
@@ -175,23 +174,27 @@ msgstr "Verwaltung"
 
 #: madc/templates/madc/partials/fittings.html:9
 msgid "Character Base Skill Checks"
-msgstr ""
+msgstr "Charakterbasierte Skill Prüfung"
 
 #: madc/templates/madc/partials/fittings.html:17
 #: madc/templates/madc/partials/fittings.html:49
 msgid ""
 "Basic skills required to <b>sit in the hull</b> and <b>fit the modules</b>."
 msgstr ""
+"Grundlegende Skills, die erforderlich sind, um <b>im Rumpf zu sitzen</b> und "
+"<b>die Module einzubauen</b>."
 
 #: madc/templates/madc/partials/fittings.html:20
 #: madc/templates/madc/partials/fittings.html:52
 msgid ""
 "Extra skills <b>will</b> be required to use this fitting properly in fleets"
 msgstr ""
+"Um dieses Fitting in Flotten richtig fliegen zu können, <b>sind zusätzliche "
+"Fähigkeiten erforderlich.</b>"
 
 #: madc/templates/madc/partials/fittings.html:41
 msgid "Base Skills Required"
-msgstr ""
+msgstr "Erforderliche Grund Skills"
 
 #: madc/templates/madc/partials/modals/doctrine.html:9
 msgid "Doctrine Skills"
@@ -237,7 +240,7 @@ msgstr "Name"
 
 #: madc/templates/madc/partials/table/skill-list.html:7
 msgid "Skills"
-msgstr ""
+msgstr "Skills"
 
 #: madc/templates/madc/partials/table/skill-list.html:9
 msgid "Order-Weight"
