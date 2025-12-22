@@ -162,10 +162,6 @@ msgstr ""
 msgid "Administration"
 msgstr ""
 
-#: madc/templates/madc/partials/administration.html:13
-msgid "Adminstration"
-msgstr ""
-
 #: madc/templates/madc/partials/fittings.html:9
 msgid "Character Base Skill Checks"
 msgstr ""
