@@ -105,7 +105,7 @@ $(document).ready(function() {
             },
             error: function(xhr, status, error) {
                 // Parse JSON response to get the message
-                let errorMessage = 'Update failed';
+                let errorMessage;
                 try {
                     const response = JSON.parse(xhr.responseText);
                     errorMessage = response.message || 'Update failed';
@@ -137,7 +137,7 @@ $(document).ready(function() {
             },
             error: function(xhr, status, error) {
                 // Parse JSON response to get the message
-                let errorMessage = 'Update failed';
+                let errorMessage;
                 try {
                     const response = JSON.parse(xhr.responseText);
                     errorMessage = response.message || 'Update failed';

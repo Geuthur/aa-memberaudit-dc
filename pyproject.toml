@@ -35,26 +35,29 @@ dynamic = [
 ]
 dependencies = [
     "aa-memberaudit>=3.16",
-    "allianceauth>=4.10,<5",
+    "allianceauth>=4.12",
     "allianceauth-app-utils>=1.3",
-    "django-esi>=8,<9",
+    "django-esi>=8",
     "django-eveuniverse>=1.6",
-    "django-ninja",
+    "django-ninja>=1.5,<2",
+]
+optional-dependencies.tests-allianceauth-development = [
+    "allianceauth==5.0.0b2",
+    "coverage",
+    "factory-boy",
 ]
 optional-dependencies.tests-allianceauth-latest = [
     "coverage",
     "factory-boy",
-    "fittings",
+    "fittings>=2.2,<2.3",
 ]
 urls.Changelog = "https://github.com/Geuthur/aa-memberaudit-dc/blob/master/CHANGELOG.md"
 urls.Homepage = "https://github.com/Geuthur/aa-memberaudit-dc"
 urls.Source = "https://github.com/Geuthur/aa-memberaudit-dc"
 urls.Tracker = "https://github.com/Geuthur/aa-memberaudit-dc/issues"
 
-[tool.hatch.build]
-include = [
+[tool.hatch]
+build.include = [
     "/madc",
 ]
-
-[tool.hatch.version]
-path = "madc/__init__.py"
+version.path = "madc/__init__.py"
