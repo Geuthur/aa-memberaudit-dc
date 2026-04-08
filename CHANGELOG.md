@@ -11,6 +11,8 @@ Section Order:
 ### Removed
 -->
 
+## [0.3.4] - 2026-04-08
+
 > [!WARNING]
 >
 > This will be the Last Version that will work with AAv4 and is not Compatible with AAv5
@@ -231,4 +233,5 @@ Section Order:
 [0.3.1]: https://github.com/Geuthur/aa-memberaudit-dc/compare/v0.3.0...v0.3.1 "0.3.1"
 [0.3.2]: https://github.com/Geuthur/aa-memberaudit-dc/compare/v0.3.1...v0.3.2 "0.3.2"
 [0.3.3]: https://github.com/Geuthur/aa-memberaudit-dc/compare/v0.3.2...v0.3.3 "0.3.3"
-[in development]: https://github.com/Geuthur/aa-memberaudit-dc/compare/v0.3.3...HEAD "In Development"
+[0.3.4]: https://github.com/Geuthur/aa-memberaudit-dc/compare/v0.3.3...v0.3.4 "v0.3.4"
+[in development]: https://github.com/Geuthur/aa-memberaudit-dc/compare/v0.3.4...HEAD "In Development"
