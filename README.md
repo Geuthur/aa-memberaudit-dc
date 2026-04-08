@@ -63,7 +63,7 @@ ______________________________________________________________________
 ## Installation<a name="installation"></a>
 
 > [!NOTE]
-> AA Memberaudit Doctrine Checker needs at least Alliance Auth v4.6.0
+> AA Memberaudit Doctrine Checker needs at least Alliance Auth v4.12.0
 > Please make sure to update your Alliance Auth before you install this APP
 
 ### Step 1 - Install the Package<a name="step1"></a>
@@ -78,9 +78,14 @@ pip install aa-memberaudit-dc
 
 Configure your Alliance Auth settings (`local.py`) as follows:
 
-- Add `'eveuniverse',` to `INSTALLED_APPS`
-- Add `'memberaudit',` to `INSTALLED_APPS`
-- Add `'madc',` to `INSTALLED_APPS`
+```python
+INSTALLED_APPS = [
+    # other apps
+    "eveuniverse",  # only if it not already existing
+    "madc",
+    # other apps?
+]
+```
 
 ### Step 3 - (Optional) Add own Logger File<a name="step3"></a>
 
@@ -88,18 +93,19 @@ To set up the Logger add following code to your `local.py`
 Ensure that you have writing permission in logs folder.
 
 ```python
-LOGGING["handlers"]["madc_file"] = {
-    "level": "INFO",
-    "class": "logging.handlers.RotatingFileHandler",
-    "filename": os.path.join(BASE_DIR, "log/madc.log"),
-    "formatter": "verbose",
-    "maxBytes": 1024 * 1024 * 5,
-    "backupCount": 5,
-}
-LOGGING["loggers"]["extensions.madc"] = {
-    "handlers": ["madc_file", "console", "extension_file"],
-    "level": "DEBUG",
-}
+if "madc" in INSTALLED_APPS:
+    LOGGING["handlers"]["madc_file"] = {
+        "level": "INFO",
+        "class": "logging.handlers.RotatingFileHandler",
+        "filename": os.path.join(BASE_DIR, "log/madc.log"),
+        "formatter": "verbose",
+        "maxBytes": 1024 * 1024 * 5,
+        "backupCount": 5,
+    }
+    LOGGING["loggers"]["extensions.madc"] = {
+        "handlers": ["madc_file", "console", "extension_file"],
+        "level": "DEBUG",
+    }
 ```
 
 ### Step 4 - Migration to AA<a name="step4"></a>
