@@ -49,7 +49,6 @@ optional-dependencies.tests-allianceauth-development = [
 optional-dependencies.tests-allianceauth-latest = [
     "coverage",
     "factory-boy",
-    "fittings>=2.2,<2.3",
 ]
 urls.Changelog = "https://github.com/Geuthur/aa-memberaudit-dc/blob/master/CHANGELOG.md"
 urls.Homepage = "https://github.com/Geuthur/aa-memberaudit-dc"

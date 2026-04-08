@@ -11,6 +11,18 @@ Section Order:
 ### Removed
 -->
 
+> [!WARNING]
+>
+> This will be the Last Version that will work with AAv4 and is not Compatible with AAv5
+
+### Added
+
+- AAv5 Dependency Check in Test Evniroement
+
+### Removed
+
+- Fittings Addon
+
 ## [0.3.3] - 2025-12-22
 
 ### Changed
