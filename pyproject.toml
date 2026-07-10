@@ -56,7 +56,7 @@ urls.Source = "https://github.com/Geuthur/aa-memberaudit-dc"
 urls.Tracker = "https://github.com/Geuthur/aa-memberaudit-dc/issues"
 
 [tool.hatch]
+version.path = "madc/__init__.py"
 build.include = [
     "/madc",
 ]
-version.path = "madc/__init__.py"
