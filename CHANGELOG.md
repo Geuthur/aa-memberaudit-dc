@@ -11,6 +11,16 @@ Section Order:
 ### Removed
 -->
 
+## [0.4.0] - 2026-07-10
+
+### Changed
+
+- remove old BS template import
+
+### Removed
+
+- ESI Provider
+
 ## [0.3.4] - 2026-04-08
 
 > [!WARNING]
