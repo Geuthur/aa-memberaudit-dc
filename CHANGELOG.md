@@ -3,6 +3,21 @@
 ## [In Development] - Unreleased
 
 <!--
+> [!NOTE]
+>
+
+> [!TIP]
+>
+
+> [!IMPORTANT]
+>
+
+> [!WARNING]
+>
+
+> [!CAUTION]
+>
+
 Section Order:
 
 ### Added
@@ -10,6 +25,8 @@ Section Order:
 ### Changed
 ### Removed
 -->
+
+<!-- Your changes go here -->
 
 ## [0.4.0] - 2026-07-10
 
@@ -238,6 +255,8 @@ Section Order:
 ## [0.0.1] - 2025-07-03
 
 - Initial Release
+
+<!-- Links -->
 
 [0.3.0]: https://github.com/Geuthur/aa-memberaudit-dc/compare/v0.2.8...v0.3.0 "0.3.0"
 [0.3.1]: https://github.com/Geuthur/aa-memberaudit-dc/compare/v0.3.0...v0.3.1 "0.3.1"
