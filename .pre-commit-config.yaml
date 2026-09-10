@@ -6,7 +6,7 @@
 default_language_version:
   # force all unspecified python hooks to run python3
   python: python3
-  node: 22.19.0 # LTS https://nodejs.org/en/blog/release/
+  node: 24.18.0 # LTS https://nodejs.org/en/blog/release/
 
 # https://pre-commit.ci/
 ci:
@@ -27,6 +27,7 @@ exclude: |
   (?x)(
     .github/|
     LICENSE|
+    openapi_.*\.json|
     .min(.css|.css.map|.js|.js.map)|
     locale/|
     static/(.*)/libs/
@@ -115,13 +116,15 @@ repos:
         name: End of file fixer
         description: Ensure that files end with a newline.
 
-  - repo: https://github.com/eslint/eslint
-    rev: v10.8.0
+  - repo: https://github.com/pre-commit/mirrors-eslint
+    rev: v10.10.0
     hooks:
       - id: eslint
         name: ESLint
+        args: [--fix, --color, --max-warnings, "0"]
         description: Check for problems in JavaScript files.
-        args: [--fix, --color, --max-warnings, '0']
+        additional_dependencies:
+          - eslint@10.10.0
 
   - repo: https://github.com/thibaudcolas/pre-commit-stylelint
     rev: v17.14.1
@@ -133,8 +136,8 @@ repos:
           - --formatter=compact
         additional_dependencies:
           # stylelint itself needs to be here when using additional_dependencies.
-          - stylelint@16.25.0  # https://github.com/stylelint/stylelint/releases/latest
-          - stylelint-config-standard@39.0.1  # https://github.com/stylelint/stylelint-config-standard/releases/latest
+          - stylelint@17.15.0  # https://github.com/stylelint/stylelint/releases/latest
+          - stylelint-config-standard@40.0.0  # https://github.com/stylelint/stylelint-config-standard/releases/latest
 
   - repo: https://github.com/pre-commit/pygrep-hooks
     rev: v1.10.0
@@ -143,7 +146,7 @@ repos:
         name: Check for blanket noqa
         description: Check for blanket noqa annotations.
 
-      - id: python-check-blanket-type-ignore  # Enforce that # type: ignore annotations always occur with specific codes. Sample annotations: # type: ignore[attr-defined], # type: ignore[attr-defined, name-defined]
+      - id: python-check-blanket-type-ignore  # Enforce that # type: ignore annotations always occur with specific codes. Sample annotations: # type: ignore[attr-defined], # type: ignore[attr-def...
         name: Check for blanket type ignore
         description: Check for blanket type ignore annotations.
 
@@ -164,14 +167,14 @@ repos:
         description: Enforce that python3.6+ type annotations are used instead of type comments.
 
   - repo: https://github.com/editorconfig-checker/editorconfig-checker.python
-    rev: 3.8.0
+    rev: 3.11.1
     hooks:
       - id: editorconfig-checker
         name: EditorConfig Checker
         description: Check for compliance with the definitions in the EditorConfig file.
 
   - repo: https://github.com/adamchainz/django-upgrade
-    rev: 1.31.1
+    rev: 1.32.0
     hooks:
       - id: django-upgrade
         name: Django upgrade
@@ -203,7 +206,7 @@ repos:
         description: Check for extraneous `# noqa` comments.
 
   - repo: https://github.com/PyCQA/isort
-    rev: 9.0.0b1
+    rev: 9.0.1
     hooks:
       - id: isort
         name: Isort
@@ -232,7 +235,7 @@ repos:
         name: Blacken docs
         description: Format Python code in documentation files.
         additional_dependencies:
-          - black==25.9.0  # https://github.com/psf/black/releases/latest
+          - black==26.5.1  # https://github.com/psf/black/releases/latest
         args:
           - --target-version=py310  # Minimum required Python version for AA. Update as needed.
 
@@ -249,14 +252,14 @@ repos:
           - mdformat-shfmt==0.2.0  # Mdformat plugin to format shell code blocks » https://github.com/hukkin/mdformat-shfmt/tags
 
   - repo: https://github.com/tox-dev/tox-ini-fmt
-    rev: 1.8.1
+    rev: 1.9.0
     hooks:
       - id: tox-ini-fmt
         name: tox.ini formatter
         description: Format the tox.ini file.
 
   - repo: https://github.com/tox-dev/pyproject-fmt
-    rev: v2.26.0
+    rev: v2.29.3
     hooks:
       - id: pyproject-fmt
         name: pyproject.toml formatter
@@ -264,7 +267,7 @@ repos:
         args:
           - --indent=4
         additional_dependencies:
-          - tox==4.32.0  # https://github.com/tox-dev/tox/releases/latest
+          - tox==4.61.2  # https://github.com/tox-dev/tox/releases/latest
 
   - repo: https://github.com/abravalheri/validate-pyproject
     rev: v0.25
@@ -274,7 +277,7 @@ repos:
         description: Validate the pyproject.toml file.
 
   - repo: https://github.com/pylint-dev/pylint
-    rev: v4.0.6
+    rev: v4.0.8
     hooks:
       - id: pylint
         name: Pylint
@@ -283,7 +286,7 @@ repos:
           - --py-version=3.10  # Minimum required Python version for AA. Update as needed.
 
   - repo: https://github.com/python-jsonschema/check-jsonschema
-    rev: 0.37.4
+    rev: 0.38.0
     hooks:
       - id: check-github-actions
         name: Check GitHub Actions
