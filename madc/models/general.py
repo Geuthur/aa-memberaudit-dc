@@ -24,6 +24,8 @@ class General(models.Model):
     class Meta:
         managed = False
         default_permissions = ()
+        verbose_name = "AA-Memberaudit-Doctrine-Checker"
+        verbose_name_plural = "AA-Memberaudit-Doctrine-Checker"
         permissions = (
             ("basic_access", "Can access this app, Memberaudit Doctrine Checker."),
             (
