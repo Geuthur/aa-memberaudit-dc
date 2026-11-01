@@ -270,8 +270,7 @@ def edit_doctrine(request: WSGIRequest, pk: int):
 
     except ValidationError as e:
         return JsonResponse({"message": str(e)}, status=400)
-    # pylint: disable=broad-except
-    except Exception as e:
+    except Exception as e:  # pylint: disable=broad-exception-caught
         logger.error("Error updating skilllist: %s", str(e))
         return JsonResponse(
             {"message": _("An error occurred while updating")}, status=500
