@@ -42,6 +42,9 @@ updates:
         update-types:
           - "minor"
           - "patch"
+      "NPM Major Dependencies":
+        update-types:
+          - "major"
     schedule:
       interval: "monthly"
     commit-message:
