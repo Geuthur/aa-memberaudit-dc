@@ -28,6 +28,10 @@ Section Order:
 
 <!-- Your changes go here -->
 
+### Fixed
+
+- Fixed `make coverage` exiting with 0 when tests failed. The reports are still created, and the target now exits with the status of the test run, or with the status of `coverage report` if the tests passed.
+
 ## [0.4.0] - 2026-07-10
 
 ### Changed
