@@ -30,7 +30,12 @@ Section Order:
 
 ### Fixed
 
+- Fixed `__operations__` being an empty list, it now contains the public operation `GetStatus`. An empty filter makes `esi.client` raise an `AttributeError` with `DEBUG=False`.
 - Fixed `make coverage` exiting with 0 when tests failed. The reports are still created, and the target now exits with the status of the test run, or with the status of `coverage report` if the tests passed.
+
+### Changed
+
+- Raised `__esi_compatibility_date__` to `2026-08-18`.
 
 ## [0.4.0] - 2026-07-10
 
