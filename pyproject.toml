@@ -40,6 +40,11 @@ dependencies = [
     "django-eveuniverse>=2.1",
     "django-ninja>=1.5,<2",
 ]
+optional-dependencies.tests-allianceauth-development = [
+    "allianceauth>=6.0.0a1,<7",
+    "coverage",
+    "factory-boy",
+]
 optional-dependencies.tests-allianceauth-latest = [
     "coverage",
     "factory-boy",

@@ -28,6 +28,10 @@ Section Order:
 
 <!-- Your changes go here -->
 
+### Added
+
+- Optional extra `tests-allianceauth-development` (test packages plus the Alliance Auth 6 pre-release) for the tox environment `allianceauth-development` and `make tox-tests-development`; a non-blocking CI job "AA Development" runs it on Python 3.13 and 3.14
+
 ### Fixed
 
 - Fixed `__operations__` being an empty list, it now contains the public operation `GetStatus`. An empty filter makes `esi.client` raise an `AttributeError` with `DEBUG=False`.
