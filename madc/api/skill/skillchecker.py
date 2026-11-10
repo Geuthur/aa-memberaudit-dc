@@ -8,15 +8,10 @@ from ninja import NinjaAPI
 from django.shortcuts import render
 from django.utils.translation import gettext_lazy as _
 
-# Alliance Auth
-from allianceauth.services.hooks import get_extension_logger
-
 # Alliance Auth (External Libs)
-from app_utils.logging import LoggerAddTag
 from memberaudit.models import Character
 
 # AA Memberaudit Doctrine Checker
-from madc import __title__, providers
 from madc.api import schema
 from madc.api.helpers import (
     _collect_user_doctrines,
@@ -24,9 +19,8 @@ from madc.api.helpers import (
     get_corporation,
     get_main_character,
 )
+from madc.helpers.skill_handler import skill_list_handler
 from madc.models import SkillList
-
-logger = LoggerAddTag(get_extension_logger(__name__), __title__)
 
 
 class DoctrineCheckerApiEndpoints:
@@ -50,7 +44,7 @@ class DoctrineCheckerApiEndpoints:
             characters = get_alts_queryset(main)
 
             # Get the skill lists for the main character
-            skilllists = providers.skills.get_user_skill_list(
+            skilllists = skill_list_handler.get_user_skill_list(
                 user_id=main.character_ownership.user_id
             )
 
@@ -111,7 +105,7 @@ class DoctrineCheckerApiEndpoints:
             )
 
             # Get skill lists for all users
-            skilllists = providers.skills.get_users_skill_list(users)
+            skilllists = skill_list_handler.get_users_skill_list(users)
 
             # Process skill data for each user
             self._process_user_skills(
@@ -134,7 +128,7 @@ class DoctrineCheckerApiEndpoints:
                 return 403, str(_("Permission Denied"))
 
             # Get the skill lists for the main character
-            user_skilllists = providers.skills.get_user_skill_list(
+            user_skilllists = skill_list_handler.get_user_skill_list(
                 user_id=character.character_ownership.user_id
             )
 

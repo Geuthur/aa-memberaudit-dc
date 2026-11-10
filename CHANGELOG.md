@@ -28,6 +28,16 @@ Section Order:
 
 <!-- Your changes go here -->
 
+### Changed
+
+- Logging: a single `AppLogger` is created in `madc/providers.py` and imported by all modules via `from madc.providers import logger` (replaces `LoggerAddTag` per module; log records now use the logger name `madc.providers`)
+- Tests for the `AppLogger` prefix
+- The shared `SkillListHandler` instance moved from `madc/providers.py` to `madc/helpers/skill_handler.py` (`skill_list_handler`) to avoid a circular import
+
+### Removed
+
+- Unused module loggers in `decorators.py`, `models/general.py`, `models/skillchecker.py`, `api/helpers.py`, `api/admin/admin.py` and `api/skill/skillchecker.py`
+
 ### Added
 
 - Optional extra `tests-allianceauth-development` (test packages plus the Alliance Auth 6 pre-release) for the tox environment `allianceauth-development` and `make tox-tests-development`; a non-blocking CI job "AA Development" runs it on Python 3.13 and 3.14
