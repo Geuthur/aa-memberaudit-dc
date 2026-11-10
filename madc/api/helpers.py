@@ -7,15 +7,9 @@ from django.utils.translation import gettext_lazy as _
 
 # Alliance Auth
 from allianceauth.eveonline.models import EveCharacter, EveCorporationInfo
-from allianceauth.services.hooks import get_extension_logger
-
-# Alliance Auth (External Libs)
-from app_utils.logging import LoggerAddTag
 
 # AA Memberaudit Doctrine Checker
-from madc import __title__, models
-
-logger = LoggerAddTag(get_extension_logger(__name__), __title__)
+from madc import models
 
 
 def get_manage_permission(request, character_id):

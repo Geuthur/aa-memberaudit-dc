@@ -10,21 +10,17 @@ from django.utils.html import format_html
 
 # Alliance Auth
 from allianceauth.authentication.models import CharacterOwnership
-from allianceauth.services.hooks import get_extension_logger
 
 # Alliance Auth (External Libs)
-from app_utils.logging import LoggerAddTag
 from memberaudit.models import CharacterSkill
 
 # AA Memberaudit Doctrine Checker
-from madc import __title__
 from madc.models.skillchecker import SkillList
+from madc.providers import logger
 
 SKILL_CACHE_TIMEOUT_SECONDS = 60 * 60 * 72  # 72 hours
 SKILL_CACHE_HEADERS_KEY = "SKILL_HEADER"
 SKILL_CACHE_USER_KEY = "SKILL_LISTS_{}"
-
-logger = LoggerAddTag(get_extension_logger(__name__), __title__)
 
 
 class SkillListHandler:
@@ -231,3 +227,6 @@ class SkillListHandler:
         )
         cache.set(SKILL_CACHE_HEADERS_KEY, skill_list_hash)
         return output
+
+
+skill_list_handler = SkillListHandler()

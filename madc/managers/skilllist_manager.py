@@ -4,15 +4,9 @@ from django.db import models
 # Alliance Auth
 from allianceauth.authentication.models import User
 from allianceauth.eveonline.models import EveCharacter, EveCorporationInfo
-from allianceauth.services.hooks import get_extension_logger
-
-# Alliance Auth (External Libs)
-from app_utils.logging import LoggerAddTag
 
 # AA Memberaudit Doctrine Checker
-from madc import __title__
-
-logger = LoggerAddTag(get_extension_logger(__name__), __title__)
+from madc.providers import logger
 
 
 class SkillListQuerySet(models.QuerySet):

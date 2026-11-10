@@ -1,22 +1,14 @@
-# Alliance Auth
-from allianceauth.services.hooks import get_extension_logger
-
-# Alliance Auth (External Libs)
-from app_utils.logging import LoggerAddTag
-
 # AA Memberaudit Doctrine Checker
-from madc import __title__
 from madc.decorators import (
     log_timing,
 )
+from madc.providers import logger
 from madc.tests import NoSocketsTestCase
 
 
 class TestDecorators(NoSocketsTestCase):
     def test_log_timing(self):
         # given
-        logger = LoggerAddTag(get_extension_logger(__name__), __title__)
-
         @log_timing(logger)
         def trigger_log_timing():
             return "Log Timing"

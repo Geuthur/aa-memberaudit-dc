@@ -15,17 +15,12 @@ from django.views.decorators.http import require_POST
 
 # Alliance Auth
 from allianceauth.authentication.decorators import permissions_required
-from allianceauth.services.hooks import get_extension_logger
-
-# Alliance Auth (External Libs)
-from app_utils.logging import LoggerAddTag
 
 # AA Memberaudit Doctrine Checker
-from madc import __title__, forms
+from madc import forms
 from madc.api.helpers import get_manage_permission
 from madc.models.skillchecker import SkillList
-
-logger = LoggerAddTag(get_extension_logger(__name__), __title__)
+from madc.providers import logger
 
 
 @login_required

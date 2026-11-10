@@ -12,14 +12,11 @@ from django.utils.translation import gettext_lazy as _
 # Alliance Auth
 from allianceauth.authentication.models import UserProfile
 from allianceauth.eveonline.models import EveCorporationInfo
-from allianceauth.services.hooks import get_extension_logger
 
 # Alliance Auth (External Libs)
-from app_utils.logging import LoggerAddTag
 from memberaudit.models import Character
 
 # AA Memberaudit Doctrine Checker
-from madc import __title__
 from madc.api import schema
 from madc.api.helpers import (
     generate_button,
@@ -28,8 +25,6 @@ from madc.api.helpers import (
     get_manage_permission,
 )
 from madc.models import SkillList
-
-logger = LoggerAddTag(get_extension_logger(__name__), __title__)
 
 
 class DoctrineCheckerAdminApiEndpoints:
