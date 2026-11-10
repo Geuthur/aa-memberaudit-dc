@@ -40,6 +40,7 @@ Section Order:
 ### Changed
 
 - Raised `__esi_compatibility_date__` to `2026-08-18`.
+- Tests: unified test base like the template `aa-example`. `madc/tests/__init__.py` now provides `NoSocketsTestCase` and `AuthTestCase`, users come from a `UserMainFactory` (`madc/tests/testdata/app.py`) based on `aa-evesde-factory`, which is added to the test extras. The JSON loader for Alliance Auth objects (`load_allianceauth`, `allianceauth.json`) and the use of `app_utils.testing` in the tests are removed.
 
 ## [0.4.0] - 2026-07-10
 

@@ -1,61 +1,27 @@
 # Standard Library
 import json
 
-# Django
-from django.test import RequestFactory
-
 # Alliance Auth (External Libs)
-from app_utils.testing import NoSocketsTestCase, create_user_from_evecharacter
 from eveuniverse.models import EveType
-from memberaudit.models import Character, CharacterSkill
+from memberaudit.models import CharacterSkill
 
 # AA Memberaudit Doctrine Checker
 from madc import __title__
 from madc.helpers.skill_handler import SkillListHandler
 from madc.models import SkillList
-from madc.tests.testdata.load_allianceauth import load_allianceauth
+from madc.tests import AuthTestCase
 from madc.tests.testdata.load_eveuniverse import load_eveuniverse
-from madc.tests.testdata.load_memberaudit import load_memberaudit
+from madc.tests.testdata.load_memberaudit import create_memberaudit
 
 
-class TestSkillHandler(NoSocketsTestCase):
+class TestSkillHandler(AuthTestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        load_allianceauth()
         load_eveuniverse()
-        load_memberaudit()
-
-        cls.factory = RequestFactory()
-        cls.user, cls.character_ownership = create_user_from_evecharacter(
-            character_id=1001,
-            permissions=["madc.basic_access"],
-        )
-        cls.user_corp_access, cls.character_ownership_corp = (
-            create_user_from_evecharacter(
-                character_id=1002,
-                permissions=["madc.basic_access", "madc.corp_access"],
-            )
-        )
-        cls.user_admin_access, cls.character_ownership_admin = (
-            create_user_from_evecharacter(
-                character_id=1003,
-                permissions=[
-                    "madc.basic_access",
-                    "madc.corp_access",
-                    "madc.admin_access",
-                ],
-            )
-        )
-        cls.user_no_access, cls.character_ownership_no_access = (
-            create_user_from_evecharacter(
-                character_id=1004,
-                permissions=[],
-            )
-        )
 
         cls.eve_type = EveType.objects.get(id=17940)
-        cls.memberaudit = Character.objects.get(eve_character__character_id=1001)
+        cls.memberaudit = create_memberaudit(cls.user.profile.main_character)
 
     def test_get_skill_list_hash(self):
         """Test should generate correct skill list hash."""
@@ -126,7 +92,7 @@ class TestSkillHandler(NoSocketsTestCase):
         )
 
         handler = SkillListHandler()
-        linked_characters = [self.character_ownership.character.character_id]
+        linked_characters = [self.user.profile.main_character.character_id]
         # when
         result = handler.check_skill_lists(
             skill_lists=[skill_list],
@@ -151,7 +117,7 @@ class TestSkillHandler(NoSocketsTestCase):
         skill_list = SkillList(name="fit", skill_list=json.dumps(sk_check))
 
         handler = SkillListHandler()
-        linked_characters = [self.character_ownership.character.character_id]
+        linked_characters = [self.user.profile.main_character.character_id]
         # when
         result = handler.check_skill_lists(
             skill_lists=[skill_list],

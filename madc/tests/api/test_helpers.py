@@ -5,63 +5,38 @@ import json
 from http import HTTPStatus
 
 # Django
-from django.test import RequestFactory, TestCase
 from django.urls import reverse
 
 # Alliance Auth (External Libs)
-from app_utils.testing import create_user_from_evecharacter
 from eveuniverse.models import EveType
-from memberaudit.models import Character
 
 # AA Memberaudit Doctrine Checker
 from madc.api import helpers
 from madc.models.skillchecker import SkillList
-from madc.tests.testdata.load_allianceauth import load_allianceauth
+from madc.tests import AuthTestCase
+from madc.tests.testdata.app import UserMainFactory
 from madc.tests.testdata.load_eveuniverse import load_eveuniverse
-from madc.tests.testdata.load_memberaudit import load_memberaudit
 
 API_PATH = "madc.api.admin"
 API_URL = "madc:api"
 
 
-class TestAPIHelper(TestCase):
+class TestAPIHelper(AuthTestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        load_allianceauth()
         load_eveuniverse()
-        load_memberaudit()
 
-        cls.factory = RequestFactory()
-        cls.user_no_access, cls.character_ownership_no_access = (
-            create_user_from_evecharacter(
-                character_id=1000,
-                permissions=[],
-            )
+        cls.user_admin_access = UserMainFactory(
+            permissions__=[
+                "madc.basic_access",
+                "madc.corp_access",
+                "madc.admin_access",
+            ]
         )
-        cls.user, cls.character_ownership = create_user_from_evecharacter(
-            character_id=1001,
-            permissions=["madc.basic_access"],
-        )
-        cls.user_corp_access, cls.character_ownership_corp = (
-            create_user_from_evecharacter(
-                character_id=1002,
-                permissions=["madc.basic_access", "madc.corp_access"],
-            )
-        )
-        cls.user_admin_access, cls.character_ownership_admin = (
-            create_user_from_evecharacter(
-                character_id=1003,
-                permissions=[
-                    "madc.basic_access",
-                    "madc.corp_access",
-                    "madc.admin_access",
-                ],
-            )
-        )
+        cls.user_no_access = UserMainFactory(permissions__=[])
 
         cls.eve_type = EveType.objects.get(id=17940)
-        cls.memberaudit = Character.objects.get(eve_character__character_id=1001)
         cls.skill_list = SkillList.objects.create(
             name="Test Skill Ready",
             category="Test Category",
@@ -83,14 +58,14 @@ class TestAPIHelper(TestCase):
 
         # when
         perms, main_char = helpers.get_main_character(
-            request, self.character_ownership_admin.character.character_id
+            request, self.user_admin_access.profile.main_character.character_id
         )
 
         # then
         self.assertTrue(perms)
         self.assertEqual(
             main_char.character_id,
-            self.character_ownership_admin.character.character_id,
+            self.user_admin_access.profile.main_character.character_id,
         )
 
     def test_get_main_character_no_access(self):
@@ -100,21 +75,21 @@ class TestAPIHelper(TestCase):
 
         # when
         perms, main_char = helpers.get_main_character(
-            request, self.character_ownership_admin.character.character_id
+            request, self.user_admin_access.profile.main_character.character_id
         )
 
         # then
         self.assertFalse(perms)
         self.assertEqual(
             main_char.character_id,
-            self.character_ownership_admin.character.character_id,
+            self.user_admin_access.profile.main_character.character_id,
         )
 
     def test_get_corporation(self):
         # given
         request = self.factory.get("/")
         request.user = self.user_admin_access
-        corporation_id = self.character_ownership.character.corporation_id
+        corporation_id = self.user.profile.main_character.corporation_id
 
         # when
         perms, corporation = helpers.get_corporation(request, corporation_id)
@@ -127,7 +102,7 @@ class TestAPIHelper(TestCase):
         # given
         request = self.factory.get("/")
         request.user = self.user_no_access
-        corporation_id = self.character_ownership.character.corporation_id
+        corporation_id = self.user.profile.main_character.corporation_id
 
         # when
         perms, corporation = helpers.get_corporation(request, corporation_id)
@@ -151,10 +126,10 @@ class TestAPIHelper(TestCase):
 
     def test_get_alts_queryset(self):
         # when
-        alts_qs = helpers.get_alts_queryset(self.character_ownership.character)
+        alts_qs = helpers.get_alts_queryset(self.user.profile.main_character)
 
         # then
-        self.assertIn(self.character_ownership.character, alts_qs)
+        self.assertIn(self.user.profile.main_character, alts_qs)
         self.assertEqual(alts_qs.count(), 1)
 
     def test__collect_user_doctrines_single_char(self):
