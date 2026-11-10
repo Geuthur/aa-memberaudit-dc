@@ -5,53 +5,32 @@ from http import HTTPStatus
 from unittest.mock import patch
 
 # Django
-from django.test import RequestFactory, TestCase
 from django.urls import reverse
-
-# Alliance Auth (External Libs)
-from app_utils.testing import create_user_from_evecharacter
 
 # AA Memberaudit Doctrine Checker
 from madc import views
-from madc.tests.testdata.load_allianceauth import load_allianceauth
+from madc.tests import AuthTestCase
+from madc.tests.testdata.app import UserMainFactory
 from madc.tests.testdata.load_eveuniverse import load_eveuniverse
 
 INDEX_PATH = "madc.views"
 
 
-class TestViewIndexAccess(TestCase):
+class TestViewIndexAccess(AuthTestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        load_allianceauth()
         load_eveuniverse()
 
-        cls.factory = RequestFactory()
-        cls.user, cls.character_ownership = create_user_from_evecharacter(
-            character_id=1001,
-            permissions=["madc.basic_access"],
+        cls.user_corp_access = UserMainFactory(
+            permissions__=["madc.basic_access", "madc.corp_access"]
         )
-        cls.user_corp_access, cls.character_ownership_corp = (
-            create_user_from_evecharacter(
-                character_id=1002,
-                permissions=["madc.basic_access", "madc.corp_access"],
-            )
-        )
-        cls.user_admin_access, cls.character_ownership_admin = (
-            create_user_from_evecharacter(
-                character_id=1003,
-                permissions=[
-                    "madc.basic_access",
-                    "madc.corp_access",
-                    "madc.admin_access",
-                ],
-            )
-        )
-        cls.user_no_access, cls.character_ownership_no_access = (
-            create_user_from_evecharacter(
-                character_id=1004,
-                permissions=[],
-            )
+        cls.user_admin_access = UserMainFactory(
+            permissions__=[
+                "madc.basic_access",
+                "madc.corp_access",
+                "madc.admin_access",
+            ]
         )
 
     def test_index_view(self):
@@ -69,13 +48,13 @@ class TestViewIndexAccess(TestCase):
         # given
         request = self.factory.get(
             reverse(
-                "madc:checker", args=[self.character_ownership.character.character_id]
+                "madc:checker", args=[self.user.profile.main_character.character_id]
             )
         )
         request.user = self.user
         # when
         response = views.checker(
-            request, character_id=self.character_ownership.character.character_id
+            request, character_id=self.user.profile.main_character.character_id
         )
         # then
         self.assertEqual(response.status_code, HTTPStatus.OK)
@@ -87,7 +66,7 @@ class TestViewIndexAccess(TestCase):
             reverse(
                 "madc:corporation_checker",
                 args=[
-                    self.character_ownership_corp.character.corporation.corporation_id
+                    self.user_corp_access.profile.main_character.corporation.corporation_id
                 ],
             )
         )
@@ -95,7 +74,7 @@ class TestViewIndexAccess(TestCase):
         # when
         response = views.corporation_checker(
             request,
-            corporation_id=self.character_ownership_corp.character.corporation.corporation_id,
+            corporation_id=self.user_corp_access.profile.main_character.corporation.corporation_id,
         )
         # then
         self.assertEqual(response.status_code, HTTPStatus.OK)
@@ -105,13 +84,13 @@ class TestViewIndexAccess(TestCase):
         # given
         request = self.factory.get(
             reverse(
-                "madc:overview", args=[self.character_ownership.character.character_id]
+                "madc:overview", args=[self.user.profile.main_character.character_id]
             )
         )
         request.user = self.user
         # when
         response = views.overview(
-            request, character_id=self.character_ownership.character.character_id
+            request, character_id=self.user.profile.main_character.character_id
         )
         # then
         self.assertEqual(response.status_code, HTTPStatus.OK)
@@ -122,13 +101,14 @@ class TestViewIndexAccess(TestCase):
         request = self.factory.get(
             reverse(
                 "madc:administration",
-                args=[self.character_ownership_admin.character.character_id],
+                args=[self.user_admin_access.profile.main_character.character_id],
             )
         )
         request.user = self.user_admin_access
         # when
         response = views.administration(
-            request, character_id=self.character_ownership_admin.character.character_id
+            request,
+            character_id=self.user_admin_access.profile.main_character.character_id,
         )
         # then
         self.assertEqual(response.status_code, HTTPStatus.OK)
@@ -139,13 +119,14 @@ class TestViewIndexAccess(TestCase):
         request = self.factory.get(
             reverse(
                 "madc:add_doctrine",
-                args=[self.character_ownership_admin.character.character_id],
+                args=[self.user_admin_access.profile.main_character.character_id],
             )
         )
         request.user = self.user_admin_access
         # when
         response = views.doctrine(
-            request, character_id=self.character_ownership_admin.character.character_id
+            request,
+            character_id=self.user_admin_access.profile.main_character.character_id,
         )
         # then
         self.assertEqual(response.status_code, HTTPStatus.OK)

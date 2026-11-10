@@ -3,13 +3,13 @@ from allianceauth.services.hooks import get_extension_logger
 
 # Alliance Auth (External Libs)
 from app_utils.logging import LoggerAddTag
-from app_utils.testing import NoSocketsTestCase
 
 # AA Memberaudit Doctrine Checker
 from madc import __title__
 from madc.decorators import (
     log_timing,
 )
+from madc.tests import NoSocketsTestCase
 
 
 class TestDecorators(NoSocketsTestCase):

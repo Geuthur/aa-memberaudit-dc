@@ -5,43 +5,30 @@ import json
 from http import HTTPStatus
 
 # Django
-from django.test import RequestFactory, TestCase
 from django.urls import reverse
-
-# Alliance Auth (External Libs)
-from app_utils.testing import create_user_from_evecharacter
 
 # AA Memberaudit Doctrine Checker
 from madc import views
 from madc.models.skillchecker import SkillList
-from madc.tests.testdata.load_allianceauth import load_allianceauth
+from madc.tests import AuthTestCase
+from madc.tests.testdata.app import UserMainFactory
 from madc.tests.testdata.load_eveuniverse import load_eveuniverse
 
 
-class TestAdministrationView(TestCase):
+class TestAdministrationView(AuthTestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        load_allianceauth()
         load_eveuniverse()
 
-        cls.factory = RequestFactory()
-        cls.user_admin_access, cls.character_ownership_admin = (
-            create_user_from_evecharacter(
-                character_id=1003,
-                permissions=[
-                    "madc.basic_access",
-                    "madc.corp_access",
-                    "madc.admin_access",
-                ],
-            )
+        cls.user_admin_access = UserMainFactory(
+            permissions__=[
+                "madc.basic_access",
+                "madc.corp_access",
+                "madc.admin_access",
+            ]
         )
-        cls.user_no_access, cls.character_ownership_no_access = (
-            create_user_from_evecharacter(
-                character_id=1004,
-                permissions=[],
-            )
-        )
+        cls.user_no_access = UserMainFactory(permissions__=[])
         cls.skill_plan = SkillList.objects.create(
             name="Test Skillplan",
             category="Test Category",
