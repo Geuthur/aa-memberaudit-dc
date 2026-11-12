@@ -9,7 +9,7 @@ from django.utils.translation import gettext_lazy as _
 from app_utils.django import users_with_permission
 
 # AA Memberaudit Doctrine Checker
-from madc.managers.general_manager import GeneralManager
+from madc.managers.general import GeneralManager
 
 
 class General(models.Model):
