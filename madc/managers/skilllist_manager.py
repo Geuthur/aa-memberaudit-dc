@@ -1,3 +1,6 @@
+# pylint: disable=import-outside-toplevel
+# General is imported locally: models/general.py imports managers (circular import)
+
 # Django
 from django.db import models
 
@@ -11,17 +14,15 @@ from madc.providers import logger
 
 class SkillListQuerySet(models.QuerySet):
     def manage_to(self, user: User):
-        qs = EveCharacter.objects.get_queryset()
-        # superusers get all visible
-        if user.is_superuser:
-            logger.debug("Returning all Data for superuser %s.", user)
-            return qs.all()
+        # AA Memberaudit Doctrine Checker
+        from madc.models.general import General
 
-        if user.has_perm("madc.admin_access"):
+        qs = EveCharacter.objects.get_queryset()
+        if General.objects.has_full_access(user):
             logger.debug("Returning all Data for %s.", user)
             return qs.all()
 
-        if user.has_perm("madc.manage_access"):
+        if General.objects.has_management_access(user):
             try:
                 char = user.profile.main_character
                 char: EveCharacter
@@ -30,10 +31,10 @@ class SkillListQuerySet(models.QuerySet):
                 # build all accepted queries
                 queries = [models.Q(character_ownership__user=user)]
 
-                if user.has_perm("madc.corp_access"):
+                if General.objects.has_corp_access(user):
                     queries.append(models.Q(corporation_id=char.corporation_id))
 
-                if user.has_perm("madc.alliance_access"):
+                if General.objects.has_alliance_access(user):
                     queries.append(models.Q(alliance_id=char.alliance_id))
 
                 logger.debug(
@@ -58,12 +59,11 @@ class SkillListManagerBase(models.Manager):
 
     @staticmethod
     def visible_eve_characters(user: User):
-        qs = EveCharacter.objects.get_queryset()
-        if user.is_superuser:
-            logger.debug("Returning all characters for superuser %s.", user)
-            return qs.all()
+        # AA Memberaudit Doctrine Checker
+        from madc.models.general import General
 
-        if user.has_perm("madc.admin_access"):
+        qs = EveCharacter.objects.get_queryset()
+        if General.objects.has_full_access(user):
             logger.debug("Returning all characters for %s.", user)
             return qs.all()
 
@@ -75,10 +75,10 @@ class SkillListManagerBase(models.Manager):
             # build all accepted queries
             queries = [models.Q(character_ownership__user=user)]
 
-            if user.has_perm("madc.corp_access"):
+            if General.objects.has_corp_access(user):
                 queries.append(models.Q(corporation_id=char.corporation_id))
 
-            if user.has_perm("madc.alliance_access"):
+            if General.objects.has_alliance_access(user):
                 queries.append(models.Q(alliance_id=char.alliance_id))
 
             logger.debug(
@@ -95,12 +95,11 @@ class SkillListManagerBase(models.Manager):
 
     @staticmethod
     def visible_eve_corporations(user: User):
-        qs = EveCorporationInfo.objects.get_queryset()
-        if user.is_superuser:
-            logger.debug("Returning all corporations for superuser %s.", user)
-            return qs.all()
+        # AA Memberaudit Doctrine Checker
+        from madc.models.general import General
 
-        if user.has_perm("madc.admin_access"):
+        qs = EveCorporationInfo.objects.get_queryset()
+        if General.objects.has_full_access(user):
             logger.debug("Returning all corporations for %s.", user)
             return qs.all()
 
@@ -112,10 +111,10 @@ class SkillListManagerBase(models.Manager):
             # build all accepted queries
             queries = [models.Q(corporation_id=char.corporation_id)]
 
-            if user.has_perm("madc.corp_access"):
+            if General.objects.has_corp_access(user):
                 queries.append(models.Q(corporation_id=char.corporation_id))
 
-            if user.has_perm("madc.alliance_access"):
+            if General.objects.has_alliance_access(user):
                 queries.append(models.Q(alliance_id=char.alliance_id))
 
             logger.debug(

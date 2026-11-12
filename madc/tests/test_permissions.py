@@ -9,6 +9,7 @@ from django.test import SimpleTestCase
 
 # AA Memberaudit Doctrine Checker
 import madc
+from madc.models import SkillList
 from madc.models.general import General
 from madc.tests import AuthTestCase
 from madc.tests.testdata.app import UserMainFactory
@@ -59,3 +60,61 @@ class TestGeneralManager(AuthTestCase):
         ):
             user = UserMainFactory(permissions__=[perm])
             self.assertEqual(General.objects.has_management_access(user), expected)
+
+    def test_has_basic_access(self):
+        for perm, expected in (
+            ("madc.basic_access", True),
+            ("madc.corp_access", False),
+        ):
+            user = UserMainFactory(permissions__=[perm])
+            self.assertEqual(General.objects.has_basic_access(user), expected)
+
+    def test_has_corp_and_alliance_access(self):
+        corp = UserMainFactory(permissions__=["madc.corp_access"])
+        alliance = UserMainFactory(permissions__=["madc.alliance_access"])
+        self.assertTrue(General.objects.has_corp_access(corp))
+        self.assertFalse(General.objects.has_corp_access(alliance))
+        self.assertTrue(General.objects.has_alliance_access(alliance))
+        self.assertFalse(General.objects.has_alliance_access(corp))
+
+    def test_has_admin_and_full_access(self):
+        admin = UserMainFactory(permissions__=["madc.admin_access"])
+        manager = UserMainFactory(permissions__=["madc.manage_access"])
+        self.assertTrue(General.objects.has_admin_access(admin))
+        self.assertFalse(General.objects.has_admin_access(manager))
+        self.assertTrue(General.objects.has_full_access(admin))
+        self.assertFalse(General.objects.has_full_access(manager))
+        self.assertTrue(General.objects.has_full_access(self.superuser))
+
+
+class TestSkillListAccess(AuthTestCase):
+    """The access querysets get their rules from General.objects."""
+
+    def test_full_access_sees_all_characters(self):
+        # Alliance Auth
+        from allianceauth.eveonline.models import EveCharacter
+
+        admin = UserMainFactory(permissions__=["madc.admin_access"])
+        total = EveCharacter.objects.count()
+        for user in (admin, self.superuser):
+            self.assertEqual(
+                SkillList.objects.visible_eve_characters(user).count(), total
+            )
+            self.assertEqual(SkillList.objects.manage_to(user).count(), total)
+
+    def test_basic_user_sees_only_own_characters(self):
+        user = UserMainFactory(permissions__=["madc.basic_access"])
+        visible = SkillList.objects.visible_eve_characters(user)
+        self.assertEqual(
+            list(visible.values_list("pk", flat=True)),
+            [user.profile.main_character.pk],
+        )
+        self.assertEqual(SkillList.objects.manage_to(user).count(), 0)
+
+    def test_manager_sees_own_characters_only_to_manage(self):
+        user = UserMainFactory(permissions__=["madc.manage_access"])
+        manageable = SkillList.objects.manage_to(user)
+        self.assertEqual(
+            list(manageable.values_list("pk", flat=True)),
+            [user.profile.main_character.pk],
+        )

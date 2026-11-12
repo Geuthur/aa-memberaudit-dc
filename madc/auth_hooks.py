@@ -9,6 +9,7 @@ from allianceauth.services.hooks import MenuItemHook, UrlHook
 
 # AA Memberaudit Doctrine Checker
 from madc import urls
+from madc.models.general import General
 
 
 class MADoctrineCheckerMenuItem(MenuItemHook):
@@ -27,7 +28,7 @@ class MADoctrineCheckerMenuItem(MenuItemHook):
     def render(self, request):
         """Render the menu item"""
 
-        if request.user.has_perm("madc.basic_access"):
+        if General.objects.has_basic_access(request.user):
             return MenuItemHook.render(self, request)
 
         return ""
