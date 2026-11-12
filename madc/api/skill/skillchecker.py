@@ -20,7 +20,7 @@ from madc.api.helpers import (
     get_main_character,
 )
 from madc.helpers.skill_handler import skill_list_handler
-from madc.models import SkillList
+from madc.models import General, SkillList
 
 
 class DoctrineCheckerApiEndpoints:
@@ -163,7 +163,7 @@ class DoctrineCheckerApiEndpoints:
             tags=self.tags,
         )
         def get_doctrine_skills(request, pk: int):
-            perms = request.user.has_perm("madc.basic_access")
+            perms = General.has_perm(request.user, General.Permission.BASIC_ACCESS)
 
             if not perms:
                 return 403, str(_("Permission Denied"))

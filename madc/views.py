@@ -19,18 +19,19 @@ from allianceauth.authentication.decorators import permissions_required
 # AA Memberaudit Doctrine Checker
 from madc import forms
 from madc.api.helpers import get_manage_permission
+from madc.models.general import General
 from madc.models.skillchecker import SkillList
 from madc.providers import logger
 
 
 @login_required
-@permissions_required(["madc.basic_access"])
+@permissions_required([General.get_perm(General.Permission.BASIC_ACCESS)])
 def index(request: WSGIRequest):
     return redirect("madc:checker", request.user.profile.main_character.character_id)
 
 
 @login_required
-@permissions_required(["madc.basic_access"])
+@permissions_required([General.get_perm(General.Permission.BASIC_ACCESS)])
 def checker(request: WSGIRequest, character_id=None):
     if character_id is None:
         character_id = request.user.profile.main_character.character_id
@@ -46,7 +47,7 @@ def checker(request: WSGIRequest, character_id=None):
 
 
 @login_required
-@permissions_required(["madc.corp_access"])
+@permissions_required([General.get_perm(General.Permission.CORP_ACCESS)])
 def corporation_checker(request: WSGIRequest, corporation_id=None):
     character_id = request.user.profile.main_character.character_id
     if corporation_id is None:
@@ -64,7 +65,7 @@ def corporation_checker(request: WSGIRequest, corporation_id=None):
 
 
 @login_required
-@permissions_required(["madc.basic_access"])
+@permissions_required([General.get_perm(General.Permission.BASIC_ACCESS)])
 def overview(request: WSGIRequest, character_id=None):
     if character_id is None:
         character_id = request.user.profile.main_character.character_id
@@ -77,7 +78,7 @@ def overview(request: WSGIRequest, character_id=None):
 
 
 @login_required
-@permissions_required(["madc.corp_access"])
+@permissions_required([General.get_perm(General.Permission.CORP_ACCESS)])
 def corporation_overview(request: WSGIRequest, character_id=None):
     if character_id is None:
         character_id = request.user.profile.main_character.character_id
@@ -90,7 +91,12 @@ def corporation_overview(request: WSGIRequest, character_id=None):
 
 
 @login_required
-@permissions_required(["madc.manage_access", "madc.admin_access"])
+@permissions_required(
+    [
+        General.get_perm(General.Permission.MANAGE_ACCESS),
+        General.get_perm(General.Permission.ADMIN_ACCESS),
+    ]
+)
 def administration(request: WSGIRequest, character_id=None):
     if character_id is None:
         character_id = request.user.profile.main_character.character_id
@@ -106,7 +112,12 @@ def administration(request: WSGIRequest, character_id=None):
 
 
 @login_required
-@permissions_required(["madc.manage_access", "madc.admin_access"])
+@permissions_required(
+    [
+        General.get_perm(General.Permission.MANAGE_ACCESS),
+        General.get_perm(General.Permission.ADMIN_ACCESS),
+    ]
+)
 def doctrine(request: WSGIRequest, character_id=None):
     if character_id is None:
         character_id = request.user.profile.main_character.character_id
@@ -122,7 +133,12 @@ def doctrine(request: WSGIRequest, character_id=None):
 
 
 @login_required
-@permissions_required(["madc.manage_access", "madc.admin_access"])
+@permissions_required(
+    [
+        General.get_perm(General.Permission.MANAGE_ACCESS),
+        General.get_perm(General.Permission.ADMIN_ACCESS),
+    ]
+)
 def ajax_doctrine(request: WSGIRequest):
     if request.method == "POST":
         form = forms.SkillListForm(request.POST)
@@ -188,7 +204,12 @@ def ajax_doctrine(request: WSGIRequest):
 
 
 @login_required
-@permissions_required(["madc.manage_access", "madc.admin_access"])
+@permissions_required(
+    [
+        General.get_perm(General.Permission.MANAGE_ACCESS),
+        General.get_perm(General.Permission.ADMIN_ACCESS),
+    ]
+)
 @require_POST
 def delete_doctrine(request: WSGIRequest):
     msg = _("Invalid Method")
@@ -220,7 +241,12 @@ def delete_doctrine(request: WSGIRequest):
 
 # pylint: disable=too-many-return-statements
 @login_required
-@permissions_required(["madc.manage_access", "madc.admin_access"])
+@permissions_required(
+    [
+        General.get_perm(General.Permission.MANAGE_ACCESS),
+        General.get_perm(General.Permission.ADMIN_ACCESS),
+    ]
+)
 def edit_doctrine(request: WSGIRequest, pk: int):
     """Handle x-editable updates for skill lists"""
     # Validate request method

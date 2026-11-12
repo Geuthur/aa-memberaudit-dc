@@ -30,6 +30,7 @@ Section Order:
 
 ### Changed
 
+- `General` now defines a `Permission` enum (`TextChoices`), `Meta.permissions = Permission.choices` and the helpers `get_perm`, `has_perm`, `has_any_perm` and `has_management_access`. Views, API, menu hook and managers check permissions only through `General` instead of permission strings. Permission codenames are unchanged; migration `0005` only re-declares the permission list.
 - Logging: a single `AppLogger` is created in `madc/providers.py` and imported by all modules via `from madc.providers import logger` (replaces `LoggerAddTag` per module; log records now use the logger name `madc.providers`)
 - Tests for the `AppLogger` prefix
 - The shared `SkillListHandler` instance moved from `madc/providers.py` to `madc/helpers/skill_handler.py` (`skill_list_handler`) to avoid a circular import

@@ -6,6 +6,7 @@ from allianceauth.authentication.models import User
 from allianceauth.eveonline.models import EveCharacter, EveCorporationInfo
 
 # AA Memberaudit Doctrine Checker
+from madc.models.general import General
 from madc.providers import logger
 
 
@@ -17,11 +18,11 @@ class SkillListQuerySet(models.QuerySet):
             logger.debug("Returning all Data for superuser %s.", user)
             return qs.all()
 
-        if user.has_perm("madc.admin_access"):
+        if General.has_perm(user, General.Permission.ADMIN_ACCESS):
             logger.debug("Returning all Data for %s.", user)
             return qs.all()
 
-        if user.has_perm("madc.manage_access"):
+        if General.has_perm(user, General.Permission.MANAGE_ACCESS):
             try:
                 char = user.profile.main_character
                 char: EveCharacter
@@ -30,10 +31,10 @@ class SkillListQuerySet(models.QuerySet):
                 # build all accepted queries
                 queries = [models.Q(character_ownership__user=user)]
 
-                if user.has_perm("madc.corp_access"):
+                if General.has_perm(user, General.Permission.CORP_ACCESS):
                     queries.append(models.Q(corporation_id=char.corporation_id))
 
-                if user.has_perm("madc.alliance_access"):
+                if General.has_perm(user, General.Permission.ALLIANCE_ACCESS):
                     queries.append(models.Q(alliance_id=char.alliance_id))
 
                 logger.debug(
@@ -63,7 +64,7 @@ class SkillListManagerBase(models.Manager):
             logger.debug("Returning all characters for superuser %s.", user)
             return qs.all()
 
-        if user.has_perm("madc.admin_access"):
+        if General.has_perm(user, General.Permission.ADMIN_ACCESS):
             logger.debug("Returning all characters for %s.", user)
             return qs.all()
 
@@ -75,10 +76,10 @@ class SkillListManagerBase(models.Manager):
             # build all accepted queries
             queries = [models.Q(character_ownership__user=user)]
 
-            if user.has_perm("madc.corp_access"):
+            if General.has_perm(user, General.Permission.CORP_ACCESS):
                 queries.append(models.Q(corporation_id=char.corporation_id))
 
-            if user.has_perm("madc.alliance_access"):
+            if General.has_perm(user, General.Permission.ALLIANCE_ACCESS):
                 queries.append(models.Q(alliance_id=char.alliance_id))
 
             logger.debug(
@@ -100,7 +101,7 @@ class SkillListManagerBase(models.Manager):
             logger.debug("Returning all corporations for superuser %s.", user)
             return qs.all()
 
-        if user.has_perm("madc.admin_access"):
+        if General.has_perm(user, General.Permission.ADMIN_ACCESS):
             logger.debug("Returning all corporations for %s.", user)
             return qs.all()
 
@@ -112,10 +113,10 @@ class SkillListManagerBase(models.Manager):
             # build all accepted queries
             queries = [models.Q(corporation_id=char.corporation_id)]
 
-            if user.has_perm("madc.corp_access"):
+            if General.has_perm(user, General.Permission.CORP_ACCESS):
                 queries.append(models.Q(corporation_id=char.corporation_id))
 
-            if user.has_perm("madc.alliance_access"):
+            if General.has_perm(user, General.Permission.ALLIANCE_ACCESS):
                 queries.append(models.Q(alliance_id=char.alliance_id))
 
             logger.debug(
