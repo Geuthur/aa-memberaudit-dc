@@ -10,6 +10,8 @@ from django.test import SimpleTestCase
 # AA Memberaudit Doctrine Checker
 import madc
 from madc.models.general import General
+from madc.tests import AuthTestCase
+from madc.tests.testdata.app import UserMainFactory
 
 # Matches e.g. "madc.basic_access" and "perms.madc.basic_access", also typos
 PERMISSION_PATTERN = re.compile(r"\bmadc\.(\w*access\w*)", re.IGNORECASE)
@@ -46,3 +48,14 @@ class TestPermissionStrings(SimpleTestCase):
                 continue
             used |= set(PERMISSION_PATTERN.findall(path.read_text(encoding="utf-8")))
         self.assertEqual(defined - used, set())
+
+
+class TestGeneralManager(AuthTestCase):
+    def test_has_management_access(self):
+        for perm, expected in (
+            ("madc.manage_access", True),
+            ("madc.admin_access", True),
+            ("madc.basic_access", False),
+        ):
+            user = UserMainFactory(permissions__=[perm])
+            self.assertEqual(General.objects.has_management_access(user), expected)
