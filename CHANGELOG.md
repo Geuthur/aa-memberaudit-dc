@@ -30,6 +30,9 @@ Section Order:
 
 ### Changed
 
+- Permissions are checked directly with Django and the full string (e.g. `madc.basic_access`); `General.Meta.permissions` stays the single place where they are defined. Codenames are unchanged, no migration needed.
+- `General` has a `GeneralManager` (`managers/general.py`) with `has_management_access` (manage or admin, no database query); permission texts are translatable
+- Test that matches all permission strings used in the code (Python and templates) against `General.Meta.permissions`
 - Logging: a single `AppLogger` is created in `madc/providers.py` and imported by all modules via `from madc.providers import logger` (replaces `LoggerAddTag` per module; log records now use the logger name `madc.providers`)
 - Tests for the `AppLogger` prefix
 - The shared `SkillListHandler` instance moved from `madc/providers.py` to `madc/helpers/skill_handler.py` (`skill_list_handler`) to avoid a circular import
