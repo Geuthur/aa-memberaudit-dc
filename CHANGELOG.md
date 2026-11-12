@@ -30,6 +30,7 @@ Section Order:
 
 ### Changed
 
+- The API, the menu hook and the access querysets (`SkillList.objects.manage_to`, `visible_eve_characters`, `visible_eve_corporations`) check permissions only through `General.objects` (`GeneralManager`) instead of `user.has_perm("madc.…")` or their own `is_superuser` check. New `GeneralManager` methods `has_basic_access`, `has_corp_access`, `has_alliance_access`, `has_admin_access` and `has_full_access` (superuser or `admin_access`). The Django views keep `@permissions_required`. No behavior change.
 - Permissions are checked directly with Django and the full string (e.g. `madc.basic_access`); `General.Meta.permissions` stays the single place where they are defined. Codenames are unchanged, no migration needed.
 - `General` has a `GeneralManager` (`managers/general.py`) with `has_management_access` (manage or admin, no database query); permission texts are translatable
 - Test that matches all permission strings used in the code (Python and templates) against `General.Meta.permissions`
