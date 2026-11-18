@@ -30,6 +30,11 @@ Section Order:
 
 ### Changed
 
+> [!WARNING]
+> Basic access is only granted by `basic_access`. Users with `corp_access`, `alliance_access`, `manage_access` or `admin_access` but without `basic_access` lose access to the API and the pages; give them `basic_access` as well.
+
+- The whole API requires `basic_access` centrally (`basic_access_required` around the API URLs in `urls.py`); without it every endpoint answers 403 `{"error": "Permission Denied"}`, also for characters of the own account
+- All views require `basic_access` in addition to their own permission (`corp_access`, or `manage_access`/`admin_access`); `GeneralManager.has_basic_access` is now a `@staticmethod`
 - The API, the menu hook and the access querysets (`SkillList.objects.manage_to`, `visible_eve_characters`, `visible_eve_corporations`) check permissions only through `General.objects` (`GeneralManager`) instead of `user.has_perm("madc.…")` or their own `is_superuser` check. New `GeneralManager` methods `has_basic_access`, `has_corp_access`, `has_alliance_access`, `has_admin_access` and `has_full_access` (superuser or `admin_access`). The Django views keep `@permissions_required`. No behavior change.
 - Permissions are checked directly with Django and the full string (e.g. `madc.basic_access`); `General.Meta.permissions` stays the single place where they are defined. Codenames are unchanged, no migration needed.
 - `General` has a `GeneralManager` (`managers/general.py`) with `has_management_access` (manage or admin, no database query); permission texts are translatable

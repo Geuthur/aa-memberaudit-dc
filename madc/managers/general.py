@@ -14,7 +14,8 @@ from allianceauth.authentication.models import User
 
 
 class GeneralManager(models.Manager):
-    def has_basic_access(self, user: User) -> bool:
+    @staticmethod
+    def has_basic_access(user: User) -> bool:
         """True if the user may use the app (basic_access)."""
         return bool(user.has_perm("madc.basic_access"))
 
