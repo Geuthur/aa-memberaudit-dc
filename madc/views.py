@@ -46,6 +46,7 @@ def checker(request: WSGIRequest, character_id=None):
 
 
 @login_required
+@permissions_required(["madc.basic_access"])
 @permissions_required(["madc.corp_access"])
 def corporation_checker(request: WSGIRequest, corporation_id=None):
     character_id = request.user.profile.main_character.character_id
@@ -77,6 +78,7 @@ def overview(request: WSGIRequest, character_id=None):
 
 
 @login_required
+@permissions_required(["madc.basic_access"])
 @permissions_required(["madc.corp_access"])
 def corporation_overview(request: WSGIRequest, character_id=None):
     if character_id is None:
@@ -90,6 +92,7 @@ def corporation_overview(request: WSGIRequest, character_id=None):
 
 
 @login_required
+@permissions_required(["madc.basic_access"])
 @permissions_required(["madc.manage_access", "madc.admin_access"])
 def administration(request: WSGIRequest, character_id=None):
     if character_id is None:
@@ -106,6 +109,7 @@ def administration(request: WSGIRequest, character_id=None):
 
 
 @login_required
+@permissions_required(["madc.basic_access"])
 @permissions_required(["madc.manage_access", "madc.admin_access"])
 def doctrine(request: WSGIRequest, character_id=None):
     if character_id is None:
@@ -122,6 +126,7 @@ def doctrine(request: WSGIRequest, character_id=None):
 
 
 @login_required
+@permissions_required(["madc.basic_access"])
 @permissions_required(["madc.manage_access", "madc.admin_access"])
 def ajax_doctrine(request: WSGIRequest):
     if request.method == "POST":
@@ -188,6 +193,7 @@ def ajax_doctrine(request: WSGIRequest):
 
 
 @login_required
+@permissions_required(["madc.basic_access"])
 @permissions_required(["madc.manage_access", "madc.admin_access"])
 @require_POST
 def delete_doctrine(request: WSGIRequest):
@@ -220,6 +226,7 @@ def delete_doctrine(request: WSGIRequest):
 
 # pylint: disable=too-many-return-statements
 @login_required
+@permissions_required(["madc.basic_access"])
 @permissions_required(["madc.manage_access", "madc.admin_access"])
 def edit_doctrine(request: WSGIRequest, pk: int):
     """Handle x-editable updates for skill lists"""
