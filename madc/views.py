@@ -212,7 +212,7 @@ def delete_doctrine(request: WSGIRequest):
     if form.is_valid():
         pk = form.cleaned_data["pk"]
         skilllist_obj = SkillList.objects.get(pk=pk)
-        msg = _(f"Skilllist: {skilllist_obj.name} deleted")
+        msg = _("Skilllist: {name} deleted").format(name=skilllist_obj.name)
         msg += f" - {pk}"
         skilllist_obj.delete()
         logger.info(
