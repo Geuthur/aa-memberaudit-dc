@@ -7,6 +7,7 @@ from ninja import NinjaAPI
 # Django
 from django.urls import reverse
 from django.utils.html import format_html
+from django.utils.translation import gettext
 from django.utils.translation import gettext_lazy as _
 
 # Alliance Auth
@@ -34,7 +35,7 @@ class DoctrineCheckerAdminApiEndpoints:
     def __init__(self, api: NinjaAPI):
         @api.get(
             "administration/",
-            response={200: Any, 403: str},
+            response={200: Any, 403: schema.ErrorSchema},
             tags=self.tags,
         )
         def admin_doctrines(request):
@@ -42,7 +43,7 @@ class DoctrineCheckerAdminApiEndpoints:
             response, __ = get_manage_permission(request, character_id)
 
             if not response:
-                return 403, str(_("Permission Denied"))
+                return 403, {"error": gettext("Permission Denied")}
 
             skilllist_obj = SkillList.objects.all().order_by("ordering", "name")
 
@@ -139,14 +140,14 @@ class DoctrineCheckerAdminApiEndpoints:
 
         @api.get(
             "character/overview/",
-            response={200: list[schema.CharacterOverview], 403: str},
+            response={200: list[schema.CharacterOverview], 403: schema.ErrorSchema},
             tags=self.tags,
         )
         def get_character_overview(request):
             chars_visible = SkillList.objects.visible_eve_characters(request.user)
 
             if chars_visible is None:
-                return 403, "Permission Denied"
+                return 403, {"error": gettext("Permission Denied")}
 
             chars_ids = chars_visible.values_list("character_id", flat=True)
 
@@ -175,14 +176,14 @@ class DoctrineCheckerAdminApiEndpoints:
 
         @api.get(
             "corporation/overview/",
-            response={200: list[schema.CorporationOverview], 403: str},
+            response={200: list[schema.CorporationOverview], 403: schema.ErrorSchema},
             tags=self.tags,
         )
         def get_corporation_overview(request):
             corps_visible = SkillList.objects.visible_eve_corporations(request.user)
 
             if corps_visible is None:
-                return 403, "Permission Denied"
+                return 403, {"error": gettext("Permission Denied")}
 
             # Collect unique corporation IDs from visible corporations
             corp_ids = corps_visible.distinct().values_list("corporation_id", flat=True)

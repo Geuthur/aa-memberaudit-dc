@@ -6,6 +6,10 @@ class Message(Schema):
     message: str
 
 
+class ErrorSchema(Schema):
+    error: str
+
+
 class Character(Schema):
     character_name: str
     character_id: int
