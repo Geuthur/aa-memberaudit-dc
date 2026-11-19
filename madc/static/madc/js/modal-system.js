@@ -25,7 +25,14 @@ function setupModal(modalId, ajaxDataAttr, contentId, loaderId) {
                 modal.find(contentId).show();
 
                 if ([403, 404, 500].includes(xhr.status)) {
-                    modal.find(contentId).html(response);
+                    // The API answers errors as JSON: {"error": "<text>"}
+                    try {
+                        const data = JSON.parse(response);
+                        modal.find(contentId).text(data.error || data.detail || response);
+                    } catch (e) {
+                        // not JSON (e.g. an HTML error page), show it as it is
+                        modal.find(contentId).html(response);
+                    }
                     modal.find('.modal-title').html('Error');
                     return;
                 }

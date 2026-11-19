@@ -6,6 +6,7 @@ from ninja import NinjaAPI
 
 # Django
 from django.shortcuts import render
+from django.utils.translation import gettext
 from django.utils.translation import gettext_lazy as _
 
 # Alliance Auth (External Libs)
@@ -30,7 +31,7 @@ class DoctrineCheckerApiEndpoints:
     def __init__(self, api: NinjaAPI):
         @api.get(
             "{character_id}/doctrines/",
-            response={200: list[schema.CharacterDoctrines], 403: str},
+            response={200: list[schema.CharacterDoctrines], 403: schema.ErrorSchema},
             tags=self.tags,
         )
         def get_doctrines(request, character_id: int):
@@ -39,7 +40,7 @@ class DoctrineCheckerApiEndpoints:
             response, main = get_main_character(request, character_id)
 
             if not response:
-                return 403, str(_("Permission Denied"))
+                return 403, {"error": gettext("Permission Denied")}
 
             characters = get_alts_queryset(main)
 
@@ -74,7 +75,7 @@ class DoctrineCheckerApiEndpoints:
 
         @api.get(
             "{corporation_id}/doctrines/view/corporation/",
-            response={200: list[schema.CorporationDoctrines], 403: str},
+            response={200: list[schema.CorporationDoctrines], 403: schema.ErrorSchema},
             tags=self.tags,
         )
         def get_corporation_doctrines(request, corporation_id: int):
@@ -83,7 +84,7 @@ class DoctrineCheckerApiEndpoints:
             perm, __ = get_corporation(request, corporation_id)
 
             if not perm:
-                return 403, str(_("Permission Denied"))
+                return 403, {"error": gettext("Permission Denied")}
 
             # Get all characters in the corporation
             corporation_characters = Character.objects.filter(
@@ -116,7 +117,7 @@ class DoctrineCheckerApiEndpoints:
 
         @api.get(
             "{character_id}/doctrines/{pk}/",
-            response={200: Any, 403: str},
+            response={200: Any, 403: schema.ErrorSchema},
             tags=self.tags,
         )
         def get_missing_skills(request, character_id: int, pk: int):
@@ -125,7 +126,7 @@ class DoctrineCheckerApiEndpoints:
             response, character = get_main_character(request, character_id)
 
             if not response:
-                return 403, str(_("Permission Denied"))
+                return 403, {"error": gettext("Permission Denied")}
 
             # Get the skill lists for the main character
             user_skilllists = skill_list_handler.get_user_skill_list(
@@ -148,7 +149,7 @@ class DoctrineCheckerApiEndpoints:
             )
 
             if character_skills is None:
-                return 403, _("Character not found in skill lists")
+                return 403, {"error": gettext("Character not found in skill lists")}
 
             # Compare required skills with character skills
             missing_skills = self._compare_skills(doctrine_skills, character_skills)
@@ -159,14 +160,14 @@ class DoctrineCheckerApiEndpoints:
 
         @api.get(
             "doctrines/{pk}/",
-            response={200: Any, 403: str},
+            response={200: Any, 403: schema.ErrorSchema},
             tags=self.tags,
         )
         def get_doctrine_skills(request, pk: int):
             perms = General.objects.has_basic_access(request.user)
 
             if not perms:
-                return 403, str(_("Permission Denied"))
+                return 403, {"error": gettext("Permission Denied")}
 
             try:
                 skilllist = SkillList.objects.get(pk=pk)
