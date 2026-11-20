@@ -6,7 +6,7 @@ from ninja.security import django_auth
 from django.conf import settings
 
 # AA Memberaudit Doctrine Checker
-from madc.api import admin, skill
+from madc.api import doctrine, general, legacy, manage
 
 api = NinjaAPI(
     title="AA Memberaudit Doctrine Checker API",
@@ -16,6 +16,14 @@ api = NinjaAPI(
     openapi_url=settings.DEBUG and "/openapi.json" or "",
 )
 
-# Add the core endpoints
-admin.setup(api)
-skill.setup(api)
+
+def setup(ninja_api):
+    """Setup API endpoints."""
+    general.ApiEndpoints(ninja_api)
+    manage.ManageApiEndpoints(ninja_api)
+    doctrine.DoctrineApiEndpoints(ninja_api)
+    legacy.LegacyApiEndpoints(ninja_api)
+
+
+# Initialize API endpoints
+setup(api)

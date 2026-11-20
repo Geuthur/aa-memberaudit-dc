@@ -6,7 +6,8 @@ from hashlib import md5
 from django.contrib.auth.models import User
 from django.core.cache import cache
 from django.urls import reverse
-from django.utils.html import format_html
+from django.utils.html import escape
+from django.utils.safestring import mark_safe
 
 # Alliance Auth
 from allianceauth.authentication.models import CharacterOwnership
@@ -19,8 +20,9 @@ from madc.models.skillchecker import SkillList
 from madc.providers import logger
 
 SKILL_CACHE_TIMEOUT_SECONDS = 60 * 60 * 72  # 72 hours
-SKILL_CACHE_HEADERS_KEY = "SKILL_HEADER"
-SKILL_CACHE_USER_KEY = "SKILL_LISTS_{}"
+# Keys with a version: cached results hold HTML with URLs, a new version drops them
+SKILL_CACHE_HEADERS_KEY = "SKILL_HEADER_V2"
+SKILL_CACHE_USER_KEY = "SKILL_LISTS_V2_{}"
 
 
 class SkillListHandler:
@@ -45,12 +47,14 @@ class SkillListHandler:
         skill_list_pk: int = None,
     ) -> str:
         """Generate HTML for doctrine buttons based on skill status."""
+        # The name comes from managers: escape it, it lands in attributes and text
+        skill_list_name = escape(skill_list_name)
         html = f"<div class='doctrine-item btn-group' role='group' data-doctrine='{skill_list_name}'>"
         html += "<button type='button' "
 
         if has_missing_skills:
             url = reverse(
-                viewname="madc:api:get_missing_skills",
+                viewname="madc:missing_skills_modal",
                 kwargs={"character_id": character_id, "pk": skill_list_pk},
             )
             html += f"class='btn btn-danger btn-sm' id='missing-{skill_list_name}-{character_id}' data-bs-toggle='modal' data-bs-target='#modalViewMissingContainer' data-ajax_missing='{url}'>"
@@ -68,7 +72,7 @@ class SkillListHandler:
             html += "<i class='fa-solid fa-check'></i>"
         html += "</button></div>"
 
-        return format_html(html)
+        return mark_safe(html)
 
     def check_skill_lists(self, skill_lists: list[SkillList], linked_characters):
         """Check if the skill lists are up to date."""

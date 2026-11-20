@@ -408,3 +408,18 @@ class TestAPIHelper(AuthTestCase):
         )
         # then
         self.assertEqual(doctrines, {})
+
+
+class TestEditableHtml(AuthTestCase):
+    def test_generate_editable_html_should_escape_name(self):
+        # given
+        skill_list = SkillList.objects.create(
+            name="x' onmouseover='alert(1)", skill_list="{}"
+        )
+        # when
+        html = helpers.generate_editable_html(
+            skill_list, field_name="name", name=skill_list.name, url="/u/", title="t"
+        )
+        # then
+        self.assertNotIn("x' onmouseover", html)
+        self.assertIn("x&#x27; onmouseover=&#x27;alert(1)", html)
