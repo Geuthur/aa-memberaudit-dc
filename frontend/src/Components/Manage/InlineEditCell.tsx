@@ -80,7 +80,7 @@ export const InlineEditCell: React.FC<InlineEditCellProps> = ({
         onChange={(e) => setDraft(e.target.value)}
         onKeyDown={(e) => {
           if (e.key === "Enter") save();
-          if (e.key === "Escape") setIsEditing(false);
+          if (e.key === "Escape" && !isSaving) setIsEditing(false);
         }}
       />
       <Button
