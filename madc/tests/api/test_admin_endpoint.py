@@ -96,7 +96,7 @@ class TestAdminAPI(AuthTestCase):
     def test_corporation_overview_endpoint(self):
         # given
         url = reverse(f"{API_URL}:get_corporation_overview")
-        self.client.force_login(self.user)
+        self.client.force_login(self.user_corp_access)
         # when
         response = self.client.get(url)
         response_json = response.json()

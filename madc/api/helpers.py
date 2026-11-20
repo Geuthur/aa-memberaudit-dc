@@ -23,16 +23,10 @@ def get_main_character(request, character_id) -> tuple[bool, EveCharacter | None
     except ObjectDoesNotExist:
         pass
 
-    # check access
+    # check access: the own characters are always part of the visible ones
     visible = models.SkillList.objects.visible_eve_characters(request.user)
     if main_char not in visible:
-        account_chars = (
-            request.user.profile.main_character.character_ownership.user.character_ownerships.all()
-        )
-        if main_char in account_chars:
-            pass
-        else:
-            perms = False
+        perms = False
     return perms, main_char
 
 

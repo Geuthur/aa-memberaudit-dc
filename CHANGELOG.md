@@ -32,6 +32,11 @@ Section Order:
 
 - API endpoints to create, edit and delete skill lists, plus `menu/`, `user/` and corporation member audit with filters
 
+### Fixed
+
+- Corporation endpoints showed the own corporation without `corp_access`
+- `alliance_access` showed all characters and corporations without alliance if the main character has no alliance, and compared the wrong alliance ID for corporations
+
 ### Changed
 
 - API restructured like aa-corptools-dc; modal endpoints and overviews answer JSON, the jQuery pages use transitional views
