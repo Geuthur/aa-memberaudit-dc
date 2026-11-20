@@ -132,6 +132,41 @@ class TestAccountDoctrines(DoctrineTestCase):
         self.assertEqual(response.status_code, HTTPStatus.FORBIDDEN)
         self.assertEqual(response.json(), PERMISSION_DENIED)
 
+    def test_doctrines_should_return_character_without_owner(self):
+        # given: only an admin sees a character without owner
+        admin = UserMainFactory(
+            permissions__=["madc.basic_access", "madc.admin_access"]
+        )
+        orphan = EveCharacterFactory()
+        SkillList.objects.create(name="Empty", skill_list="")
+        self.client.force_login(admin)
+        # when
+        response = self.client.get(
+            reverse(
+                f"{API_URL}:get_doctrines",
+                kwargs={"character_id": orphan.character_id},
+            )
+        )
+        # then
+        self.assertEqual(response.status_code, HTTPStatus.OK)
+        data = response.json()
+        self.assertEqual(len(data), 1)
+        self.assertEqual(data[0]["character"]["character_id"], orphan.character_id)
+        self.assertEqual(data[0]["doctrines"], {})
+
+    def test_doctrines_should_treat_skill_list_without_skills_as_fulfilled(self):
+        SkillList.objects.create(name="Empty", skill_list="")
+        # when
+        response = self.client.get(
+            reverse(
+                f"{API_URL}:get_doctrines",
+                kwargs={"character_id": self.main.character_id},
+            )
+        )
+        # then
+        self.assertEqual(response.status_code, HTTPStatus.OK)
+        self.assertEqual(response.json()[0]["doctrines"]["Empty"]["skills"], [])
+
     def test_doctrines_should_return_403_for_unknown_character(self):
         response = self.client.get(
             reverse(f"{API_URL}:get_doctrines", kwargs={"character_id": 1})

@@ -100,9 +100,16 @@ class DoctrineApiEndpoints:
             characters = get_alts_queryset(main)
 
             # Get the skill lists for the main character
-            skilllists = skill_list_handler.get_user_skill_list(
-                user_id=main.character_ownership.user_id
-            )
+            try:
+                skills_list = skill_list_handler.get_user_skill_list(
+                    user_id=main.character_ownership.user_id
+                )["skills_list"]
+            except ObjectDoesNotExist:
+                # A character without owner has no account: check it alone
+                skills_list = skill_list_handler.check_skill_lists(
+                    SkillList.objects.all().order_by("ordering", "name"),
+                    [main.character_id],
+                )
 
             # Active skill lists are the ones that are visible in the UI
             visibles = set(
@@ -110,7 +117,7 @@ class DoctrineApiEndpoints:
             )
 
             doctrines_by_character: dict[int, dict] = defaultdict(dict)
-            for character_data in skilllists["skills_list"].values():
+            for character_data in skills_list.values():
                 for name, doctrine in character_data["doctrines"].items():
                     if name in visibles:
                         doctrines_by_character[character_data["character_id"]][

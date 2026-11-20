@@ -69,6 +69,28 @@ class TestViewsBasicAccess(AuthTestCase):
                     if response.status_code == HTTPStatus.FOUND:
                         self.assertNotIn("login", response["Location"])
 
+    def test_legacy_urls_should_redirect_to_the_react_page(self):
+        self.client.force_login(self.user)
+        cases = {
+            "view/index/": "",
+            "123/view/checker/": "doctrine/123/",
+            "0/view/checker/": "doctrine/",
+            "456/view/corporation_checker/": "corporation/456/",
+            "0/view/corporation_checker/": "corporation/",
+            "123/view/overview/": "overview/",
+            "123/view/corporation_overview/": "overview/",
+            "123/view/add/": "manage/",
+            "123/view/administration/": "manage/",
+        }
+        for old, new in cases.items():
+            with self.subTest(path=old):
+                response = self.client.get(f"/{__app_name__}/{old}")
+                self.assertRedirects(
+                    response,
+                    f"/{__app_name__}/{new}",
+                    fetch_redirect_response=False,
+                )
+
     def test_react_routes_should_render_the_react_page(self):
         # The catch-all serves the React page for every route of the frontend
         self.client.force_login(self.user)

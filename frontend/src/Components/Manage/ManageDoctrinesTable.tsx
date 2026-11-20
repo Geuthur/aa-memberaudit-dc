@@ -13,20 +13,19 @@ export interface ManageDoctrinesTableProps {
   data: ManageSkillListSchema[];
   isLoading: boolean;
   isError: boolean;
-  isDeleting: boolean;
-  isUpdating: boolean;
   onEdit: (doctrine: ManageSkillListSchema) => void;
   onDelete: (doctrine: ManageSkillListSchema) => void;
   onViewSkills: (doctrineId: number) => void;
-  onUpdate: (doctrineId: number, payload: SkillListUpdateRequest) => void;
+  onUpdate: (
+    doctrineId: number,
+    payload: SkillListUpdateRequest
+  ) => Promise<boolean>;
 }
 
 export const ManageDoctrinesTable: React.FC<ManageDoctrinesTableProps> = ({
   data,
   isLoading,
   isError,
-  isDeleting,
-  isUpdating,
   onEdit,
   onDelete,
   onViewSkills,
@@ -38,14 +37,12 @@ export const ManageDoctrinesTable: React.FC<ManageDoctrinesTableProps> = ({
     () =>
       getManageDoctrinesColumns(
         t,
-        isDeleting,
-        isUpdating,
         onEdit,
         onDelete,
         onViewSkills,
         onUpdate
       ),
-    [t, isDeleting, isUpdating, onEdit, onDelete, onViewSkills, onUpdate]
+    [t, onEdit, onDelete, onViewSkills, onUpdate]
   );
 
   return (

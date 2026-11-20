@@ -38,7 +38,8 @@ const ManageDoctrineForm: React.FC<{
       if (isEditing && doctrineToEdit) {
         return updateSkillList(doctrineToEdit.id, {
           name,
-          category: category || null,
+          // An empty text removes the category, null would keep it
+          category,
           ordering: Number(orderWeight),
           active: showOnAudit,
         });

@@ -11,13 +11,15 @@ export interface InlineEditCellProps {
   label: string;
   type?: "text" | "number";
   disabled?: boolean;
-  onSave: (value: string) => void;
+  /** Resolve to false if saving failed: the cell then stays open with the input. */
+  onSave: (value: string) => void | Promise<boolean | void>;
   children?: React.ReactNode;
 }
 
 /**
  * Show a value and edit it in place: click the value, change it,
  * save with Enter or the check button, cancel with Escape.
+ * If saving fails, the input stays so it can be corrected.
  */
 export const InlineEditCell: React.FC<InlineEditCellProps> = ({
   value,
@@ -30,16 +32,24 @@ export const InlineEditCell: React.FC<InlineEditCellProps> = ({
   const { t } = useTranslation();
   const [isEditing, setIsEditing] = useState(false);
   const [draft, setDraft] = useState(value);
+  const [isSaving, setIsSaving] = useState(false);
 
   const startEdit = () => {
     setDraft(value);
     setIsEditing(true);
   };
 
-  const save = () => {
-    setIsEditing(false);
-    if (draft !== value) {
-      onSave(draft);
+  const save = async () => {
+    if (isSaving) return;
+    if (draft === value) {
+      setIsEditing(false);
+      return;
+    }
+    setIsSaving(true);
+    const saved = await onSave(draft);
+    setIsSaving(false);
+    if (saved !== false) {
+      setIsEditing(false);
     }
   };
 
@@ -66,18 +76,25 @@ export const InlineEditCell: React.FC<InlineEditCellProps> = ({
         type={type}
         aria-label={label}
         value={draft}
+        readOnly={isSaving}
         onChange={(e) => setDraft(e.target.value)}
         onKeyDown={(e) => {
           if (e.key === "Enter") save();
-          if (e.key === "Escape") setIsEditing(false);
+          if (e.key === "Escape" && !isSaving) setIsEditing(false);
         }}
       />
-      <Button variant="success" aria-label={t("Save")} onClick={save}>
+      <Button
+        variant="success"
+        aria-label={t("Save")}
+        disabled={isSaving}
+        onClick={save}
+      >
         <Check size={14} />
       </Button>
       <Button
         variant="secondary"
         aria-label={t("Cancel")}
+        disabled={isSaving}
         onClick={() => setIsEditing(false)}
       >
         <X size={14} />

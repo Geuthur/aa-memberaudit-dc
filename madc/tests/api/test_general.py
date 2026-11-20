@@ -20,6 +20,12 @@ class TestMenuEndpoint(AuthTestCase):
         cls.user_corp_access = UserMainFactory(
             permissions__=["madc.basic_access", "madc.corp_access"]
         )
+        cls.user_alliance_access = UserMainFactory(
+            permissions__=["madc.basic_access", "madc.alliance_access"]
+        )
+        cls.user_admin_access = UserMainFactory(
+            permissions__=["madc.basic_access", "madc.admin_access"]
+        )
         cls.user_manage_access = UserMainFactory(
             permissions__=["madc.basic_access", "madc.manage_access"]
         )
@@ -43,6 +49,12 @@ class TestMenuEndpoint(AuthTestCase):
         left, right = self._links(self.user_corp_access)
         self.assertEqual(left, ["/", "/corporation/", "/overview/"])
         self.assertEqual(right, [])
+
+    def test_menu_should_show_corporation_link_with_alliance_or_admin_access(self):
+        for user in [self.user_alliance_access, self.user_admin_access]:
+            with self.subTest(user=user):
+                left, __ = self._links(user)
+                self.assertEqual(left, ["/", "/corporation/", "/overview/"])
 
     def test_menu_should_show_manage_link_with_manage_access(self):
         __, right = self._links(self.user_manage_access)

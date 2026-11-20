@@ -12,7 +12,7 @@ import {
   loadManageDoctrines,
   updateSkillList,
 } from "@/Api/ApiCalls";
-import { queryKeys } from "@/Api/query";
+import { mutationKeys, queryKeys } from "@/Api/query";
 import type { ManageSkillListSchema, SkillListUpdateRequest } from "@/Api/schema";
 import { ManageDoctrinesTable, ManageHeader } from "@/Components/Manage";
 import DoctrineSkillsModal from "@/Components/Modals/DoctrineSkillsModal";
@@ -44,6 +44,7 @@ export const ManagePage: React.FC = () => {
   });
 
   const deleteMutation = useMutation({
+    mutationKey: mutationKeys.DeleteSkillList,
     mutationFn: (pk: number) => deleteSkillList(pk),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.ManageDoctrines });
@@ -51,6 +52,7 @@ export const ManagePage: React.FC = () => {
   });
 
   const updateMutation = useMutation({
+    mutationKey: mutationKeys.UpdateSkillList,
     mutationFn: ({ pk, payload }: { pk: number; payload: SkillListUpdateRequest }) =>
       updateSkillList(pk, payload),
     onSuccess: (updated) => {
@@ -61,14 +63,18 @@ export const ManagePage: React.FC = () => {
     },
   });
 
-  const { mutate: updateMutate } = updateMutation;
+  // Resolves to false on an error, the error itself is shown by the alert below
+  const { mutateAsync: updateMutateAsync } = updateMutation;
   const handleUpdate = useCallback(
-    (pk: number, payload: SkillListUpdateRequest) => {
-      updateMutate({ pk, payload });
-    },
-    [updateMutate]
+    (pk: number, payload: SkillListUpdateRequest) =>
+      updateMutateAsync({ pk, payload }).then(
+        () => true,
+        () => false
+      ),
+    [updateMutateAsync]
   );
 
+  const { mutate: deleteMutate } = deleteMutation;
   const handleDelete = useCallback(
     (doctrine: ManageSkillListSchema) => {
       if (
@@ -78,10 +84,21 @@ export const ManagePage: React.FC = () => {
           })
         )
       ) {
-        deleteMutation.mutate(doctrine.id);
+        deleteMutate(doctrine.id);
       }
     },
-    [t, deleteMutation]
+    [t, deleteMutate]
+  );
+
+  // Stable callbacks: new ones would rebuild the columns and reset an open inline edit
+  const handleEdit = useCallback(
+    (doctrine: ManageSkillListSchema) =>
+      setModalState({ show: true, doctrineToEdit: doctrine }),
+    []
+  );
+  const handleViewSkills = useCallback(
+    (doctrineId: number) => setSkillsModalState({ show: true, doctrineId }),
+    []
   );
 
   return (
@@ -113,15 +130,9 @@ export const ManagePage: React.FC = () => {
             data={data || []}
             isLoading={isLoading}
             isError={isError}
-            isDeleting={deleteMutation.isPending}
-            isUpdating={updateMutation.isPending}
-            onEdit={(doc) =>
-              setModalState({ show: true, doctrineToEdit: doc })
-            }
+            onEdit={handleEdit}
             onDelete={handleDelete}
-            onViewSkills={(id) =>
-              setSkillsModalState({ show: true, doctrineId: id })
-            }
+            onViewSkills={handleViewSkills}
             onUpdate={handleUpdate}
           />
         </Card.Body>

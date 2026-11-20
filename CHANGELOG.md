@@ -36,6 +36,12 @@ Section Order:
 
 - Corporation endpoints showed the own corporation without `corp_access`
 - `alliance_access` showed all characters and corporations without alliance if the main character has no alliance, and compared the wrong alliance ID for corporations
+- Cached check results stayed up to 72 hours after a change of category, ordering, active flag or skills of a skill list
+- Server errors for a skill list without skills and for the doctrines of a character without owner
+- Category of a skill list could not be removed when editing
+- Inline editing of a skill list lost the input when saving failed
+- Bookmarks of the former template pages (e.g. `/madc/<id>/view/checker/`) redirect to the new pages
+- Menu entry and overview tab of the corporations were missing with `alliance_access` only
 
 ### Changed
 

@@ -25,7 +25,7 @@ def get_main_character(request, character_id) -> tuple[bool, EveCharacter | None
 
     # check access: the own characters are always part of the visible ones
     visible = models.SkillList.objects.visible_eve_characters(request.user)
-    if main_char not in visible:
+    if not visible.filter(pk=main_char.pk).exists():
         perms = False
     return perms, main_char
 
@@ -39,7 +39,7 @@ def get_corporation(request, corporation_id) -> tuple[bool, EveCorporationInfo |
 
     # check access
     visible = models.SkillList.objects.visible_eve_corporations(request.user)
-    if corporation not in visible:
+    if not visible.filter(pk=corporation.pk).exists():
         perms = False
     return perms, corporation
 

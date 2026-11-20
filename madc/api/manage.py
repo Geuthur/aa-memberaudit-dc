@@ -78,14 +78,13 @@ def _apply_update(
         skill_list.name = name
 
     if payload.category is not None:
+        # None leaves the category as it is, an empty text removes it
         category = payload.category.strip()
-        if not category:
-            return _("Category cannot be empty")
         if len(category) > CATEGORY_MAX_LENGTH:
             return _("Category can have at most {max} characters").format(
                 max=CATEGORY_MAX_LENGTH
             )
-        skill_list.category = category
+        skill_list.category = category or None
 
     if payload.ordering is not None:
         if not 0 <= payload.ordering <= ORDERING_MAX:
@@ -165,7 +164,7 @@ class ManageApiEndpoints:
             skill_list = SkillList.objects.create(
                 name=form.cleaned_data["name"],
                 skill_list=json.dumps(parsed_skills, ensure_ascii=False),
-                category=form.cleaned_data["category"],
+                category=form.cleaned_data["category"] or None,
                 ordering=ordering if ordering is not None else 0,
             )
             logger.info(
