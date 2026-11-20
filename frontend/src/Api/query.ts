@@ -16,3 +16,8 @@ export const queryKeys = {
     ["DoctrineSkills", doctrineId, characterId ?? 0] as const,
   ManageDoctrines: ["ManageDoctrines"] as const,
 };
+
+export const mutationKeys = {
+  UpdateSkillList: ["UpdateSkillList"] as const,
+  DeleteSkillList: ["DeleteSkillList"] as const,
+};

@@ -25,9 +25,19 @@ SKILL_CACHE_USER_KEY = "SKILL_LISTS_V3_{}"
 class SkillListHandler:
     """handler for skill lists."""
 
-    def _get_skill_list_hash(self, skills: list[str]) -> str:
-        """Generate a hash for the skill list names."""
-        return md5(",".join(str(x) for x in sorted(skills)).encode()).hexdigest()
+    def _get_skill_list_hash(self, skill_lists) -> str:
+        """
+        Generate a hash over everything of the skill lists that changes a result.
+
+        Name, category, ordering, active flag and the skills are part of the
+        cached check results, so a change of any of them gives a new hash.
+        """
+        rows = sorted(
+            skill_lists.values_list(
+                "pk", "name", "category", "ordering", "active", "skill_list"
+            )
+        )
+        return md5(json.dumps(rows).encode()).hexdigest()
 
     def _get_chars_hash(self, characters: list[int]) -> str:
         return md5(",".join(str(x) for x in sorted(characters)).encode()).hexdigest()
@@ -113,7 +123,7 @@ class SkillListHandler:
         )
 
         skill_lists = SkillList.objects.all().order_by("ordering", "name")
-        skill_list_hash = self._get_skill_list_hash(skill_lists.values_list("name"))
+        skill_list_hash = self._get_skill_list_hash(skill_lists)
         cached_header = cache.get(SKILL_CACHE_HEADERS_KEY, False)
         skill_lists_up_to_date = cached_header == skill_list_hash
 
@@ -150,7 +160,7 @@ class SkillListHandler:
         )
 
         skill_lists = SkillList.objects.all().order_by("ordering", "name")
-        skill_list_hash = self._get_skill_list_hash(skill_lists.values_list("name"))
+        skill_list_hash = self._get_skill_list_hash(skill_lists)
         cached_header = cache.get(SKILL_CACHE_HEADERS_KEY, False)
         skill_lists_up_to_date = cached_header == skill_list_hash
 

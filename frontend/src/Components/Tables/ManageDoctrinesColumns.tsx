@@ -5,17 +5,19 @@ import { BookOpen, Edit2, Eye, EyeOff, Trash2 } from "lucide-react";
 import { Badge, Button, ButtonGroup } from "react-bootstrap";
 
 // AA Memberaudit Doctrine Checker
+import { mutationKeys } from "@/Api/query";
 import type { ManageSkillListSchema, SkillListUpdateRequest } from "@/Api/schema";
-import { InlineEditCell } from "@/Components/Manage/InlineEditCell";
+import { BusyButton, BusyInlineEditCell } from "@/Components/Manage/BusyCells";
 
 export const getManageDoctrinesColumns = (
   t: TFunction,
-  isDeleting: boolean,
-  isUpdating: boolean,
   onEdit: (doctrine: ManageSkillListSchema) => void,
   onDelete: (doctrine: ManageSkillListSchema) => void,
   onViewSkills: (doctrineId: number) => void,
-  onUpdate: (doctrineId: number, payload: SkillListUpdateRequest) => void
+  onUpdate: (
+    doctrineId: number,
+    payload: SkillListUpdateRequest
+  ) => Promise<boolean>
 ): BaseColumnDef<ManageSkillListSchema>[] => [
   {
     id: "name",
@@ -23,14 +25,14 @@ export const getManageDoctrinesColumns = (
     accessorKey: "name",
     cell: ({ row }) => (
       <div className="d-flex align-items-center gap-2">
-        <InlineEditCell
+        <BusyInlineEditCell
+          mutationKey={mutationKeys.UpdateSkillList}
           value={row.original.name}
           label={t("Doctrine Name")}
-          disabled={isUpdating}
           onSave={(name) => onUpdate(row.original.id, { name })}
         >
           <span className="fw-bold">{row.original.name}</span>
-        </InlineEditCell>
+        </BusyInlineEditCell>
         <Badge bg="secondary" pill title={t("Required Skills Count")}>
           {row.original.skill_count} {t("skills")}
         </Badge>
@@ -42,14 +44,14 @@ export const getManageDoctrinesColumns = (
     header: () => t("Category"),
     accessorKey: "category",
     cell: ({ row }) => (
-      <InlineEditCell
+      <BusyInlineEditCell
+        mutationKey={mutationKeys.UpdateSkillList}
         value={row.original.category ?? ""}
         label={t("Category")}
-        disabled={isUpdating}
         onSave={(category) => onUpdate(row.original.id, { category })}
       >
         <Badge bg="info">{row.original.category || t("Uncategorized")}</Badge>
-      </InlineEditCell>
+      </BusyInlineEditCell>
     ),
   },
   {
@@ -57,20 +59,20 @@ export const getManageDoctrinesColumns = (
     header: () => t("Order Weight"),
     accessorKey: "ordering",
     cell: ({ row }) => (
-      <InlineEditCell
+      <BusyInlineEditCell
+        mutationKey={mutationKeys.UpdateSkillList}
         value={String(row.original.ordering)}
         label={t("Order Weight")}
         type="number"
-        disabled={isUpdating}
         onSave={(ordering) => {
           // Ignore empty or non-integer input instead of sending 0 or a fraction
           if (/^\d+$/.test(ordering.trim())) {
-            onUpdate(row.original.id, { ordering: Number(ordering) });
+            return onUpdate(row.original.id, { ordering: Number(ordering) });
           }
         }}
       >
         <span className="text-muted">{row.original.ordering}</span>
-      </InlineEditCell>
+      </BusyInlineEditCell>
     ),
   },
   {
@@ -80,19 +82,19 @@ export const getManageDoctrinesColumns = (
     cell: ({ row }) =>
       renderTooltip(
         row.original.active ? t("Click to deactivate") : t("Click to activate"),
-        <Button
+        <BusyButton
+          mutationKey={mutationKeys.UpdateSkillList}
           size="sm"
           variant={row.original.active ? "success" : "secondary"}
           className="d-inline-flex align-items-center gap-1"
           aria-label={row.original.active ? t("Deactivate") : t("Activate")}
-          disabled={isUpdating}
           onClick={() =>
             onUpdate(row.original.id, { active: !row.original.active })
           }
         >
           {row.original.active ? <Eye size={12} /> : <EyeOff size={12} />}
           <span>{row.original.active ? t("Active") : t("Inactive")}</span>
-        </Button>
+        </BusyButton>
       ),
   },
   {
@@ -122,14 +124,14 @@ export const getManageDoctrinesColumns = (
         )}
         {renderTooltip(
           t("Delete Doctrine"),
-          <Button
+          <BusyButton
+            mutationKey={mutationKeys.DeleteSkillList}
             variant="danger"
             aria-label={t("Delete Doctrine")}
-            disabled={isDeleting}
             onClick={() => onDelete(row.original)}
           >
             <Trash2 size={14} />
-          </Button>
+          </BusyButton>
         )}
       </ButtonGroup>
     ),

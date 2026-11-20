@@ -72,6 +72,16 @@ class TestAPIHelper(AuthTestCase):
             self.user_admin_access.profile.main_character.character_id,
         )
 
+    def test_get_main_character_should_not_load_all_visible_characters(self):
+        # given: an admin sees every character
+        request = self.factory.get("/")
+        request.user = self.user_admin_access
+        character_id = self.user.profile.main_character.character_id
+        # when/then: one query for the character, one for the access check
+        with self.assertNumQueries(2):
+            perms, __ = helpers.get_main_character(request, character_id)
+        self.assertTrue(perms)
+
     def test_get_main_character_no_access(self):
         # given
         request = self.factory.get("/")

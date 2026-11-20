@@ -173,7 +173,10 @@ class TestManageUpdate(ManageTestCase):
                 "Skill list with this name already exists",
             ),
             "long name": ({"name": "x" * 51}, "Name can have at most 50 characters"),
-            "empty category": ({"category": ""}, "Category cannot be empty"),
+            "long category": (
+                {"category": "x" * 21},
+                "Category can have at most 20 characters",
+            ),
             "ordering too high": (
                 {"ordering": 1000},
                 "Ordering must be between 0 and 999",
@@ -191,6 +194,28 @@ class TestManageUpdate(ManageTestCase):
         self.skill_list.refresh_from_db()
         self.assertEqual(self.skill_list.name, "Fleet")
         self.assertEqual(self.skill_list.ordering, 5)
+
+    def test_update_should_remove_category_for_empty_text(self):
+        for category in ["", "   "]:
+            with self.subTest(category=category):
+                self.skill_list.category = "Combat"
+                self.skill_list.save()
+                # when
+                response = self._put(self.skill_list.pk, {"category": category})
+                # then
+                self.assertEqual(response.status_code, HTTPStatus.OK)
+                self.assertIsNone(response.json()["category"])
+                self.skill_list.refresh_from_db()
+                self.assertIsNone(self.skill_list.category)
+
+    def test_manage_should_list_skill_list_without_skills(self):
+        SkillList.objects.create(name="Empty", skill_list="")
+        # when
+        response = self.client.get(reverse(f"{API_URL}:manage_skilllists"))
+        # then
+        self.assertEqual(response.status_code, HTTPStatus.OK)
+        counts = {entry["name"]: entry["skill_count"] for entry in response.json()}
+        self.assertEqual(counts["Empty"], 0)
 
     def test_update_should_return_404_for_unknown_skill_list(self):
         response = self._put(self.skill_list.pk + 100, {"active": False})

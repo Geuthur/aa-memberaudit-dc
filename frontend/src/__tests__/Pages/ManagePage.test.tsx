@@ -16,8 +16,10 @@ vi.mock("@/Api/ApiCalls", () => ({
   updateSkillList: vi.fn(),
 }));
 
+// A stable `t` like the one of i18next: a new one per render rebuilds the columns
+const t = (key: string) => key;
 vi.mock("react-i18next", () => ({
-  useTranslation: () => ({ t: (key: string) => key }),
+  useTranslation: () => ({ t }),
   withTranslation: () => (Component: unknown) => Component,
 }));
 
@@ -190,6 +192,52 @@ describe("ManagePage", () => {
     expect(
       await screen.findByText("Skill list with this name already exists")
     ).toBeTruthy();
+  });
+
+  it("should keep the inline input and show the error when saving fails", async () => {
+    // Test Data
+    vi.mocked(ApiCalls.loadManageDoctrines).mockResolvedValue([skillList]);
+    vi.mocked(ApiCalls.updateSkillList).mockRejectedValue(
+      new Error("Skill list with this name already exists")
+    );
+
+    // Test Action
+    renderPage();
+    fireEvent.click((await screen.findByText("Cerberus Fleet")).closest("button")!);
+    fireEvent.change(screen.getByLabelText("Doctrine Name"), {
+      target: { value: "Taken Name" },
+    });
+    fireEvent.keyDown(screen.getByLabelText("Doctrine Name"), { key: "Enter" });
+
+    // Expected Result
+    expect(
+      await screen.findByText("Skill list with this name already exists")
+    ).toBeTruthy();
+    const input = screen.getByLabelText("Doctrine Name") as HTMLInputElement;
+    expect(input.value).toBe("Taken Name");
+    await waitFor(() => expect(input.readOnly).toBe(false));
+  });
+
+  it("should send an empty text to remove the category inline", async () => {
+    // Test Data
+    vi.mocked(ApiCalls.loadManageDoctrines).mockResolvedValue([skillList]);
+    vi.mocked(ApiCalls.updateSkillList).mockResolvedValue({
+      ...skillList,
+      category: null,
+    });
+
+    // Test Action
+    renderPage();
+    fireEvent.click((await screen.findByText("Cruiser")).closest("button")!);
+    const input = screen.getByLabelText("Category");
+    fireEvent.change(input, { target: { value: "" } });
+    fireEvent.keyDown(input, { key: "Enter" });
+
+    // Expected Result
+    await waitFor(() =>
+      expect(ApiCalls.updateSkillList).toHaveBeenCalledWith(1, { category: "" })
+    );
+    expect(await screen.findByText("Uncategorized")).toBeTruthy();
   });
 
   it("should ignore an empty inline ordering", async () => {

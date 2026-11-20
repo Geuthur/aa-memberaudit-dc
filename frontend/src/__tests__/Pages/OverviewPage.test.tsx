@@ -137,4 +137,32 @@ describe("OverviewPage", () => {
     const corpActionLink = screen.getByRole("link", { name: /view overview/i });
     expect(corpActionLink).toHaveClass("aa-btn", "aa-btn-sm", "aa-btn-primary");
   });
+
+  it("should show the corporation overview tab with alliance_access only", async () => {
+    // Test Data
+    vi.mocked(useUserData).mockReturnValue({
+      data: {
+        user: {
+          user_id: 1,
+          character_id: 99001,
+          character_name: "Test Pilot",
+          corporation_id: 98001,
+          corporation_name: "Test Corp",
+          is_admin: false,
+          permissions: { corp_access: false, alliance_access: true },
+        },
+      },
+    } as unknown as ReturnType<typeof useUserData>);
+    vi.mocked(ApiCalls.loadAccountOverview).mockResolvedValue([]);
+    vi.mocked(ApiCalls.loadCorporationOverview).mockResolvedValue([]);
+
+    // Test Action
+    renderPage();
+
+    // Expected Result
+    expect(
+      await screen.findByRole("button", { name: /corporation overview/i })
+    ).toBeTruthy();
+    expect(ApiCalls.loadCorporationOverview).toHaveBeenCalled();
+  });
 });

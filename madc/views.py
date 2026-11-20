@@ -3,7 +3,9 @@
 # Django
 from django.contrib.auth.decorators import login_required
 from django.core.handlers.wsgi import WSGIRequest
+from django.http import HttpResponseRedirect
 from django.shortcuts import render
+from django.urls import reverse
 from django.utils.translation import gettext as _
 
 # Alliance Auth
@@ -25,3 +27,16 @@ def react_base(
         "version": __version__,
     }
     return render(request, "madc/react_madc.html", context=context)
+
+
+def legacy_redirect(
+    request: WSGIRequest, pk: int = 0, page: str = ""
+):  # pylint: disable=unused-argument
+    """Redirect a URL of the former template pages to its React page."""
+    url = reverse("madc:react_base")
+    if page:
+        url += f"{page}/"
+        # The ID 0 stood for the own character or corporation
+        if page in ("doctrine", "corporation") and pk:
+            url += f"{pk}/"
+    return HttpResponseRedirect(url)

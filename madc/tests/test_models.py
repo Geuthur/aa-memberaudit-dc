@@ -79,3 +79,8 @@ class TestModelsSkillChecker(NoSocketsTestCase):
             Exception, "Please provide a valid skill list in JSON format."
         ):
             skillvalidator(value=sk_check)
+
+    def test_get_skills_should_return_no_skills_for_empty_or_invalid_text(self):
+        for text in ["", None, "[]", "null", "no json"]:
+            with self.subTest(skill_list=text):
+                self.assertEqual(SkillList(name="x", skill_list=text).get_skills(), {})

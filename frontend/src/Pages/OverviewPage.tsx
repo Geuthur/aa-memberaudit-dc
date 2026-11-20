@@ -31,7 +31,9 @@ export const OverviewPage: React.FC = () => {
   });
 
   const canViewCorp = Boolean(
-    userData?.user.permissions?.corp_access || userData?.user.is_admin
+    userData?.user.permissions?.corp_access ||
+      userData?.user.permissions?.alliance_access ||
+      userData?.user.is_admin
   );
 
   const {

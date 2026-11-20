@@ -36,7 +36,12 @@ class ApiEndpoints:
                 schema.MenuLink(name=_("Doctrines"), link="/"),
             ]
 
-            if General.objects.has_corp_access(request.user):
+            # Same rule as visible_eve_corporations
+            if (
+                General.objects.has_corp_access(request.user)
+                or General.objects.has_alliance_access(request.user)
+                or General.objects.has_full_access(request.user)
+            ):
                 left_menu.append(
                     schema.MenuLink(
                         name=_("Corporation Doctrines"), link="/corporation/"
