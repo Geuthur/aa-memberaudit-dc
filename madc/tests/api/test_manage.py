@@ -120,11 +120,10 @@ class TestManageCreate(ManageTestCase):
         # when
         response = self._post({"name": "FLEET", "skill_list": "Gunnery 1"})
         # then
+        # MySQL compares case-insensitively, there the form already rejects it
         self.assertEqual(response.status_code, HTTPStatus.BAD_REQUEST)
-        self.assertEqual(
-            response.json(), {"error": "Skill list with this name already exists"}
-        )
-        self.assertFalse(SkillList.objects.filter(name="FLEET").exists())
+        self.assertIn("already exists", response.json()["error"])
+        self.assertEqual(SkillList.objects.filter(name__iexact="fleet").count(), 1)
 
     def test_create_should_return_403_without_manage_access(self):
         # given
