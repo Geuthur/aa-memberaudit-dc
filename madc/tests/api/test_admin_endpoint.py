@@ -21,7 +21,6 @@ from madc.tests.testdata.app import UserMainFactory
 from madc.tests.testdata.load_eveuniverse import load_eveuniverse
 from madc.tests.testdata.load_memberaudit import create_memberaudit
 
-API_PATH = "madc.api.admin"
 API_URL = "madc:api"
 
 
@@ -83,9 +82,9 @@ class TestAdminAPI(AuthTestCase):
         # then
         self.assertEqual(response.status_code, HTTPStatus.FORBIDDEN)
 
-    def test_character_overview_endpoint(self):
+    def test_account_overview_endpoint(self):
         # given
-        url = reverse(f"{API_URL}:get_character_overview")
+        url = reverse(f"{API_URL}:get_account_overview")
         self.client.force_login(self.user)
         # when
         response = self.client.get(url)
@@ -94,9 +93,9 @@ class TestAdminAPI(AuthTestCase):
         self.assertEqual(response.status_code, HTTPStatus.OK)
         self.assertEqual(len(response_json), 1)
 
-    def test_character_overview_endpoint_admin_access(self):
+    def test_account_overview_endpoint_admin_access(self):
         # given
-        url = reverse(f"{API_URL}:get_character_overview")
+        url = reverse(f"{API_URL}:get_account_overview")
         self.client.force_login(self.user_admin_access)
         # when
         response = self.client.get(url)
@@ -107,9 +106,9 @@ class TestAdminAPI(AuthTestCase):
         self.assertEqual(response.status_code, HTTPStatus.OK)
         self.assertEqual(len(response_json), all_characters)
 
-    def test_character_overview_should_return_403_without_basic_access(self):
+    def test_account_overview_should_return_403_without_basic_access(self):
         # given
-        url = reverse(f"{API_URL}:get_character_overview")
+        url = reverse(f"{API_URL}:get_account_overview")
         self.client.force_login(self.user_no_access)
         # when
         response = self.client.get(url)

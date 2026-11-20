@@ -52,6 +52,17 @@ urlpatterns = [
         views.administration,
         name="administration",
     ),
+    # -- Modals of the jQuery pages
+    path(
+        "<int:character_id>/modal/missing/<int:pk>/",
+        views.missing_skills_modal,
+        name="missing_skills_modal",
+    ),
+    path(
+        "modal/doctrine/<int:pk>/",
+        views.doctrine_skills_modal,
+        name="doctrine_skills_modal",
+    ),
     # -- Administration
     path(
         "admin/add/",

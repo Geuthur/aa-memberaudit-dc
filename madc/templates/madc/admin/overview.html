@@ -41,7 +41,7 @@
 {% include 'bundles/datatables-js-bs5.html' %}
     <script type="application/javascript">
         $(document).ready(function() {
-            const AdminUrl = "{% url 'madc:api:get_character_overview' %}"
+            const AdminUrl = "{% url 'madc:api:get_account_overview' %}"
             let CharacterOverviewUrl = "{% url 'madc:checker' character_id=1337 %}"
             const accountOverviewTableVar = $('#accounts-overview-table');
             // Initialisierung der DataTable
@@ -58,17 +58,17 @@
                     }
                 },
                 columns: [
-                    { data: 'character.character_id' },
-                    { data: 'character.character_name' },
-                    { data: 'character.corporation_name' },
-                    { data: 'character.alliance_name' },
-                    { data: 'actions' },
+                    { data: 'character_id', defaultContent: '' },
+                    { data: 'character_name', defaultContent: '' },
+                    { data: 'corporation_name', defaultContent: '' },
+                    { data: 'alliance_name', defaultContent: '' },
+                    { data: 'actions', defaultContent: '' },
                 ],
                 columnDefs: [
                     {
                         targets: 0,
                         render: function (data, type, row) {
-                            return '<img src="https://images.evetech.net/characters/' + row.character.character_id + '/portrait?size=32" class="rounded-circle" title="' + row.character.character_name + '" height="30" data-tooltip-toggle="char-tooltip" data-bs-placement="top">';
+                            return '<img src="https://images.evetech.net/characters/' + row.character_id + '/portrait?size=32" class="rounded-circle" title="' + row.character_name + '" height="30" data-tooltip-toggle="char-tooltip" data-bs-placement="top">';
                         },
                         sortable: false,
                     },
@@ -77,7 +77,7 @@
                         className: 'text-end',
                         sortable: false,
                         render: function (data, type, row) {
-                            var OverviewUrl = CharacterOverviewUrl.replace('1337', row.character.character_id);
+                            var OverviewUrl = CharacterOverviewUrl.replace('1337', row.character_id);
                             return `<a href="${OverviewUrl}">
                                 <button class="btn btn-primary btn-sm"
                                     title="{% trans "Show" %}"

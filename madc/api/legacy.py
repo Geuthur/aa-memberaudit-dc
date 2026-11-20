@@ -1,3 +1,9 @@
+"""
+Endpoint for the jQuery administration page.
+
+Transitional: the React frontend replaces the page and this module.
+"""
+
 # Standard Library
 from typing import Any
 
@@ -10,13 +16,6 @@ from django.utils.html import format_html
 from django.utils.translation import gettext
 from django.utils.translation import gettext_lazy as _
 
-# Alliance Auth
-from allianceauth.authentication.models import UserProfile
-from allianceauth.eveonline.models import EveCorporationInfo
-
-# Alliance Auth (External Libs)
-from memberaudit.models import Character
-
 # AA Memberaudit Doctrine Checker
 from madc.api import schema
 from madc.api.helpers import (
@@ -28,7 +27,7 @@ from madc.api.helpers import (
 from madc.models import SkillList
 
 
-class DoctrineCheckerAdminApiEndpoints:
+class LegacyApiEndpoints:
     tags = ["Doctrine Administration"]
 
     # pylint: disable=too-many-statements
@@ -64,7 +63,7 @@ class DoctrineCheckerAdminApiEndpoints:
 
             for skill_list in skilllist_obj:
                 url_doctrine = reverse(
-                    viewname="madc:api:get_doctrine_skills",
+                    viewname="madc:doctrine_skills_modal",
                     kwargs={"pk": skill_list.pk},
                 )
 
@@ -137,90 +136,3 @@ class DoctrineCheckerAdminApiEndpoints:
                 }
 
             return skilllist_dict
-
-        @api.get(
-            "character/overview/",
-            response={200: list[schema.CharacterOverview], 403: schema.ErrorSchema},
-            tags=self.tags,
-        )
-        def get_character_overview(request):
-            chars_visible = SkillList.objects.visible_eve_characters(request.user)
-
-            if chars_visible is None:
-                return 403, {"error": gettext("Permission Denied")}
-
-            chars_ids = chars_visible.values_list("character_id", flat=True)
-
-            users_char_ids = UserProfile.objects.filter(
-                main_character__isnull=False, main_character__character_id__in=chars_ids
-            )
-
-            output = []
-
-            for character in users_char_ids:
-                # pylint: disable=broad-exception-caught
-                try:
-                    character_data = {
-                        "character_id": character.main_character.character_id,
-                        "character_name": character.main_character.character_name,
-                        "corporation_id": character.main_character.corporation_id,
-                        "corporation_name": character.main_character.corporation_name,
-                        "alliance_id": character.main_character.alliance_id,
-                        "alliance_name": character.main_character.alliance_name,
-                    }
-                    output.append({"character": character_data})
-                except AttributeError:
-                    continue
-
-            return output
-
-        @api.get(
-            "corporation/overview/",
-            response={200: list[schema.CorporationOverview], 403: schema.ErrorSchema},
-            tags=self.tags,
-        )
-        def get_corporation_overview(request):
-            corps_visible = SkillList.objects.visible_eve_corporations(request.user)
-
-            if corps_visible is None:
-                return 403, {"error": gettext("Permission Denied")}
-
-            # Collect unique corporation IDs from visible corporations
-            corp_ids = corps_visible.distinct().values_list("corporation_id", flat=True)
-
-            # Get existing corporation IDs from characters
-            existing_corp_ids = (
-                Character.objects.filter(
-                    eve_character__corporation_id__in=corp_ids,
-                )
-                .select_related(
-                    "eve_character",
-                )
-                .distinct()
-                .values_list("eve_character__corporation_id", flat=True)
-            )
-
-            # Get Corporations from Existing Members
-            corps = EveCorporationInfo.objects.filter(
-                corporation_id__in=existing_corp_ids,
-            )
-
-            output = []
-
-            for corporation in corps:
-                try:
-                    corporation_data = {
-                        "corporation_id": corporation.corporation_id,
-                        "corporation_name": corporation.corporation_name,
-                        "alliance_id": getattr(
-                            corporation.alliance, "alliance_id", None
-                        ),
-                        "alliance_name": getattr(
-                            corporation.alliance, "alliance_name", "N/A"
-                        ),
-                    }
-                    output.append({"corporation": corporation_data})
-                except AttributeError:
-                    continue
-
-            return output

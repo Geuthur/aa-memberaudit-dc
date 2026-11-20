@@ -28,6 +28,14 @@ Section Order:
 
 <!-- Your changes go here -->
 
+### Added
+
+- API endpoints to create, edit and delete skill lists, plus `menu/`, `user/` and corporation member audit with filters
+
+### Changed
+
+- API restructured like aa-corptools-dc; modal endpoints and overviews answer JSON, the jQuery pages use transitional views
+
 ### Changed
 
 > [!WARNING]

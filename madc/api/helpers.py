@@ -40,11 +40,14 @@ def get_manage_permission(request, character_id):
 
 def get_main_character(request, character_id) -> tuple[bool, EveCharacter | None]:
     perms = True
-    main_char = EveCharacter.objects.select_related(
-        "character_ownership",
-        "character_ownership__user__profile",
-        "character_ownership__user__profile__main_character",
-    ).get(character_id=character_id)
+    try:
+        main_char = EveCharacter.objects.select_related(
+            "character_ownership",
+            "character_ownership__user__profile",
+            "character_ownership__user__profile__main_character",
+        ).get(character_id=character_id)
+    except EveCharacter.DoesNotExist:
+        return False, None
     try:
         main_char = main_char.character_ownership.user.profile.main_character
     except ObjectDoesNotExist:
@@ -113,8 +116,14 @@ def generate_editable_html(
     title: str = "",
 ) -> str:
     """Generate HTML for an editable field."""
-    html = f"<a class='editable' href='#' data-type='text' data-pk='{skill_list.pk}' data-name='{field_name}' data-url='{url}' data-title='{str(title)}'>{name}</a>"
-    return format_html(html)
+    return format_html(
+        "<a class='editable' href='#' data-type='text' data-pk='{}' data-name='{}' data-url='{}' data-title='{}'>{}</a>",
+        skill_list.pk,
+        field_name,
+        url,
+        title,
+        name,
+    )
 
 
 def generate_editable_bool_html(
@@ -161,3 +170,19 @@ def _collect_user_doctrines(skills_list: dict, active_skilllists: list) -> dict:
                     user_doctrines[doctrine_key] = doctrine_data
 
     return user_doctrines
+
+
+def get_skill_list(pk: int) -> models.SkillList | None:
+    """Return the skill list or None if it does not exist."""
+    return models.SkillList.objects.filter(pk=pk).first()
+
+
+def skill_list_fields(skill_list: models.SkillList) -> dict:
+    """Common fields of a skill list in the API responses."""
+    return {
+        "id": skill_list.pk,
+        "name": skill_list.name,
+        "category": skill_list.category,
+        "ordering": skill_list.ordering,
+        "active": skill_list.active,
+    }

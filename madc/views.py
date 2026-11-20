@@ -8,7 +8,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ValidationError
 from django.core.handlers.wsgi import WSGIRequest
-from django.http import JsonResponse
+from django.http import HttpResponseForbidden, JsonResponse
 from django.shortcuts import redirect, render
 from django.utils.translation import gettext as _
 from django.views.decorators.http import require_POST
@@ -18,7 +18,8 @@ from allianceauth.authentication.decorators import permissions_required
 
 # AA Memberaudit Doctrine Checker
 from madc import forms
-from madc.api.helpers import get_manage_permission
+from madc.api.helpers import get_main_character, get_manage_permission
+from madc.helpers.skill_handler import skill_list_handler
 from madc.models.skillchecker import SkillList
 from madc.providers import logger
 
@@ -123,6 +124,62 @@ def doctrine(request: WSGIRequest, character_id=None):
         },
     }
     return render(request, "madc/admin/add.html", context=context)
+
+
+# -- Transitional modal views for the jQuery pages, replaced by the React frontend
+
+
+@login_required
+@permissions_required(["madc.basic_access"])
+def missing_skills_modal(request: WSGIRequest, character_id: int, pk: int):
+    """Render the modal with the skills of a skill list against a character."""
+    perms, main = get_main_character(request, character_id)
+    if not perms:
+        return HttpResponseForbidden(_("Permission Denied"))
+
+    try:
+        skilllist = SkillList.objects.get(pk=pk)
+    except SkillList.DoesNotExist:
+        return render(request, "madc/partials/modals/missing.html")
+
+    user_skilllists = skill_list_handler.get_user_skill_list(
+        user_id=main.character_ownership.user_id
+    )
+    character_skills = next(
+        (
+            data["skills"]
+            for data in user_skilllists["skills_list"].values()
+            if data["character_id"] == character_id
+        ),
+        None,
+    )
+    if character_skills is None:
+        return HttpResponseForbidden(_("Character not found in skill lists"))
+
+    missing_skills = [
+        {
+            "skill": skill_name,
+            "trained": character_skills.get(skill_name, {}).get("trained_level", 0),
+            "needed": required_level,
+        }
+        for skill_name, required_level in skilllist.get_skills().items()
+    ]
+    context = {"doctrine": skilllist, "skills": missing_skills}
+    return render(request, "madc/partials/modals/missing.html", context=context)
+
+
+@login_required
+@permissions_required(["madc.basic_access"])
+def doctrine_skills_modal(request: WSGIRequest, pk: int):
+    """Render the modal with the skills of a skill list."""
+    try:
+        skilllist = SkillList.objects.get(pk=pk)
+    except SkillList.DoesNotExist:
+        return render(request, "madc/partials/modals/missing.html")
+
+    return render(
+        request, "madc/partials/modals/doctrine.html", context={"doctrine": skilllist}
+    )
 
 
 @login_required

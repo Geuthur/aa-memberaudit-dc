@@ -26,22 +26,20 @@ class TestAdminErrorBodies(AuthTestCase):
         # given
         self.client.force_login(self.user)
         # when
-        with patch(
-            "madc.api.admin.admin.get_manage_permission", return_value=(False, None)
-        ):
+        with patch("madc.api.legacy.get_manage_permission", return_value=(False, None)):
             response = self.client.get(reverse(f"{API_URL}:admin_doctrines"))
         # then
         self.assertEqual(response.status_code, HTTPStatus.FORBIDDEN)
         self.assertEqual(response.json(), PERMISSION_DENIED)
 
-    def test_character_overview_should_return_error_body_without_visible_characters(
+    def test_account_overview_should_return_error_body_without_visible_characters(
         self,
     ):
         # given
         self.client.force_login(self.user)
         # when
         with patch.object(self.manager, "visible_eve_characters", return_value=None):
-            response = self.client.get(reverse(f"{API_URL}:get_character_overview"))
+            response = self.client.get(reverse(f"{API_URL}:get_account_overview"))
         # then
         self.assertEqual(response.status_code, HTTPStatus.FORBIDDEN)
         self.assertEqual(response.json(), PERMISSION_DENIED)
@@ -109,25 +107,3 @@ class TestSkillCheckerErrorBodies(AuthTestCase):
         # then
         self.assertEqual(response.status_code, HTTPStatus.FORBIDDEN)
         self.assertEqual(response.json(), PERMISSION_DENIED)
-
-    @patch("madc.api.skill.skillchecker.skill_list_handler")
-    def test_missing_skills_should_return_error_body_without_character_skills(
-        self, mock_handler
-    ):
-        # given
-        mock_handler.get_user_skill_list.return_value = {"skills_list": {}}
-        # when
-        response = self.client.get(
-            reverse(
-                f"{API_URL}:get_missing_skills",
-                kwargs={
-                    "character_id": self.user.profile.main_character.character_id,
-                    "pk": self.skill_list.pk,
-                },
-            )
-        )
-        # then
-        self.assertEqual(response.status_code, HTTPStatus.FORBIDDEN)
-        self.assertEqual(
-            response.json(), {"error": "Character not found in skill lists"}
-        )

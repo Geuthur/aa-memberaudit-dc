@@ -58,6 +58,20 @@ class TestSkillHandler(AuthTestCase):
         self.assertIn("btn-danger", html)
         self.assertIn("<i class='fa-solid fa-copy'></i>", html)
 
+    def test_generate_doctrine_html_should_escape_name(self):
+        # given
+        handler = SkillListHandler()
+        # when
+        html = handler._generate_doctrine_html(
+            skill_list_name="x' onmouseover='alert(1)",
+            character_id=1001,
+            has_missing_skills=True,
+            skill_list_pk=1,
+        )
+        # then
+        self.assertNotIn("x' onmouseover", html)
+        self.assertIn("x&#x27; onmouseover=&#x27;alert(1)", html)
+
     def test_generate_doctrine_html_no_missing(self):
         """Test should generate doctrine HTML snippet for complete skills."""
         # given
@@ -81,7 +95,9 @@ class TestSkillHandler(AuthTestCase):
             "Skill I": 1,
         }
 
-        skill_list = SkillList(name="fit", skill_list=json.dumps(sk_check))
+        skill_list = SkillList.objects.create(
+            name="fit", skill_list=json.dumps(sk_check)
+        )
 
         CharacterSkill.objects.create(
             character=self.memberaudit,
