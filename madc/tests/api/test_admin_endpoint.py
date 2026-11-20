@@ -59,29 +59,6 @@ class TestAdminAPI(AuthTestCase):
             ordering=1,
         )
 
-    def test_admin_endpoint_access(self):
-        # given
-        url = reverse(f"{API_URL}:admin_doctrines")
-        self.client.force_login(self.user_admin_access)
-        # when
-        response = self.client.get(url)
-        response_json = response.json()
-        # then
-        self.assertEqual(response.status_code, HTTPStatus.OK)
-        self.assertIn("Test Skill List", response_json)
-        self.assertIn(
-            "Test Category", response_json["Test Skill List"]["category"]["html"]
-        )
-
-    def test_admin_endpoint_no_access(self):
-        # given
-        url = reverse(f"{API_URL}:admin_doctrines")
-        self.client.force_login(self.user_no_access)
-        # when
-        response = self.client.get(url)
-        # then
-        self.assertEqual(response.status_code, HTTPStatus.FORBIDDEN)
-
     def test_account_overview_endpoint(self):
         # given
         url = reverse(f"{API_URL}:get_account_overview")

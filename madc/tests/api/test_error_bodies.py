@@ -22,16 +22,6 @@ class TestAdminErrorBodies(AuthTestCase):
         super().setUpClass()
         cls.manager = type(SkillList.objects)
 
-    def test_administration_should_return_error_body_without_manage_permission(self):
-        # given
-        self.client.force_login(self.user)
-        # when
-        with patch("madc.api.legacy.get_manage_permission", return_value=(False, None)):
-            response = self.client.get(reverse(f"{API_URL}:admin_doctrines"))
-        # then
-        self.assertEqual(response.status_code, HTTPStatus.FORBIDDEN)
-        self.assertEqual(response.json(), PERMISSION_DENIED)
-
     def test_account_overview_should_return_error_body_without_visible_characters(
         self,
     ):

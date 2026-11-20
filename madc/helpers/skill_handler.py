@@ -5,9 +5,6 @@ from hashlib import md5
 # Django
 from django.contrib.auth.models import User
 from django.core.cache import cache
-from django.urls import reverse
-from django.utils.html import escape
-from django.utils.safestring import mark_safe
 
 # Alliance Auth
 from allianceauth.authentication.models import CharacterOwnership
@@ -20,9 +17,9 @@ from madc.models.skillchecker import SkillList
 from madc.providers import logger
 
 SKILL_CACHE_TIMEOUT_SECONDS = 60 * 60 * 72  # 72 hours
-# Keys with a version: cached results hold HTML with URLs, a new version drops them
-SKILL_CACHE_HEADERS_KEY = "SKILL_HEADER_V2"
-SKILL_CACHE_USER_KEY = "SKILL_LISTS_V2_{}"
+# Keys with a version: a new version drops results cached in an older format
+SKILL_CACHE_HEADERS_KEY = "SKILL_HEADER_V3"
+SKILL_CACHE_USER_KEY = "SKILL_LISTS_V3_{}"
 
 
 class SkillListHandler:
@@ -38,41 +35,6 @@ class SkillListHandler:
     def _build_account_cache_key(self, characters):
         """Build a cache key based on the character IDs."""
         return SKILL_CACHE_USER_KEY.format(self._get_chars_hash(characters))
-
-    def _generate_doctrine_html(
-        self,
-        skill_list_name: str,
-        character_id: int,
-        has_missing_skills: bool,
-        skill_list_pk: int = None,
-    ) -> str:
-        """Generate HTML for doctrine buttons based on skill status."""
-        # The name comes from managers: escape it, it lands in attributes and text
-        skill_list_name = escape(skill_list_name)
-        html = f"<div class='doctrine-item btn-group' role='group' data-doctrine='{skill_list_name}'>"
-        html += "<button type='button' "
-
-        if has_missing_skills:
-            url = reverse(
-                viewname="madc:missing_skills_modal",
-                kwargs={"character_id": character_id, "pk": skill_list_pk},
-            )
-            html += f"class='btn btn-danger btn-sm' id='missing-{skill_list_name}-{character_id}' data-bs-toggle='modal' data-bs-target='#modalViewMissingContainer' data-ajax_missing='{url}'>"
-        else:
-            html += "class='btn btn-success btn-sm'>"
-
-        html += f"{skill_list_name}</button>"
-        html += "<button type='button' class='flex-one btn "
-
-        if has_missing_skills:
-            html += f"btn-danger btn-sm' id='copy-{skill_list_name}-{character_id}'>"
-            html += "<i class='fa-solid fa-copy'></i>"
-        else:
-            html += "btn-success btn-sm'>"
-            html += "<i class='fa-solid fa-check'></i>"
-        html += "</button></div>"
-
-        return mark_safe(html)
 
     def check_skill_lists(self, skill_lists: list[SkillList], linked_characters):
         """Check if the skill lists are up to date."""
@@ -133,23 +95,14 @@ class SkillListHandler:
                         ] = level
 
                 # Add metadata for the doctrine
+                character_data["doctrines"][skill_list_name]["id"] = skill_list_misc[
+                    skill_list_name
+                ]["pk"]
                 character_data["doctrines"][skill_list_name]["order"] = skill_list_misc[
                     skill_list_name
                 ]["order-weight"]
                 character_data["doctrines"][skill_list_name]["category"] = (
                     skill_list_misc[skill_list_name]["category"]
-                )
-
-                has_missing_skills = bool(
-                    character_data["doctrines"][skill_list_name]["skills"]
-                )
-                character_data["doctrines"][skill_list_name]["html"] = (
-                    self._generate_doctrine_html(
-                        skill_list_name=skill_list_name,
-                        character_id=character_data["character_id"],
-                        has_missing_skills=has_missing_skills,
-                        skill_list_pk=skill_list_misc[skill_list_name]["pk"],
-                    )
                 )
         return skill_dict
 

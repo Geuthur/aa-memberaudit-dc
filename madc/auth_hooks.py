@@ -21,7 +21,7 @@ class MADoctrineCheckerMenuItem(MenuItemHook):
             self,
             _("Doctrine Checker"),
             "fas fa-book fa-fw",
-            "madc:index",
+            "madc:react_base",
             navactive=["madc:"],
         )
 

@@ -81,14 +81,29 @@ class CorporationOverviewSchema(CorporationSchema):
     actions: str | None = None
 
 
+class DoctrineSkillSchema(Schema):
+    skill_name: str
+    required_level: int
+
+
+class DoctrineStatusSchema(Schema):
+    """Check result of a skill list: the skills that are still missing."""
+
+    id: int
+    name: str
+    category: str
+    order: int
+    skills: list[DoctrineSkillSchema]
+
+
 class CharacterDoctrines(Schema):
     character: CharacterSchema
-    doctrines: dict
+    doctrines: dict[str, DoctrineStatusSchema]
 
 
 class CorporationDoctrines(Schema):
     character: CharacterSchema
-    doctrines: dict
+    doctrines: dict[str, DoctrineStatusSchema]
     alts: list[CharacterSchema] | None = None
 
 

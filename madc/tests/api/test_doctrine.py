@@ -107,8 +107,17 @@ class TestAccountDoctrines(DoctrineTestCase):
         )
         main_doctrines = by_character[self.main.character_id]
         self.assertEqual(set(main_doctrines), {"Mining", "Combat"})
-        self.assertEqual(main_doctrines["Mining"]["skills"], {self.eve_type.name: 4})
-        self.assertEqual(by_character[self.alt.character_id]["Mining"]["skills"], {})
+        self.assertEqual(
+            main_doctrines["Mining"],
+            {
+                "id": self.mining.pk,
+                "name": "Mining",
+                "category": "Industry",
+                "order": 1,
+                "skills": [{"skill_name": self.eve_type.name, "required_level": 4}],
+            },
+        )
+        self.assertEqual(by_character[self.alt.character_id]["Mining"]["skills"], [])
 
     def test_doctrines_should_return_403_for_foreign_character(self):
         response = self.client.get(
@@ -183,7 +192,7 @@ class TestCorporationDoctrines(DoctrineTestCase):
         doctrines = data[0]["doctrines"]
         self.assertEqual(set(doctrines), {"Mining", "Combat"})
         # The alt has Mining Barge 5, so nothing is missing for Mining
-        self.assertEqual(doctrines["Mining"]["skills"], {})
+        self.assertEqual(doctrines["Mining"]["skills"], [])
 
     def test_corporation_doctrines_should_filter_by_category(self):
         response = self.client.get(

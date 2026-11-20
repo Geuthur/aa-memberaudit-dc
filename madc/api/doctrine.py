@@ -49,6 +49,23 @@ def _character_schema(character: EveCharacter | dict) -> schema.CharacterSchema:
     )
 
 
+def _doctrine_statuses(doctrines: dict) -> dict[str, schema.DoctrineStatusSchema]:
+    """Convert check results of the skill handler to DoctrineStatusSchema."""
+    return {
+        name: schema.DoctrineStatusSchema(
+            id=data["id"],
+            name=name,
+            category=data.get("category") or "",
+            order=data.get("order", 0),
+            skills=[
+                schema.DoctrineSkillSchema(skill_name=skill, required_level=level)
+                for skill, level in data.get("skills", {}).items()
+            ],
+        )
+        for name, data in doctrines.items()
+    }
+
+
 def _character_skills(character_id: int) -> list[CharacterSkill]:
     """Return the Member Audit skills of a character."""
     return list(
@@ -103,7 +120,9 @@ class DoctrineApiEndpoints:
             return [
                 schema.CharacterDoctrines(
                     character=_character_schema(character),
-                    doctrines=doctrines_by_character.get(character.character_id, {}),
+                    doctrines=_doctrine_statuses(
+                        doctrines_by_character.get(character.character_id, {})
+                    ),
                 )
                 for character in characters
             ]
@@ -418,6 +437,6 @@ class DoctrineApiEndpoints:
                 if char_data["character_id"] in corp_character_ids
             }
 
-            main_characters[main_char_id]["doctrines"] = _collect_user_doctrines(
-                corp_skills_list, active_skilllists
+            main_characters[main_char_id]["doctrines"] = _doctrine_statuses(
+                _collect_user_doctrines(corp_skills_list, active_skilllists)
             )

@@ -1,0 +1,418 @@
+@import url("aa-geuthur-react/styles.css");
+
+/*
+ * AllianceAuth CSS not colliding with BS5
+ */
+
+/* ═══ DESIGN TOKENS for AA ═══════════════════════════════════════════════════════ */
+:root {
+    --aa-color-emerald-dark: rgb(4 120 87);
+    --aa-color-amber-dark: rgb(180 83 9);
+    --aa-color-rose-dark: rgb(77 2 24);
+    --aa-color-blue-dark: rgb(13 63 120);
+    --aa-text-primary: var(--aa-color-blue);
+    --aa-text-emerald-dark: var(--aa-color-emerald-dark);
+    --aa-text-amber-dark: var(--aa-color-amber-dark);
+    --aa-text-rose-dark: var(--aa-color-rose-dark);
+    --aa-border-solid: 2px solid var(--aa-border);
+    --aa-border-solid-lg: 3px solid var(--aa-border);
+    --aa-border-solid-xl: 5px solid var(--aa-border);
+    --aa-bg-emerald: color-mix(in srgb, var(--aa-color-emerald) 100%, var(--aa-color-black) 50%);
+    --aa-bg-emerald-light: color-mix(in srgb, var(--aa-color-emerald-light) 50%, var(--aa-color-black) 50%);
+    --aa-bg-emerald-dark: color-mix(in srgb, var(--aa-color-emerald-dark) 100%, var(--aa-color-black) 50%);
+    --aa-bg-amber: color-mix(in srgb, var(--aa-color-amber) 100%, var(--aa-color-black) 50%);
+    --aa-bg-amber-light: color-mix(in srgb, var(--aa-color-amber-light) 50%, var(--aa-color-black) 50%);
+    --aa-bg-amber-dark: color-mix(in srgb, var(--aa-color-amber-dark) 100%, var(--aa-color-black) 50%);
+    --aa-bg-rose: color-mix(in srgb, var(--aa-color-rose) 100%, var(--aa-color-black) 50%);
+    --aa-bg-rose-light: color-mix(in srgb, var(--aa-color-rose-light) 50%, var(--aa-color-black) 50%);
+    --aa-bg-rose-dark: color-mix(in srgb, var(--aa-color-rose-dark) 100%, var(--aa-color-black) 50%);
+    --aa-bg-dark: color-mix(in srgb, var(--aa-color-black) 100%, var(--aa-color-black) 50%);
+    --aa-bg-light: color-mix(in srgb, var(--aa-color-white) 100%, var(--aa-color-black) 50%);
+}
+
+/* ═══ General ═══════════════════════════════════════════════════════════════ */
+.aa-badge,
+.aa-badge-xs {
+    display: inline-flex;
+    align-items: center;
+    font-family: ui-monospace, Menlo, Consolas, monospace;
+    text-transform: uppercase;
+    box-shadow: var(--aa-shadow-dark);
+}
+
+.aa-badge {
+    padding: 2px 4px;
+    border-radius: 4px;
+    font-size: var(--aa-font-size-xs);
+    font-weight: var(--aa-font-weight-bold);
+    letter-spacing: .05em;
+}
+
+.aa-badge-xs {
+    padding: 1px 3px;
+    border-radius: 3px;
+    font-size: var(--aa-font-size-xs);
+    font-weight: var(--aa-font-weight-light);
+    letter-spacing: .03em;
+}
+
+.aa-badge-lg {
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: var(--aa-font-size-md);
+    font-weight: var(--aa-font-weight-bold);
+    letter-spacing: .05em;
+}
+
+.aa-badge-nullsec {
+    background-color: var(--aa-bg-rose-dark);
+    color: var(--aa-text-rose-light);
+    border: 2px solid var(--aa-border-red);
+}
+
+.aa-badge-lowsec {
+    background-color: var(--aa-bg-amber-dark);
+    color: var(--aa-text-amber-light);
+    border: 2px solid var(--aa-border-amber);
+}
+
+.aa-badge-hisec {
+    background-color: var(--aa-bg-emerald-dark);
+    color: var(--aa-text-emerald-light);
+    border: 2px solid var(--aa-border-green);
+}
+
+.aa-badge-primary {
+    background-color: var(--aa-color-blue-dark);
+    color: var(--aa-color-white-light);
+    border-color: var(--aa-border-blue);
+}
+
+.aa-badge-secondary {
+    background-color: var(--aa-color-grey);
+    color: var(--aa-color-white-light);
+    border-color: var(--aa-border-light);
+}
+
+.aa-badge-warning {
+    background-color: var(--aa-color-amber-dark);
+    color: var(--aa-color-white-light);
+    border-color: var(--aa-border-amber);
+}
+
+.aa-badge-success {
+    background-color: var(--aa-color-emerald-dark);
+    color: var(--aa-color-white-light);
+    border-color: var(--aa-border-emerald);
+}
+
+.aa-badge-danger {
+    background-color: var(--aa-color-rose-dark);
+    color: var(--aa-color-white-light);
+    border-color: var(--aa-border-rose);
+}
+
+.aa-cursor-pointer {
+    display: block;
+    cursor: pointer;
+}
+
+/* ═══ Scroll Bar ═══════════════════════════════════════════════════════════════ */
+
+/* Custom sci-fi scrollbars matching vowra-website */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgb(12 13 17);
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgb(39 39 42);
+    border-radius: 2px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgb(82 82 91);
+}
+
+/* ═══ Border ═══════════════════════════════════════════════════════════════ */
+
+.aa-border {
+    transition: border-color 150ms ease;
+}
+
+.aa-border:hover {
+    border-color: var(--aa-color-grey-light);
+}
+
+/* ═══ HEADINGS ══════════════════════════════════════════════════════════════ */
+
+.aa-section-title {
+    color: var(--aa-text-white);
+    font-size: var(--aa-font-size-lg);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+}
+
+.aa-section-subtitle {
+    color: var(--aa-text-secondary);
+    font-size: var(--aa-font-size);
+}
+
+/* ═══ PANELS ═══════════════════════════════════════════════════════════════ */
+
+.aa-panel {
+    border-radius: var(--aa-border-radius);
+    border: var(--aa-border-solid);
+    border-color: var(--aa-border-light);
+    background-color: var(--aa-body);
+    padding: 16px;
+    box-shadow: var(--aa-shadow);
+    backdrop-filter: blur(12px);
+}
+
+.aa-panel-lg {
+    border-radius: var(--aa-border-radius);
+    border: var(--aa-border-solid);
+    border-color: var(--aa-border-light);
+    background-color: var(--aa-body);
+    padding: 20px;
+    box-shadow: var(--aa-shadow);
+    backdrop-filter: blur(12px);
+}
+
+.aa-panel-light {
+    border-radius: var(--aa-border-radius);
+    border: var(--aa-border-solid);
+    border-color: var(--aa-border-light);
+    background-color: var(--aa-color-grey-light);
+    padding: 16px;
+    box-shadow: var(--aa-shadow);
+    backdrop-filter: blur(12px);
+}
+
+@media (width >= 640px) {
+    .aa-panel-lg {
+        padding: 24px;
+    }
+}
+
+/* ═══ TAB BAR ═══════════════════════════════════════════════════════════════ */
+
+.aa-tab-bar {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px;
+    background-color: var(--aa-bg-dark);
+    border: var(--aa-border-solid);
+    border-radius: 8px;
+    box-shadow: var(--aa-shadow);
+}
+
+.aa-tab-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 14px;
+    border-radius: 6px;
+    font-size: var(--aa-font-size);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+    color: var(--aa-text-secondary);
+    background: transparent;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: background-color 150ms ease, color 150ms ease;
+}
+
+.aa-tab-btn:not(.active):hover {
+    color: var(--aa-color-white-light);
+    background-color: rgb(39 39 42 / 50%);
+}
+
+.aa-tab-btn.active {
+    color: var(--aa-text-white);
+    background-color: var(--aa-color-grey-light);
+    border-color: var(--aa-border-light);
+}
+
+/* ═══ Portrait ═══════════════════════════════════════════════════════════════ */
+
+.aa-portrait img {
+    border-radius: 50%;
+    width: 48px;
+    height: 48px;
+    object-fit: cover;
+}
+
+/* ═══ HyperLink ═══════════════════════════════════════════════════════════════ */
+
+.aa-link {
+    color: var(--aa-link-body);
+    cursor: pointer;
+}
+
+.aa-link:hover {
+    color: var(--aa-link-body-light);
+    text-decoration: underline;
+}
+
+/* ═══ BUTTONS ══════════════════════════════════════════════════════════════ */
+.aa-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 14px;
+    border-radius: 6px;
+    font-size: var(--aa-font-size-sm);
+    font-weight: 600;
+    line-height: 1.4;
+    text-decoration: none;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: background-color 150ms ease, border-color 150ms ease, color 150ms ease;
+}
+
+.aa-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.aa-btn-info {
+    background-color: var(--aa-color-blue-dark);
+    color: var(--aa-color-white-light);
+    border-color: var(--aa-color-blue-light);
+}
+
+.aa-btn-info:hover:not(:disabled) {
+    background-color: var(--aa-color-blue-light);
+    color: var(--aa-color-black);
+    border-color: var(--aa-color-white);
+}
+
+.aa-btn-primary {
+    background-color: var(--aa-color-blue-dark);
+    color: var(--aa-color-white-light);
+    border-color: var(--aa-color-blue);
+}
+
+.aa-btn-primary:hover:not(:disabled) {
+    background-color: var(--aa-color-blue);
+    color: var(--aa-color-black);
+    border-color: var(--aa-color-white);
+}
+
+.aa-btn-secondary {
+    background-color: var(--aa-color-grey);
+    color: var(--aa-color-white-light);
+    border-color: var(--aa-border-light);
+}
+
+.aa-btn-secondary:hover:not(:disabled) {
+    background-color: var(--aa-color-grey-light);
+    color: var(--aa-color-black);
+    border-color: var(--aa-color-white);
+}
+
+.aa-btn-success {
+    background-color: var(--aa-color-emerald-dark);
+    color: var(--aa-color-white-light);
+    border-color: var(--aa-color-emerald);
+}
+
+.aa-btn-success:hover:not(:disabled) {
+    background-color: var(--aa-color-emerald);
+    color: var(--aa-color-black);
+    border-color: var(--aa-color-white);
+}
+
+.aa-btn-warning {
+    background-color: var(--aa-color-amber-dark);
+    color: var(--aa-color-white-light);
+    border-color: var(--aa-border-amber);
+}
+
+.aa-btn-warning:hover:not(:disabled) {
+    background-color: var(--aa-color-amber);
+    color: var(--aa-color-black);
+    border-color: var(--aa-color-white);
+}
+
+.aa-btn-danger {
+    background-color: var(--aa-color-rose-dark);
+    color: var(--aa-color-white-light);
+    border-color: var(--aa-border-rose);
+}
+
+.aa-btn-danger:hover:not(:disabled) {
+    background-color: var(--aa-color-red);
+    color: var(--aa-color-black);
+    border-color: var(--aa-color-white);
+}
+
+.aa-btn-sm {
+    padding: 4px 10px;
+    font-size: var(--aa-font-size-xs);
+}
+
+/* ═══ Sticky Table Headers & Columns ══════════════════════════════════════ */
+
+.aa-table-sticky-header thead.aa-table-head {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.aa-table-sticky-header thead.aa-table-head th,
+.aa-table-sticky-header .aa-table-heading-cell {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background-color: var(--aa-color-body-dark, rgb(11 14 20));
+    box-shadow: inset 0 -1px 0 var(--aa-border-light, rgb(39 39 42));
+}
+
+.aa-table-shell-light .aa-table-sticky-header thead.aa-table-head th,
+.aa-table-shell-light .aa-table-sticky-header .aa-table-heading-cell,
+.aa-table-light .aa-table-sticky-header .aa-table-heading-cell {
+    background-color: var(--aa-color-body-dark, rgb(11 14 20));
+    box-shadow: inset 0 -1px 0 var(--aa-border-light, rgb(39 39 42));
+}
+
+/* Sticky First Column (Freeze Member Column in Matrix View) */
+.aa-table-sticky-first-col thead.aa-table-head th:first-child,
+.aa-table-sticky-first-col .aa-table-heading-cell:first-child {
+    position: sticky;
+    left: 0;
+    top: 0;
+    z-index: 20;
+    background-color: var(--aa-color-body-dark, rgb(11 14 20));
+    box-shadow: inset -1px -1px 0 var(--aa-border-light, rgb(39 39 42));
+}
+
+.aa-table-sticky-first-col tbody td:first-child,
+.aa-table-sticky-first-col .aa-table-cell:first-child {
+    position: sticky;
+    left: 0;
+    z-index: 5;
+    background-color: var(--aa-color-body, rgb(24 24 27));
+    box-shadow: inset -1px 0 0 var(--aa-border-light, rgb(39 39 42));
+}
+
+.aa-table-sticky-first-col tbody tr:hover td:first-child,
+.aa-table-sticky-first-col .aa-table-row-hover:hover .aa-table-cell:first-child {
+    background-color: color-mix(in srgb, var(--aa-color-grey-light) 55%, var(--aa-color-body, rgb(24 24 27)));
+}
+
+/* Corporation matrix: scroll area with sticky header and first column */
+.madc-matrix .aa-table-scroll {
+    max-height: 70vh;
+    overflow-y: auto;
+    position: relative;
+}
