@@ -28,9 +28,16 @@ Section Order:
 
 <!-- Your changes go here -->
 
+## [0.5.0] - 2026-11-20
+
+> [!WARNING]
+> Basic access is only granted by `basic_access`. Users with `corp_access`, `alliance_access`, `manage_access` or `admin_access` but without `basic_access` lose access to the API and the pages; give them `basic_access` as well.
+
 ### Added
 
 - API endpoints to create, edit and delete skill lists, plus `menu/`, `user/` and corporation member audit with filters
+- Optional extra `tests-allianceauth-development` (Alliance Auth 6 pre-release) with tox environment `allianceauth-development`, `make tox-tests-development` and a non-blocking CI job "AA Development"
+- Tests that match all permission strings used in the code against `General.Meta.permissions` and check the `AppLogger` prefix
 
 ### Fixed
 
@@ -42,51 +49,24 @@ Section Order:
 - Inline editing of a skill list lost the input when saving failed
 - Bookmarks of the former template pages (e.g. `/madc/<id>/view/checker/`) redirect to the new pages
 - Menu entry and overview tab of the corporations were missing with `alliance_access` only
+- `__operations__` was an empty list, it now contains the public operation `GetStatus`; an empty filter makes `esi.client` raise an `AttributeError` with `DEBUG=False`
+- `make coverage` exited with 0 when tests failed; it now exits with the status of the test run
 
 ### Changed
 
-- API restructured like aa-corptools-dc; modal endpoints and overviews answer JSON, the jQuery pages use transitional views
 - Frontend rebuilt in React (aa-geuthur-react) on the base of aa-corptools-dc, with inline editing of skill lists
-
-### Removed
-
-- Django templates, jQuery scripts and x-editable; the old page URLs now open the React app
-
-### Changed
-
-> [!WARNING]
-> Basic access is only granted by `basic_access`. Users with `corp_access`, `alliance_access`, `manage_access` or `admin_access` but without `basic_access` lose access to the API and the pages; give them `basic_access` as well.
-
-- Uniform error format of the API: every error response is `{"error": "<text>"}` (`ErrorSchema`) and every endpoint lists its 403 in the OpenAPI schema; the modals show the message of the API
-- Removed the unreachable `basic_access` check in the body of `GET doctrines/{pk}/`; the decorator answers first
-- The whole API requires `basic_access` centrally (`basic_access_required` around the API URLs in `urls.py`); without it every endpoint answers 403 `{"error": "Permission Denied"}`, also for characters of the own account
-- All views require `basic_access` in addition to their own permission (`corp_access`, or `manage_access`/`admin_access`); `GeneralManager.has_basic_access` is now a `@staticmethod`
-- The API, the menu hook and the access querysets (`SkillList.objects.manage_to`, `visible_eve_characters`, `visible_eve_corporations`) check permissions only through `General.objects` (`GeneralManager`) instead of `user.has_perm("madc.…")` or their own `is_superuser` check. New `GeneralManager` methods `has_basic_access`, `has_corp_access`, `has_alliance_access`, `has_admin_access` and `has_full_access` (superuser or `admin_access`). The Django views keep `@permissions_required`. No behavior change.
-- Permissions are checked directly with Django and the full string (e.g. `madc.basic_access`); `General.Meta.permissions` stays the single place where they are defined. Codenames are unchanged, no migration needed.
-- `General` has a `GeneralManager` (`managers/general.py`) with `has_management_access` (manage or admin, no database query); permission texts are translatable
-- Test that matches all permission strings used in the code (Python and templates) against `General.Meta.permissions`
-- Logging: a single `AppLogger` is created in `madc/providers.py` and imported by all modules via `from madc.providers import logger` (replaces `LoggerAddTag` per module; log records now use the logger name `madc.providers`)
-- Tests for the `AppLogger` prefix
-- The shared `SkillListHandler` instance moved from `madc/providers.py` to `madc/helpers/skill_handler.py` (`skill_list_handler`) to avoid a circular import
+- API restructured like aa-corptools-dc; modal endpoints and overviews answer JSON
+- Uniform error format of the API: every error response is `{"error": "<text>"}` (`ErrorSchema`) and every endpoint lists its 403 in the OpenAPI schema
+- The whole API (`basic_access_required` around the API URLs) and all views require `basic_access`; without it every endpoint answers 403 `{"error": "Permission Denied"}`, also for characters of the own account
+- Permissions are checked only through `General.objects` (`GeneralManager` in `managers/general.py` with `has_basic_access`, `has_corp_access`, `has_alliance_access`, `has_admin_access`, `has_full_access` and `has_management_access`) and the full string (e.g. `madc.basic_access`); codenames are unchanged, no migration needed, permission texts are translatable
+- Logging: a single `AppLogger` in `madc/providers.py` replaces `LoggerAddTag` per module (logger name `madc.providers`); the shared `SkillListHandler` instance moved to `madc/helpers/skill_handler.py` (`skill_list_handler`)
+- Raised `__esi_compatibility_date__` to `2026-08-18`
+- Tests: unified test base like the template `aa-example` (`NoSocketsTestCase`, `AuthTestCase`, `UserMainFactory` based on `aa-evesde-factory`); the JSON loader `load_allianceauth` and `app_utils.testing` are no longer used
 - Bumped dev dependency eslint to 10.15 (minimatch 11, fixes GHSA-g3hv-75wg-m249)
 
 ### Removed
 
-- Unused module loggers in `decorators.py`, `models/general.py`, `models/skillchecker.py`, `api/helpers.py`, `api/admin/admin.py` and `api/skill/skillchecker.py`
-
-### Added
-
-- Optional extra `tests-allianceauth-development` (test packages plus the Alliance Auth 6 pre-release) for the tox environment `allianceauth-development` and `make tox-tests-development`; a non-blocking CI job "AA Development" runs it on Python 3.13 and 3.14
-
-### Fixed
-
-- Fixed `__operations__` being an empty list, it now contains the public operation `GetStatus`. An empty filter makes `esi.client` raise an `AttributeError` with `DEBUG=False`.
-- Fixed `make coverage` exiting with 0 when tests failed. The reports are still created, and the target now exits with the status of the test run, or with the status of `coverage report` if the tests passed.
-
-### Changed
-
-- Raised `__esi_compatibility_date__` to `2026-08-18`.
-- Tests: unified test base like the template `aa-example`. `madc/tests/__init__.py` now provides `NoSocketsTestCase` and `AuthTestCase`, users come from a `UserMainFactory` (`madc/tests/testdata/app.py`) based on `aa-evesde-factory`, which is added to the test extras. The JSON loader for Alliance Auth objects (`load_allianceauth`, `allianceauth.json`) and the use of `app_utils.testing` in the tests are removed.
+- Django templates, jQuery scripts and x-editable; the old page URLs now open the React app
 
 ## [0.4.0] - 2026-07-10
 
@@ -323,4 +303,6 @@ Section Order:
 [0.3.2]: https://github.com/Geuthur/aa-memberaudit-dc/compare/v0.3.1...v0.3.2 "0.3.2"
 [0.3.3]: https://github.com/Geuthur/aa-memberaudit-dc/compare/v0.3.2...v0.3.3 "0.3.3"
 [0.3.4]: https://github.com/Geuthur/aa-memberaudit-dc/compare/v0.3.3...v0.3.4 "v0.3.4"
-[in development]: https://github.com/Geuthur/aa-memberaudit-dc/compare/v0.3.4...HEAD "In Development"
+[0.4.0]: https://github.com/Geuthur/aa-memberaudit-dc/compare/v0.3.4...v0.4.0 "v0.4.0"
+[0.5.0]: https://github.com/Geuthur/aa-memberaudit-dc/compare/v0.4.0...v0.5.0 "v0.5.0"
+[in development]: https://github.com/Geuthur/aa-memberaudit-dc/compare/v0.5.0...HEAD "In Development"
