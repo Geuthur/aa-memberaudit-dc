@@ -13,6 +13,9 @@ from evesde_factory.utils import add_character_to_user
 from django.core.cache import cache
 from django.urls import reverse
 
+# Alliance Auth
+from allianceauth.tests.auth_utils import AuthUtils
+
 # Alliance Auth (External Libs)
 from eveuniverse.models import EveType
 from memberaudit.models import CharacterSkill
@@ -137,6 +140,14 @@ class TestAccountDoctrines(DoctrineTestCase):
 
 
 class TestCorporationDoctrines(DoctrineTestCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        # The corporation endpoints need corp_access for the own corporation
+        cls.user = AuthUtils.add_permission_to_user_by_name(
+            "madc.corp_access", cls.user
+        )
+
     def test_members_should_return_mains_with_corp_alts_and_active_doctrines(self):
         # when
         response = self.client.get(

@@ -7,6 +7,9 @@ from http import HTTPStatus
 # Django
 from django.urls import reverse
 
+# Alliance Auth
+from allianceauth.tests.auth_utils import AuthUtils
+
 # AA Memberaudit Doctrine Checker
 from madc.models.skillchecker import SkillList
 from madc.tests import AuthTestCase
@@ -233,6 +236,10 @@ class TestOverviews(AuthTestCase):
     def setUpClass(cls):
         super().setUpClass()
         create_memberaudit(cls.user.profile.main_character)
+        # The corporation overview needs corp_access for the own corporation
+        cls.user = AuthUtils.add_permission_to_user_by_name(
+            "madc.corp_access", cls.user
+        )
 
     def setUp(self):
         self.client.force_login(self.user)

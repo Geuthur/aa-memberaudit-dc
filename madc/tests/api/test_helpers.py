@@ -4,6 +4,10 @@
 import json
 from http import HTTPStatus
 
+# Third Party
+# AA EVE SDE Factory
+from evesde_factory.allianceauth import UserFactory
+
 # Django
 from django.urls import reverse
 
@@ -84,6 +88,20 @@ class TestAPIHelper(AuthTestCase):
             main_char.character_id,
             self.user_admin_access.profile.main_character.character_id,
         )
+
+    def test_get_main_character_should_deny_user_without_main_character(self):
+        # given
+        request = self.factory.get("/")
+        request.user = UserFactory(permissions__=["madc.basic_access"])
+
+        # when
+        perms, main_char = helpers.get_main_character(
+            request, self.user.profile.main_character.character_id
+        )
+
+        # then
+        self.assertFalse(perms)
+        self.assertEqual(main_char, self.user.profile.main_character)
 
     def test_get_corporation(self):
         # given
