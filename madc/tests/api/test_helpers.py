@@ -165,7 +165,6 @@ class TestAPIHelper(AuthTestCase):
                         "skills": {},
                         "order": 0,
                         "category": "SIGMA",
-                        "html": "<div class='doctrine-item btn-group' role='group' data-doctrine='Test Skill Ready'><button type='button' class='btn btn-success btn-sm'>Test Skill Ready</button><button type='button' class='flex-one btn btn-success btn-sm'><i class='fa-solid fa-check'></i></button></div>",
                     },
                 },
             },
@@ -213,7 +212,6 @@ class TestAPIHelper(AuthTestCase):
                         "skills": {},
                         "order": 0,
                         "category": "SIGMA",
-                        "html": "<div class='doctrine-item btn-group' role='group' data-doctrine='Test Skill Ready'><button type='button' class='btn btn-success btn-sm'>Test Skill Ready</button><button type='button' class='flex-one btn btn-success btn-sm'><i class='fa-solid fa-check'></i></button></div>",
                     },
                 },
             },
@@ -238,7 +236,6 @@ class TestAPIHelper(AuthTestCase):
                         "skills": {"XL Torpedoes": 5, "Heavy Fighters": 5},
                         "order": 0,
                         "category": "SIGMA",
-                        "html": "<div class='doctrine-item btn-group' role='group' data-doctrine='Test Skill Ready'><button type='button' class='btn btn-success btn-sm'>Test Skill Ready</button><button type='button' class='flex-one btn btn-success btn-sm'><i class='fa-solid fa-check'></i></button></div>",
                     },
                 },
             },
@@ -250,7 +247,6 @@ class TestAPIHelper(AuthTestCase):
                         "skills": {"XL Torpedoes": 5, "Heavy Fighters": 5},
                         "order": 0,
                         "category": "SIGMA",
-                        "html": "<div class='doctrine-item btn-group' role='group' data-doctrine='Test Skill Ready'><button type='button' class='btn btn-success btn-sm'>Test Skill Ready</button><button type='button' class='flex-one btn btn-success btn-sm'><i class='fa-solid fa-check'></i></button></div>",
                     },
                 },
             },
@@ -293,7 +289,6 @@ class TestAPIHelper(AuthTestCase):
                         "skills": {"XL Torpedoes": 5, "Heavy Fighters": 5},
                         "order": 0,
                         "category": "SIGMA",
-                        "html": "<div class='doctrine-item btn-group' role='group' data-doctrine='Test Skill Ready'><button type='button' class='btn btn-success btn-sm'>Test Skill Ready</button><button type='button' class='flex-one btn btn-success btn-sm'><i class='fa-solid fa-check'></i></button></div>",
                     },
                 },
             },
@@ -305,7 +300,6 @@ class TestAPIHelper(AuthTestCase):
                         "skills": {"XL Torpedoes": 5, "Heavy Fighters": 5},
                         "order": 0,
                         "category": "SIGMA",
-                        "html": "<div class='doctrine-item btn-group' role='group' data-doctrine='Test Skill Ready'><button type='button' class='btn btn-success btn-sm'>Test Skill Ready</button><button type='button' class='flex-one btn btn-success btn-sm'><i class='fa-solid fa-check'></i></button></div>",
                     },
                 },
             },
@@ -354,7 +348,6 @@ class TestAPIHelper(AuthTestCase):
                         "skills": {},
                         "order": 0,
                         "category": "SIGMA",
-                        "html": "<div class='doctrine-item btn-group' role='group' data-doctrine='Test Skill Ready'><button type='button' class='btn btn-success btn-sm'>Test Skill Ready</button><button type='button' class='flex-one btn btn-success btn-sm'><i class='fa-solid fa-check'></i></button></div>",
                     },
                 },
             },
@@ -408,18 +401,3 @@ class TestAPIHelper(AuthTestCase):
         )
         # then
         self.assertEqual(doctrines, {})
-
-
-class TestEditableHtml(AuthTestCase):
-    def test_generate_editable_html_should_escape_name(self):
-        # given
-        skill_list = SkillList.objects.create(
-            name="x' onmouseover='alert(1)", skill_list="{}"
-        )
-        # when
-        html = helpers.generate_editable_html(
-            skill_list, field_name="name", name=skill_list.name, url="/u/", title="t"
-        )
-        # then
-        self.assertNotIn("x' onmouseover", html)
-        self.assertIn("x&#x27; onmouseover=&#x27;alert(1)", html)

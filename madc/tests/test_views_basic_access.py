@@ -21,21 +21,7 @@ HIGHER_PERMISSIONS = [
 
 # (url name, kwargs, method, permissions of which one is needed besides basic_access)
 VIEWS = [
-    ("index", {}, "get", None),
-    ("checker", {"character_id": 1}, "get", None),
-    ("overview", {"character_id": 1}, "get", None),
-    ("corporation_checker", {"corporation_id": 1}, "get", ["corp_access"]),
-    ("corporation_overview", {"character_id": 1}, "get", ["corp_access"]),
-    (
-        "administration",
-        {"character_id": 1},
-        "get",
-        ["manage_access", "admin_access"],
-    ),
-    ("add_doctrine", {"character_id": 1}, "get", ["manage_access", "admin_access"]),
-    ("ajax_doctrine", {}, "post", ["manage_access", "admin_access"]),
-    ("delete_doctrine", {}, "post", ["manage_access", "admin_access"]),
-    ("update_skilllist", {"pk": 1}, "post", ["manage_access", "admin_access"]),
+    ("react_base", {}, "get", None),
 ]
 
 
@@ -82,3 +68,12 @@ class TestViewsBasicAccess(AuthTestCase):
                     # The view itself answers (200, redirect to the app, 4xx of its own)
                     if response.status_code == HTTPStatus.FOUND:
                         self.assertNotIn("login", response["Location"])
+
+    def test_react_routes_should_render_the_react_page(self):
+        # The catch-all serves the React page for every route of the frontend
+        self.client.force_login(self.user)
+        for path in ["", "doctrine/1/", "corporation/", "overview/", "manage/"]:
+            with self.subTest(path=path):
+                response = self.client.get(f"/{__app_name__}/{path}")
+                self.assertEqual(response.status_code, HTTPStatus.OK)
+                self.assertContains(response, "aa-memberaudit-dc-root")

@@ -7,17 +7,6 @@ from django import forms
 from django.utils.translation import gettext_lazy as _
 
 
-class DeleteForm(forms.Form):
-    """Form for Deleting."""
-
-    pk = forms.IntegerField(
-        required=True,
-        widget=forms.HiddenInput(),
-        label="ID",
-        help_text="The ID of the item to delete.",
-    )
-
-
 class SkillListForm(forms.Form):
     name = forms.CharField(
         required=True,

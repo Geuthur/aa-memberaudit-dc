@@ -35,6 +35,11 @@ Section Order:
 ### Changed
 
 - API restructured like aa-corptools-dc; modal endpoints and overviews answer JSON, the jQuery pages use transitional views
+- Frontend rebuilt in React (aa-geuthur-react) on the base of aa-corptools-dc, with inline editing of skill lists
+
+### Removed
+
+- Django templates, jQuery scripts and x-editable; the old page URLs now open the React app
 
 ### Changed
 

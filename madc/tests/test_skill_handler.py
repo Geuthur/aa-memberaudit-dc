@@ -41,52 +41,6 @@ class TestSkillHandler(AuthTestCase):
         # then
         self.assertEqual(handler._get_chars_hash(characters), expected_hash)
 
-    def test_generate_doctrine_html(self):
-        """Test should generate doctrine HTML snippet."""
-        # given
-        handler = SkillListHandler()
-        # when
-        html = handler._generate_doctrine_html(
-            skill_list_name="Test Doctrine",
-            character_id=1001,
-            has_missing_skills=True,
-            skill_list_pk=1,
-        )
-        # then
-        self.assertIn("Test Doctrine", html)
-        self.assertIn("1001", html)
-        self.assertIn("btn-danger", html)
-        self.assertIn("<i class='fa-solid fa-copy'></i>", html)
-
-    def test_generate_doctrine_html_should_escape_name(self):
-        # given
-        handler = SkillListHandler()
-        # when
-        html = handler._generate_doctrine_html(
-            skill_list_name="x' onmouseover='alert(1)",
-            character_id=1001,
-            has_missing_skills=True,
-            skill_list_pk=1,
-        )
-        # then
-        self.assertNotIn("x' onmouseover", html)
-        self.assertIn("x&#x27; onmouseover=&#x27;alert(1)", html)
-
-    def test_generate_doctrine_html_no_missing(self):
-        """Test should generate doctrine HTML snippet for complete skills."""
-        # given
-        handler = SkillListHandler()
-        # when
-        html = handler._generate_doctrine_html(
-            skill_list_name="Test Doctrine",
-            character_id=1001,
-            has_missing_skills=False,
-        )
-        # then
-        self.assertIn("Test Doctrine", html)
-        self.assertIn("btn-success", html)
-        self.assertIn("<i class='fa-solid fa-check'></i>", html)
-
     def test_check_skill_lists(self):
         """Test should check skill lists for linked characters."""
         # given
@@ -119,7 +73,9 @@ class TestSkillHandler(AuthTestCase):
         # then
         self.assertIn(character_name, result)
         self.assertIn("fit", result[character_name]["doctrines"])
-        self.assertTrue(result[character_name]["doctrines"]["fit"]["html"])
+        self.assertEqual(
+            result[character_name]["doctrines"]["fit"]["id"], skill_list.pk
+        )
         self.assertIn("Mining Barge", result[character_name]["skills"])
 
     def test_check_skill_lists_no_skills(self):
