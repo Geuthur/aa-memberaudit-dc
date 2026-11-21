@@ -40,6 +40,7 @@ Section Order:
 ### Removed
 
 - Internal: Unused `madc/decorators.py` (`log_timing`) with its test, and the empty `madc/tasks.py` and `madc/templatetags` stubs.
+- Internal: Unused `IS_TESTING` constant in `madc/app_settings.py`.
 
 ## [0.5.0] - 2026-11-20
 
