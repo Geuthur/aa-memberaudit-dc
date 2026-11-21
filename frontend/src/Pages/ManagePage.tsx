@@ -10,9 +10,10 @@ import { useTranslation } from "react-i18next";
 import {
   deleteSkillList,
   loadManageDoctrines,
+  manageMutationKeys,
+  manageQueryKeys,
   updateSkillList,
-} from "@/Api/ApiCalls";
-import { mutationKeys, queryKeys } from "@/Api/query";
+} from "@/Api/calls/manage";
 import type { ManageSkillListSchema, SkillListUpdateRequest } from "@/Api/schema";
 import { ManageDoctrinesTable, ManageHeader } from "@/Components/Manage";
 import DoctrineSkillsModal from "@/Components/Modals/DoctrineSkillsModal";
@@ -39,25 +40,25 @@ export const ManagePage: React.FC = () => {
   });
 
   const { data, isLoading, isError } = useQuery({
-    queryKey: queryKeys.ManageDoctrines,
+    queryKey: manageQueryKeys.skillLists,
     queryFn: loadManageDoctrines,
   });
 
   const deleteMutation = useMutation({
-    mutationKey: mutationKeys.DeleteSkillList,
+    mutationKey: manageMutationKeys.deleteSkillList,
     mutationFn: (pk: number) => deleteSkillList(pk),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.ManageDoctrines });
+      queryClient.invalidateQueries({ queryKey: manageQueryKeys.skillLists });
     },
   });
 
   const updateMutation = useMutation({
-    mutationKey: mutationKeys.UpdateSkillList,
+    mutationKey: manageMutationKeys.updateSkillList,
     mutationFn: ({ pk, payload }: { pk: number; payload: SkillListUpdateRequest }) =>
       updateSkillList(pk, payload),
     onSuccess: (updated) => {
       queryClient.setQueryData<ManageSkillListSchema[]>(
-        queryKeys.ManageDoctrines,
+        manageQueryKeys.skillLists,
         (old) => old?.map((item) => (item.id === updated.id ? updated : item))
       );
     },

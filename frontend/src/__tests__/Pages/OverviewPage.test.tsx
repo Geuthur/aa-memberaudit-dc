@@ -8,10 +8,11 @@ import { useUserData } from "aa-geuthur-react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 // AA Memberaudit Doctrine Checker
-import * as ApiCalls from "@/Api/ApiCalls";
+import * as overviewCalls from "@/Api/calls/overview";
 import OverviewPage from "@/Pages/OverviewPage";
 
-vi.mock("@/Api/ApiCalls", () => ({
+vi.mock("@/Api/calls/overview", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("@/Api/calls/overview")>()),
   loadAccountOverview: vi.fn(),
   loadCorporationOverview: vi.fn(),
 }));
@@ -63,7 +64,7 @@ describe("OverviewPage", () => {
     },
     } as unknown as ReturnType<typeof useUserData>);
 
-    vi.mocked(ApiCalls.loadAccountOverview).mockResolvedValue([
+    vi.mocked(overviewCalls.loadAccountOverview).mockResolvedValue([
       {
         character_id: 99001,
         character_name: "Test Pilot",
@@ -108,8 +109,8 @@ describe("OverviewPage", () => {
     },
     } as unknown as ReturnType<typeof useUserData>);
 
-    vi.mocked(ApiCalls.loadAccountOverview).mockResolvedValue([]);
-    vi.mocked(ApiCalls.loadCorporationOverview).mockResolvedValue([
+    vi.mocked(overviewCalls.loadAccountOverview).mockResolvedValue([]);
+    vi.mocked(overviewCalls.loadCorporationOverview).mockResolvedValue([
       {
         corporation_id: 98001,
         corporation_name: "Test Corporation",
@@ -153,8 +154,8 @@ describe("OverviewPage", () => {
         },
       },
     } as unknown as ReturnType<typeof useUserData>);
-    vi.mocked(ApiCalls.loadAccountOverview).mockResolvedValue([]);
-    vi.mocked(ApiCalls.loadCorporationOverview).mockResolvedValue([]);
+    vi.mocked(overviewCalls.loadAccountOverview).mockResolvedValue([]);
+    vi.mocked(overviewCalls.loadCorporationOverview).mockResolvedValue([]);
 
     // Test Action
     renderPage();
@@ -163,6 +164,6 @@ describe("OverviewPage", () => {
     expect(
       await screen.findByRole("button", { name: /corporation overview/i })
     ).toBeTruthy();
-    expect(ApiCalls.loadCorporationOverview).toHaveBeenCalled();
+    expect(overviewCalls.loadCorporationOverview).toHaveBeenCalled();
   });
 });

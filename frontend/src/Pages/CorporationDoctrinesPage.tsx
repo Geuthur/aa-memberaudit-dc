@@ -10,9 +10,9 @@ import { useTranslation } from "react-i18next";
 // AA Memberaudit Doctrine Checker
 import {
     auditCorporationMembers,
+    corporationQueryKeys,
     loadCorporationMembers,
-    } from "@/Api/ApiCalls";
-import { queryKeys } from "@/Api/query";
+} from "@/Api/calls/corporation";
 import type { ActiveDoctrineOverview, UserData } from "@/Api/schema";
 import {
     CorporationBadgesTable,
@@ -82,7 +82,7 @@ export const CorporationDoctrinesPage: React.FC = () => {
         error: membersError,
     } = useQuery({
         queryKey: activeCorpId
-            ? queryKeys.CorporationMembers(activeCorpId)
+            ? corporationQueryKeys.members(activeCorpId)
             : ["CorporationMembers", 0],
         queryFn: () => loadCorporationMembers(activeCorpId),
         enabled: Boolean(activeCorpId),

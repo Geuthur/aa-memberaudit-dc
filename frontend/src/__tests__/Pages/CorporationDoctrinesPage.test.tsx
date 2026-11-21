@@ -8,12 +8,17 @@ import { useUserData } from "aa-geuthur-react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 // AA Memberaudit Doctrine Checker
-import * as ApiCalls from "@/Api/ApiCalls";
+import * as corporationCalls from "@/Api/calls/corporation";
 import CorporationDoctrinesPage from "@/Pages/CorporationDoctrinesPage";
 
-vi.mock("@/Api/ApiCalls", () => ({
+vi.mock("@/Api/calls/corporation", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("@/Api/calls/corporation")>()),
   loadCorporationMembers: vi.fn(),
   auditCorporationMembers: vi.fn(),
+}));
+
+vi.mock("@/Api/calls/doctrines", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("@/Api/calls/doctrines")>()),
   loadMissingSkills: vi.fn(),
   loadDoctrineSkills: vi.fn(),
 }));
@@ -146,8 +151,8 @@ describe("CorporationDoctrinesPage", () => {
     },
     } as unknown as ReturnType<typeof useUserData>);
 
-    vi.mocked(ApiCalls.loadCorporationMembers).mockResolvedValue(mockMembersResponse);
-    vi.mocked(ApiCalls.auditCorporationMembers).mockResolvedValue(mockCorpMembers);
+    vi.mocked(corporationCalls.loadCorporationMembers).mockResolvedValue(mockMembersResponse);
+    vi.mocked(corporationCalls.auditCorporationMembers).mockResolvedValue(mockCorpMembers);
 
     // Test Action
     renderPage();
@@ -182,8 +187,8 @@ describe("CorporationDoctrinesPage", () => {
     },
     } as unknown as ReturnType<typeof useUserData>);
 
-    vi.mocked(ApiCalls.loadCorporationMembers).mockResolvedValue(mockMembersResponse);
-    vi.mocked(ApiCalls.auditCorporationMembers).mockResolvedValue(mockCorpMembers);
+    vi.mocked(corporationCalls.loadCorporationMembers).mockResolvedValue(mockMembersResponse);
+    vi.mocked(corporationCalls.auditCorporationMembers).mockResolvedValue(mockCorpMembers);
 
     // Test Action
     renderPage();
@@ -227,8 +232,8 @@ describe("CorporationDoctrinesPage", () => {
     },
     } as unknown as ReturnType<typeof useUserData>);
 
-    vi.mocked(ApiCalls.loadCorporationMembers).mockResolvedValue(mockMembersResponse);
-    vi.mocked(ApiCalls.auditCorporationMembers).mockResolvedValue(mockCorpMembers);
+    vi.mocked(corporationCalls.loadCorporationMembers).mockResolvedValue(mockMembersResponse);
+    vi.mocked(corporationCalls.auditCorporationMembers).mockResolvedValue(mockCorpMembers);
 
     // Test Action
     renderPage();
@@ -261,12 +266,12 @@ describe("CorporationDoctrinesPage", () => {
     },
     } as unknown as ReturnType<typeof useUserData>);
 
-    vi.mocked(ApiCalls.loadCorporationMembers).mockResolvedValue({
+    vi.mocked(corporationCalls.loadCorporationMembers).mockResolvedValue({
       ...mockMembersResponse,
       corporation_id: 98002,
       corporation_name: "Target Selected Corp",
     });
-    vi.mocked(ApiCalls.auditCorporationMembers).mockResolvedValue([]);
+    vi.mocked(corporationCalls.auditCorporationMembers).mockResolvedValue([]);
 
     // Test Action
     const queryClient = new QueryClient({
@@ -305,8 +310,8 @@ describe("CorporationDoctrinesPage", () => {
     },
     } as unknown as ReturnType<typeof useUserData>);
 
-    vi.mocked(ApiCalls.loadCorporationMembers).mockResolvedValue(mockMembersResponse);
-    vi.mocked(ApiCalls.auditCorporationMembers).mockResolvedValue([]);
+    vi.mocked(corporationCalls.loadCorporationMembers).mockResolvedValue(mockMembersResponse);
+    vi.mocked(corporationCalls.auditCorporationMembers).mockResolvedValue([]);
 
     // Test Action
     renderPage();
@@ -342,14 +347,14 @@ describe("CorporationDoctrinesPage", () => {
         },
       },
     } as unknown as ReturnType<typeof useUserData>);
-    vi.mocked(ApiCalls.loadCorporationMembers).mockResolvedValue({
+    vi.mocked(corporationCalls.loadCorporationMembers).mockResolvedValue({
       ...mockMembersResponse,
       doctrines: [
         { id: 10, name: "Cerberus Fleet", category: "Cruiser", order: 1 },
         { id: 11, name: "Eagle Fleet", category: "", order: 2 },
       ],
     });
-    vi.mocked(ApiCalls.auditCorporationMembers).mockResolvedValue(mockCorpMembers);
+    vi.mocked(corporationCalls.auditCorporationMembers).mockResolvedValue(mockCorpMembers);
 
     // Test Action
     renderPage();
