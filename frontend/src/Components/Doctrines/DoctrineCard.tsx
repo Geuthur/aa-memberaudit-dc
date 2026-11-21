@@ -7,7 +7,7 @@ import { Badge, Button, Card } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 
 // AA Memberaudit Doctrine Checker
-import type { DoctrineItem } from "./types";
+import type { DoctrineItem } from "@/Components/Doctrines/types";
 
 export interface DoctrineCardProps {
   doctrine: DoctrineItem;

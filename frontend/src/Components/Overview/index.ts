@@ -1,3 +1,3 @@
-export * from "./AccountOverviewTable";
-export * from "./CorporationOverviewTable";
-export * from "./OverviewNav";
+export * from "@/Components/Overview/AccountOverviewTable";
+export * from "@/Components/Overview/CorporationOverviewTable";
+export * from "@/Components/Overview/OverviewNav";

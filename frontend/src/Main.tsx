@@ -8,6 +8,8 @@ import { initI18n } from "aa-geuthur-react";
 // AA Memberaudit Doctrine Checker
 import { AppName, ProjectName } from '@/constants';
 import Routing from '@/Routing';
+
+// Styles
 import '@/Styles/index.css';
 
 initI18n(ProjectName, `${AppName}-root`);

@@ -35,6 +35,7 @@ Section Order:
 ### Changed
 
 - Internal: The frontend API calls are split by area into `Api/calls/{doctrines,overview,corporation,manage}.ts`, each with its own query keys, replacing `Api/ApiCalls.ts` and `Api/query.ts`.
+- Internal: eslint now enforces the import order React, third party, `@/`, styles (CSS imports via `@/` belong to `// Styles`); the remaining relative imports in `frontend/src` use `@/`.
 
 ## [0.5.0] - 2026-11-20
 

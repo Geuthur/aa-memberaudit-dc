@@ -6,8 +6,8 @@ import { BookOpen } from "lucide-react";
 import { Badge, Col, Row } from "react-bootstrap";
 
 // AA Memberaudit Doctrine Checker
-import { DoctrineCard } from "./DoctrineCard";
-import type { DoctrineItem } from "./types";
+import { DoctrineCard } from "@/Components/Doctrines/DoctrineCard";
+import type { DoctrineItem } from "@/Components/Doctrines/types";
 
 export interface DoctrineCategorySectionProps {
   category: string;
