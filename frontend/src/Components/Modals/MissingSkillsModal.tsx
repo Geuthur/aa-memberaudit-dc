@@ -10,8 +10,7 @@ import { Badge, Button } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 
 // AA Memberaudit Doctrine Checker
-import { loadMissingSkills } from "@/Api/ApiCalls";
-import { queryKeys } from "@/Api/query";
+import { doctrinesQueryKeys, loadMissingSkills } from "@/Api/calls/doctrines";
 import { SkillLevelIndicator } from "@/Components/Badges/SkillLevelIndicator";
 
 interface MissingSkillsModalProps {
@@ -39,7 +38,7 @@ export const MissingSkillsModal: React.FC<MissingSkillsModalProps> = ({
   const { data, isLoading, isError, error } = useQuery({
     queryKey:
       characterId && doctrineId
-        ? queryKeys.MissingSkills(characterId, doctrineId)
+        ? doctrinesQueryKeys.missingSkills(characterId, doctrineId)
         : ["MissingSkills", 0, 0],
     queryFn: () => loadMissingSkills(characterId!, doctrineId!),
     enabled: Boolean(characterId && doctrineId && show),

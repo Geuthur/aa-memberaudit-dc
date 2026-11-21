@@ -8,8 +8,7 @@ import { useUserData } from "aa-geuthur-react";
 import { useTranslation } from "react-i18next";
 
 // AA Memberaudit Doctrine Checker
-import { loadDoctrines } from "@/Api/ApiCalls";
-import { queryKeys } from "@/Api/query";
+import { doctrinesQueryKeys, loadDoctrines } from "@/Api/calls/doctrines";
 import type { CharacterDoctrines, UserData } from "@/Api/schema";
 import {
   CharacterBanner,
@@ -67,7 +66,7 @@ export const DoctrinesPage: React.FC = () => {
     isError,
     error,
   } = useQuery({
-    queryKey: effectiveCharId ? queryKeys.Doctrines(effectiveCharId) : ["Doctrines", 0],
+    queryKey: effectiveCharId ? doctrinesQueryKeys.doctrines(effectiveCharId) : ["Doctrines", 0],
     queryFn: () => loadDoctrines(effectiveCharId),
     enabled: Boolean(effectiveCharId),
   });

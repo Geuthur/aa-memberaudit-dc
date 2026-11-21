@@ -7,10 +7,11 @@ import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 // AA Memberaudit Doctrine Checker
-import * as ApiCalls from "@/Api/ApiCalls";
+import * as manageCalls from "@/Api/calls/manage";
 import ManagePage from "@/Pages/ManagePage";
 
-vi.mock("@/Api/ApiCalls", () => ({
+vi.mock("@/Api/calls/manage", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("@/Api/calls/manage")>()),
   loadManageDoctrines: vi.fn(),
   deleteSkillList: vi.fn(),
   updateSkillList: vi.fn(),
@@ -43,7 +44,7 @@ describe("ManagePage", () => {
 
   it("should render manage doctrines table and add button", async () => {
     // Test Data
-    vi.mocked(ApiCalls.loadManageDoctrines).mockResolvedValue([
+    vi.mocked(manageCalls.loadManageDoctrines).mockResolvedValue([
       {
         id: 1,
         name: "Cerberus Fleet",
@@ -66,7 +67,7 @@ describe("ManagePage", () => {
 
   it("should render the row actions as icon buttons in a button group", async () => {
     // Test Data
-    vi.mocked(ApiCalls.loadManageDoctrines).mockResolvedValue([
+    vi.mocked(manageCalls.loadManageDoctrines).mockResolvedValue([
       {
         id: 1,
         name: "Cerberus Fleet",
@@ -101,8 +102,8 @@ describe("ManagePage", () => {
 
   it("should save an inline edited name with Enter", async () => {
     // Test Data
-    vi.mocked(ApiCalls.loadManageDoctrines).mockResolvedValue([skillList]);
-    vi.mocked(ApiCalls.updateSkillList).mockResolvedValue({
+    vi.mocked(manageCalls.loadManageDoctrines).mockResolvedValue([skillList]);
+    vi.mocked(manageCalls.updateSkillList).mockResolvedValue({
       ...skillList,
       name: "Cerberus Doctrine",
     });
@@ -117,7 +118,7 @@ describe("ManagePage", () => {
 
     // Expected Result
     await waitFor(() =>
-      expect(ApiCalls.updateSkillList).toHaveBeenCalledWith(1, {
+      expect(manageCalls.updateSkillList).toHaveBeenCalledWith(1, {
         name: "Cerberus Doctrine",
       })
     );
@@ -126,8 +127,8 @@ describe("ManagePage", () => {
 
   it("should save an inline edited ordering as number", async () => {
     // Test Data
-    vi.mocked(ApiCalls.loadManageDoctrines).mockResolvedValue([skillList]);
-    vi.mocked(ApiCalls.updateSkillList).mockResolvedValue({ ...skillList, ordering: 7 });
+    vi.mocked(manageCalls.loadManageDoctrines).mockResolvedValue([skillList]);
+    vi.mocked(manageCalls.updateSkillList).mockResolvedValue({ ...skillList, ordering: 7 });
 
     // Test Action
     renderPage();
@@ -139,13 +140,13 @@ describe("ManagePage", () => {
 
     // Expected Result
     await waitFor(() =>
-      expect(ApiCalls.updateSkillList).toHaveBeenCalledWith(1, { ordering: 7 })
+      expect(manageCalls.updateSkillList).toHaveBeenCalledWith(1, { ordering: 7 })
     );
   });
 
   it("should not save when the inline edit is cancelled with Escape", async () => {
     // Test Data
-    vi.mocked(ApiCalls.loadManageDoctrines).mockResolvedValue([skillList]);
+    vi.mocked(manageCalls.loadManageDoctrines).mockResolvedValue([skillList]);
 
     // Test Action
     renderPage();
@@ -155,14 +156,14 @@ describe("ManagePage", () => {
     fireEvent.keyDown(input, { key: "Escape" });
 
     // Expected Result
-    expect(ApiCalls.updateSkillList).not.toHaveBeenCalled();
+    expect(manageCalls.updateSkillList).not.toHaveBeenCalled();
     expect(screen.getByText("Cruiser")).toBeTruthy();
   });
 
   it("should toggle the active flag", async () => {
     // Test Data
-    vi.mocked(ApiCalls.loadManageDoctrines).mockResolvedValue([skillList]);
-    vi.mocked(ApiCalls.updateSkillList).mockResolvedValue({ ...skillList, active: false });
+    vi.mocked(manageCalls.loadManageDoctrines).mockResolvedValue([skillList]);
+    vi.mocked(manageCalls.updateSkillList).mockResolvedValue({ ...skillList, active: false });
 
     // Test Action
     renderPage();
@@ -171,15 +172,15 @@ describe("ManagePage", () => {
 
     // Expected Result
     await waitFor(() =>
-      expect(ApiCalls.updateSkillList).toHaveBeenCalledWith(1, { active: false })
+      expect(manageCalls.updateSkillList).toHaveBeenCalledWith(1, { active: false })
     );
     expect(await screen.findByText("Inactive")).toBeTruthy();
   });
 
   it("should show the API error when an update fails", async () => {
     // Test Data
-    vi.mocked(ApiCalls.loadManageDoctrines).mockResolvedValue([skillList]);
-    vi.mocked(ApiCalls.updateSkillList).mockRejectedValue(
+    vi.mocked(manageCalls.loadManageDoctrines).mockResolvedValue([skillList]);
+    vi.mocked(manageCalls.updateSkillList).mockRejectedValue(
       new Error("Skill list with this name already exists")
     );
 
@@ -196,8 +197,8 @@ describe("ManagePage", () => {
 
   it("should keep the inline input and show the error when saving fails", async () => {
     // Test Data
-    vi.mocked(ApiCalls.loadManageDoctrines).mockResolvedValue([skillList]);
-    vi.mocked(ApiCalls.updateSkillList).mockRejectedValue(
+    vi.mocked(manageCalls.loadManageDoctrines).mockResolvedValue([skillList]);
+    vi.mocked(manageCalls.updateSkillList).mockRejectedValue(
       new Error("Skill list with this name already exists")
     );
 
@@ -220,8 +221,8 @@ describe("ManagePage", () => {
 
   it("should send an empty text to remove the category inline", async () => {
     // Test Data
-    vi.mocked(ApiCalls.loadManageDoctrines).mockResolvedValue([skillList]);
-    vi.mocked(ApiCalls.updateSkillList).mockResolvedValue({
+    vi.mocked(manageCalls.loadManageDoctrines).mockResolvedValue([skillList]);
+    vi.mocked(manageCalls.updateSkillList).mockResolvedValue({
       ...skillList,
       category: null,
     });
@@ -235,14 +236,14 @@ describe("ManagePage", () => {
 
     // Expected Result
     await waitFor(() =>
-      expect(ApiCalls.updateSkillList).toHaveBeenCalledWith(1, { category: "" })
+      expect(manageCalls.updateSkillList).toHaveBeenCalledWith(1, { category: "" })
     );
     expect(await screen.findByText("Uncategorized")).toBeTruthy();
   });
 
   it("should ignore an empty inline ordering", async () => {
     // Test Data
-    vi.mocked(ApiCalls.loadManageDoctrines).mockResolvedValue([skillList]);
+    vi.mocked(manageCalls.loadManageDoctrines).mockResolvedValue([skillList]);
 
     // Test Action
     renderPage();
@@ -253,6 +254,6 @@ describe("ManagePage", () => {
     fireEvent.keyDown(input, { key: "Enter" });
 
     // Expected Result
-    expect(ApiCalls.updateSkillList).not.toHaveBeenCalled();
+    expect(manageCalls.updateSkillList).not.toHaveBeenCalled();
   });
 });

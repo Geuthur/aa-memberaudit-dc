@@ -8,8 +8,7 @@ import { Alert, Button, Form, Modal } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 
 // AA Memberaudit Doctrine Checker
-import { createSkillList, updateSkillList } from "@/Api/ApiCalls";
-import { queryKeys } from "@/Api/query";
+import { createSkillList, manageQueryKeys, updateSkillList } from "@/Api/calls/manage";
 import type { ManageSkillListSchema } from "@/Api/schema";
 
 interface ManageDoctrineModalProps {
@@ -52,7 +51,7 @@ const ManageDoctrineForm: React.FC<{
       });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.ManageDoctrines });
+      queryClient.invalidateQueries({ queryKey: manageQueryKeys.skillLists });
       onHide();
     },
     onError: (err: unknown) => {

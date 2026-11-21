@@ -7,8 +7,11 @@ import { useUserData } from "aa-geuthur-react";
 import { Card } from "react-bootstrap";
 
 // AA Memberaudit Doctrine Checker
-import { loadAccountOverview, loadCorporationOverview } from "@/Api/ApiCalls";
-import { queryKeys } from "@/Api/query";
+import {
+  loadAccountOverview,
+  loadCorporationOverview,
+  overviewQueryKeys,
+} from "@/Api/calls/overview";
 import type { UserData } from "@/Api/schema";
 import {
   AccountOverviewTable,
@@ -26,7 +29,7 @@ export const OverviewPage: React.FC = () => {
     isLoading: isLoadingAccount,
     isError: isErrorAccount,
   } = useQuery({
-    queryKey: queryKeys.AccountOverview,
+    queryKey: overviewQueryKeys.account,
     queryFn: loadAccountOverview,
   });
 
@@ -41,7 +44,7 @@ export const OverviewPage: React.FC = () => {
     isLoading: isLoadingCorp,
     isError: isErrorCorp,
   } = useQuery({
-    queryKey: queryKeys.CorporationOverview,
+    queryKey: overviewQueryKeys.corporation,
     queryFn: loadCorporationOverview,
     enabled: canViewCorp,
   });

@@ -10,8 +10,7 @@ import { Badge, Button, Form, InputGroup } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 
 // AA Memberaudit Doctrine Checker
-import { loadDoctrineSkills } from "@/Api/ApiCalls";
-import { queryKeys } from "@/Api/query";
+import { doctrinesQueryKeys, loadDoctrineSkills } from "@/Api/calls/doctrines";
 import { SkillLevelIndicator } from "@/Components/Badges/SkillLevelIndicator";
 
 export interface DoctrineSkillsModalProps {
@@ -38,7 +37,7 @@ export const DoctrineSkillsModal: React.FC<DoctrineSkillsModalProps> = ({
 
   const { data, isLoading, isError, error } = useQuery({
     queryKey: doctrineId
-      ? queryKeys.DoctrineSkills(doctrineId, characterId)
+      ? doctrinesQueryKeys.doctrineSkills(doctrineId, characterId)
       : ["DoctrineSkills", 0, 0],
     queryFn: () => loadDoctrineSkills(doctrineId!, characterId),
     enabled: Boolean(doctrineId && show),

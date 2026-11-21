@@ -4,21 +4,22 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 // AA Memberaudit Doctrine Checker
 import { apiClient } from "@/Api/Api";
 import {
-  auditCorporationMembers,
-  createSkillList,
-  deleteSkillList,
-  loadAccountOverview,
-  loadCorporationDoctrines,
-  loadCorporationMembers,
-  loadCorporationOverview,
-  loadDoctrines,
+  doctrinesQueryKeys,
   loadDoctrineSkills,
-  loadManageDoctrines,
+  loadDoctrines,
   loadMissingSkills,
-  updateSkillList,
-} from "@/Api/ApiCalls";
+} from "@/Api/calls/doctrines";
 
-describe("General API client functions", () => {
+describe("doctrinesQueryKeys", () => {
+  it("provides the doctrine keys", () => {
+    expect(doctrinesQueryKeys.doctrines(42)).toEqual(["Doctrines", 42]);
+    expect(doctrinesQueryKeys.missingSkills(42, 3)).toEqual(["MissingSkills", 42, 3]);
+    expect(doctrinesQueryKeys.doctrineSkills(3)).toEqual(["DoctrineSkills", 3, 0]);
+    expect(doctrinesQueryKeys.doctrineSkills(3, 42)).toEqual(["DoctrineSkills", 3, 42]);
+  });
+});
+
+describe("Doctrines API calls", () => {
   beforeEach(() => {
     vi.restoreAllMocks();
   });
@@ -91,63 +92,74 @@ describe("General API client functions", () => {
     });
   });
 
-  describe("loadManageDoctrines", () => {
-    it("fetches manage doctrines list", async () => {
+  describe("loadMissingSkills", () => {
+    it("passes character and doctrine id as path parameters", async () => {
       // Test Data
-      const mockList = [
-        {
-          id: 1,
-          name: "Test Doctrine",
-          category: "Cruiser",
-          ordering: 1,
-          active: true,
-          skill_count: 5,
-        },
-      ];
+      const mockResponse = { missing: [] };
       vi.spyOn(apiClient, "GET").mockResolvedValueOnce({
-        data: mockList,
+        data: mockResponse,
         error: undefined,
         response: new Response(),
       } as never);
 
       // Test Action
-      const result = await loadManageDoctrines();
+      const result = await loadMissingSkills(42, 3);
 
       // Expected Result
-      expect(result).toEqual(mockList);
+      expect(result).toEqual(mockResponse);
       expect(apiClient.GET).toHaveBeenCalledWith(
-        "/madc/api/manage/"
+        "/madc/api/{character_id}/doctrines/{pk}/",
+        { params: { path: { character_id: 42, pk: 3 } } }
       );
+    });
+  });
+
+  describe("loadDoctrineSkills", () => {
+    it("passes the character id as query parameter", async () => {
+      // Test Data
+      const mockResponse = { skills: [] };
+      vi.spyOn(apiClient, "GET").mockResolvedValueOnce({
+        data: mockResponse,
+        error: undefined,
+        response: new Response(),
+      } as never);
+
+      // Test Action
+      const result = await loadDoctrineSkills(3, 42);
+
+      // Expected Result
+      expect(result).toEqual(mockResponse);
+      expect(apiClient.GET).toHaveBeenCalledWith("/madc/api/doctrines/{pk}/", {
+        params: { path: { pk: 3 }, query: { character_id: 42 } },
+      });
+    });
+
+    it("sends no query without a character id", async () => {
+      // Test Data
+      vi.spyOn(apiClient, "GET").mockResolvedValueOnce({
+        data: { skills: [] },
+        error: undefined,
+        response: new Response(),
+      } as never);
+
+      // Test Action
+      await loadDoctrineSkills(3, null);
+
+      // Expected Result
+      expect(apiClient.GET).toHaveBeenCalledWith("/madc/api/doctrines/{pk}/", {
+        params: { path: { pk: 3 }, query: undefined },
+      });
     });
   });
 });
 
 type Method = "GET" | "POST" | "PUT" | "DELETE";
 
-/** Every call of `ApiCalls.ts`: [name, HTTP method, call, fixed text]. */
+/** Every call of `calls/doctrines.ts`: [name, HTTP method, call, fixed text]. */
 const calls: [string, Method, () => Promise<unknown>, string][] = [
   ["loadDoctrines", "GET", () => loadDoctrines(42), "Failed to load doctrines for character 42"],
-  [
-    "loadCorporationDoctrines",
-    "GET",
-    () => loadCorporationDoctrines(7),
-    "Failed to load corporation doctrines for corporation 7",
-  ],
-  ["loadCorporationMembers", "GET", () => loadCorporationMembers(7), "Failed to load members for corporation 7"],
-  ["auditCorporationMembers", "POST", () => auditCorporationMembers(7), "Failed to audit members for corporation 7"],
-  ["loadAccountOverview", "GET", () => loadAccountOverview(), "Failed to load account overview"],
-  ["loadCorporationOverview", "GET", () => loadCorporationOverview(), "Failed to load corporation overview"],
   ["loadMissingSkills", "GET", () => loadMissingSkills(42, 3), "Failed to load missing skills"],
   ["loadDoctrineSkills", "GET", () => loadDoctrineSkills(3), "Failed to load doctrine skills"],
-  ["loadManageDoctrines", "GET", () => loadManageDoctrines(), "Failed to load skill lists for management"],
-  [
-    "createSkillList",
-    "POST",
-    () => createSkillList({ name: "Doctrine", category: null, ordering: 1, skill_list: "Mining 1" }),
-    "Failed to create skill list",
-  ],
-  ["updateSkillList", "PUT", () => updateSkillList(3, { name: "Doctrine" }), "Failed to update skill list 3"],
-  ["deleteSkillList", "DELETE", () => deleteSkillList(3), "Failed to delete skill list 3"],
 ];
 
 const failWith = (method: Method, error: unknown) =>
@@ -157,7 +169,7 @@ const failWith = (method: Method, error: unknown) =>
     response: new Response(),
   } as never);
 
-describe("API call errors", () => {
+describe("Doctrines API call errors", () => {
   beforeEach(() => {
     vi.restoreAllMocks();
   });

@@ -7,10 +7,11 @@ import { fireEvent, render, screen } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 // AA Memberaudit Doctrine Checker
-import * as ApiCalls from "@/Api/ApiCalls";
+import * as doctrinesCalls from "@/Api/calls/doctrines";
 import MissingSkillsModal from "@/Components/Modals/MissingSkillsModal";
 
-vi.mock("@/Api/ApiCalls", () => ({
+vi.mock("@/Api/calls/doctrines", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("@/Api/calls/doctrines")>()),
   loadMissingSkills: vi.fn(),
 }));
 
@@ -45,7 +46,7 @@ describe("MissingSkillsModal", () => {
   it("should render missing skills table using BaseModal and BaseTable when data is loaded", async () => {
     // Test Data
     const onHide = vi.fn();
-    vi.mocked(ApiCalls.loadMissingSkills).mockResolvedValue({
+    vi.mocked(doctrinesCalls.loadMissingSkills).mockResolvedValue({
       character_id: 99001,
       character_name: "Fleet Commander",
       doctrine_id: 1,
@@ -89,7 +90,7 @@ describe("MissingSkillsModal", () => {
 
   it("should display success alert when character has all required skills", async () => {
     // Test Data
-    vi.mocked(ApiCalls.loadMissingSkills).mockResolvedValue({
+    vi.mocked(doctrinesCalls.loadMissingSkills).mockResolvedValue({
       character_id: 99001,
       character_name: "Fleet Commander",
       doctrine_id: 1,
@@ -115,7 +116,7 @@ describe("MissingSkillsModal", () => {
   it("should call onHide when close button is clicked", async () => {
     // Test Data
     const onHide = vi.fn();
-    vi.mocked(ApiCalls.loadMissingSkills).mockResolvedValue({
+    vi.mocked(doctrinesCalls.loadMissingSkills).mockResolvedValue({
       character_id: 99001,
       character_name: "Fleet Commander",
       doctrine_id: 1,

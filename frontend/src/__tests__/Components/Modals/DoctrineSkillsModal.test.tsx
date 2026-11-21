@@ -7,10 +7,11 @@ import { fireEvent, render, screen } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 // AA Memberaudit Doctrine Checker
-import * as ApiCalls from "@/Api/ApiCalls";
+import * as doctrinesCalls from "@/Api/calls/doctrines";
 import DoctrineSkillsModal from "@/Components/Modals/DoctrineSkillsModal";
 
-vi.mock("@/Api/ApiCalls", () => ({
+vi.mock("@/Api/calls/doctrines", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("@/Api/calls/doctrines")>()),
   loadDoctrineSkills: vi.fn(),
 }));
 
@@ -54,7 +55,7 @@ describe("DoctrineSkillsModal", () => {
   it("should render doctrine skills table using BaseModal and BaseTable", async () => {
     // Test Data
     const onHide = vi.fn();
-    vi.mocked(ApiCalls.loadDoctrineSkills).mockResolvedValue({
+    vi.mocked(doctrinesCalls.loadDoctrineSkills).mockResolvedValue({
       id: 1,
       name: "Cerberus Fleet",
       category: "Cruiser",
@@ -86,7 +87,7 @@ describe("DoctrineSkillsModal", () => {
 
   it("should display empty notice when doctrine has no required skills", async () => {
     // Test Data
-    vi.mocked(ApiCalls.loadDoctrineSkills).mockResolvedValue({
+    vi.mocked(doctrinesCalls.loadDoctrineSkills).mockResolvedValue({
       id: 2,
       name: "Empty Doctrine",
       category: "Frigate",
@@ -111,7 +112,7 @@ describe("DoctrineSkillsModal", () => {
   it("should call onHide when close button is clicked", async () => {
     // Test Data
     const onHide = vi.fn();
-    vi.mocked(ApiCalls.loadDoctrineSkills).mockResolvedValue({
+    vi.mocked(doctrinesCalls.loadDoctrineSkills).mockResolvedValue({
       id: 1,
       name: "Cerberus Fleet",
       category: "Cruiser",
@@ -137,7 +138,7 @@ describe("DoctrineSkillsModal", () => {
 
   it("should render green trained skills and white missing skills when character context is provided", async () => {
     // Test Data
-    vi.mocked(ApiCalls.loadDoctrineSkills).mockResolvedValue({
+    vi.mocked(doctrinesCalls.loadDoctrineSkills).mockResolvedValue({
       id: 1,
       name: "Cerberus Fleet",
       category: "Cruiser",
@@ -191,7 +192,7 @@ describe("DoctrineSkillsModal", () => {
     for (let i = 1; i <= 12; i++) {
       manySkills[`Test Skill ${i.toString().padStart(2, "0")}`] = 3;
     }
-    vi.mocked(ApiCalls.loadDoctrineSkills).mockResolvedValue({
+    vi.mocked(doctrinesCalls.loadDoctrineSkills).mockResolvedValue({
       id: 5,
       name: "Capital Fleet",
       category: "Capital",
@@ -236,7 +237,7 @@ describe("DoctrineSkillsModal", () => {
       "Target Painting": 3,
       "Missile Projection": 4,
     };
-    vi.mocked(ApiCalls.loadDoctrineSkills).mockResolvedValue({
+    vi.mocked(doctrinesCalls.loadDoctrineSkills).mockResolvedValue({
       id: 6,
       name: "Search Test Fleet",
       category: "Cruiser",

@@ -5,7 +5,7 @@ import { BookOpen, Edit2, Eye, EyeOff, Trash2 } from "lucide-react";
 import { Badge, Button, ButtonGroup } from "react-bootstrap";
 
 // AA Memberaudit Doctrine Checker
-import { mutationKeys } from "@/Api/query";
+import { manageMutationKeys } from "@/Api/calls/manage";
 import type { ManageSkillListSchema, SkillListUpdateRequest } from "@/Api/schema";
 import { BusyButton, BusyInlineEditCell } from "@/Components/Manage/BusyCells";
 
@@ -26,7 +26,7 @@ export const getManageDoctrinesColumns = (
     cell: ({ row }) => (
       <div className="d-flex align-items-center gap-2">
         <BusyInlineEditCell
-          mutationKey={mutationKeys.UpdateSkillList}
+          mutationKey={manageMutationKeys.updateSkillList}
           value={row.original.name}
           label={t("Doctrine Name")}
           onSave={(name) => onUpdate(row.original.id, { name })}
@@ -45,7 +45,7 @@ export const getManageDoctrinesColumns = (
     accessorKey: "category",
     cell: ({ row }) => (
       <BusyInlineEditCell
-        mutationKey={mutationKeys.UpdateSkillList}
+        mutationKey={manageMutationKeys.updateSkillList}
         value={row.original.category ?? ""}
         label={t("Category")}
         onSave={(category) => onUpdate(row.original.id, { category })}
@@ -60,7 +60,7 @@ export const getManageDoctrinesColumns = (
     accessorKey: "ordering",
     cell: ({ row }) => (
       <BusyInlineEditCell
-        mutationKey={mutationKeys.UpdateSkillList}
+        mutationKey={manageMutationKeys.updateSkillList}
         value={String(row.original.ordering)}
         label={t("Order Weight")}
         type="number"
@@ -83,7 +83,7 @@ export const getManageDoctrinesColumns = (
       renderTooltip(
         row.original.active ? t("Click to deactivate") : t("Click to activate"),
         <BusyButton
-          mutationKey={mutationKeys.UpdateSkillList}
+          mutationKey={manageMutationKeys.updateSkillList}
           size="sm"
           variant={row.original.active ? "success" : "secondary"}
           className="d-inline-flex align-items-center gap-1"
@@ -125,7 +125,7 @@ export const getManageDoctrinesColumns = (
         {renderTooltip(
           t("Delete Doctrine"),
           <BusyButton
-            mutationKey={mutationKeys.DeleteSkillList}
+            mutationKey={manageMutationKeys.deleteSkillList}
             variant="danger"
             aria-label={t("Delete Doctrine")}
             onClick={() => onDelete(row.original)}
