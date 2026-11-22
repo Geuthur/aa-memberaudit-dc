@@ -34,6 +34,7 @@ Section Order:
 
 ### Changed
 
+- The menu entry now uses the `AA_DC_APP_NAME` setting (default "Doctrine Checker"); it was ignored before. The entry is no longer translated.
 - Internal: i18next 27, react-i18next 18, stylelint 18 and stylelint-config-standard 41; the pre-commit stylelint hook sets `--config-basedir` because stylelint 18 no longer loads `extends` from global `node_modules`. Missing plural forms in a language now fall back to that language's `_other` form instead of English (no plural keys in this app).
 - Internal: Node 26 in CI and pre-commit, npm packages updated (jsdom 31, jest-dom 8); stylelint 17, i18next 26, react-i18next 17 and TypeScript 5.9 stay.
 - Internal: The frontend API calls are split by area into `Api/calls/{doctrines,overview,corporation,manage}.ts`, each with its own query keys, replacing `Api/ApiCalls.ts` and `Api/query.ts`.
@@ -43,6 +44,7 @@ Section Order:
 
 - Internal: Unused `madc/decorators.py` (`log_timing`) with its test, and the empty `madc/tasks.py` and `madc/templatetags` stubs.
 - Internal: Unused `IS_TESTING` constant in `madc/app_settings.py`.
+- Internal: Unused `EVE_BASE_URL`, `EVE_API_URL`, `EVE_BASE_URL_REGEX` and `AA_MADC_TASKS_TIME_LIMIT` in `madc/app_settings.py`.
 
 ## [0.5.0] - 2026-11-20
 
