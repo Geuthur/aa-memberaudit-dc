@@ -34,6 +34,7 @@ Section Order:
 
 ### Changed
 
+- Internal: Node 26 in CI and pre-commit, npm packages updated (jsdom 31, jest-dom 8); stylelint 17, i18next 26, react-i18next 17 and TypeScript 5.9 stay.
 - Internal: The frontend API calls are split by area into `Api/calls/{doctrines,overview,corporation,manage}.ts`, each with its own query keys, replacing `Api/ApiCalls.ts` and `Api/query.ts`.
 - Internal: eslint now enforces the import order React, third party, `@/`, styles (CSS imports via `@/` belong to `// Styles`); the remaining relative imports in `frontend/src` use `@/`.
 
