@@ -7,8 +7,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: AA Memberaudit Doctrine Checker \n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-19 16:22+0000\n"
+"Report-Msgid-Bugs-To: https://weblate.geuthur.de/projects/alliance-auth/aa-"
+"memberaudit-dc/\n"
+"POT-Creation-Date: 2026-11-20 21:08+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -21,31 +22,43 @@ msgstr ""
 msgid "Permission Denied"
 msgstr ""
 
-msgid "Delete Skill Plan"
+msgid "Skill list not found"
 msgstr ""
 
-msgid "Are you sure you want to delete this skill plan?"
+msgid "Doctrines"
 msgstr ""
 
-msgid "Enter name"
+msgid "Corporation Doctrines"
 msgstr ""
 
-msgid "Toggle active status"
+msgid "Overview"
 msgstr ""
 
-msgid "Enter ordering"
+msgid "Manage"
 msgstr ""
 
-msgid "Enter category"
+msgid "Name cannot be empty"
 msgstr ""
 
-msgid "Active"
+#, python-brace-format
+msgid "Name can have at most {max} characters"
 msgstr ""
 
-msgid "Inactive"
+msgid "Skill list with this name already exists"
 msgstr ""
 
-msgid "Character not found in skill lists"
+#, python-brace-format
+msgid "Category can have at most {max} characters"
+msgstr ""
+
+msgid "Ordering must be between 0 and 999"
+msgstr ""
+
+msgid "Your skill plan is empty. Please add skills."
+msgstr ""
+
+#, python-brace-format
+msgid "Skilllist: {name} deleted"
 msgstr ""
 
 msgid "Doctrine Checker"
@@ -100,6 +113,9 @@ msgstr ""
 msgid "Order Weight"
 msgstr ""
 
+msgid "Active"
+msgstr ""
+
 msgid "If unchecked, this skill list will not be used in the skill checker."
 msgstr ""
 
@@ -107,145 +123,4 @@ msgid "Category"
 msgstr ""
 
 msgid "Category of the skill list, used for grouping."
-msgstr ""
-
-msgid "Add Doctrine"
-msgstr ""
-
-msgid "Submit"
-msgstr ""
-
-msgid "Corporation Overview"
-msgstr ""
-
-msgid "Actions"
-msgstr ""
-
-msgid "Show"
-msgstr ""
-
-msgid "Account Overview"
-msgstr ""
-
-msgid "All Categories"
-msgstr ""
-
-msgid "Administration"
-msgstr ""
-
-msgid "Character Base Skill Checks"
-msgstr ""
-
-msgid ""
-"Basic skills required to <b>sit in the hull</b> and <b>fit the modules</b>."
-msgstr ""
-
-msgid ""
-"Extra skills <b>will</b> be required to use this fitting properly in fleets"
-msgstr ""
-
-msgid "Base Skills Required"
-msgstr ""
-
-msgid "Doctrine Skills"
-msgstr ""
-
-msgid "No data found..."
-msgstr ""
-
-msgid "Missing Skills"
-msgstr ""
-
-msgid "Close"
-msgstr ""
-
-msgid "Cancel"
-msgstr ""
-
-msgid "Confirm"
-msgstr ""
-
-msgid "Account"
-msgstr ""
-
-msgid "Doctrines"
-msgstr ""
-
-msgid "Character"
-msgstr ""
-
-msgid "Name"
-msgstr ""
-
-msgid "Skills"
-msgstr ""
-
-msgid "Order-Weight"
-msgstr ""
-
-msgid "Doctrine Administration"
-msgstr ""
-
-msgid "Your skill plan is empty. Please add skills."
-msgstr ""
-
-msgid "Skill plan '{}' with {} skills saved successfully."
-msgstr ""
-
-msgid "There was an error with your skill plan: "
-msgstr ""
-
-msgid ""
-"There was an error with your skill plan. Please check the form and try again."
-msgstr ""
-
-msgid "There was an error processing your request. Please try again."
-msgstr ""
-
-msgid "Invalid Method"
-msgstr ""
-
-msgid "Invalid request method"
-msgstr ""
-
-msgid "Skill list not found"
-msgstr ""
-
-msgid "Invalid field data"
-msgstr ""
-
-msgid "An error occurred while updating"
-msgstr ""
-
-msgid "Invalid field name"
-msgstr ""
-
-msgid "Name cannot be empty"
-msgstr ""
-
-msgid "Skill list with this name already exists"
-msgstr ""
-
-msgid "Name updated successfully"
-msgstr ""
-
-msgid "Invalid active value"
-msgstr ""
-
-msgid "Active status updated successfully"
-msgstr ""
-
-msgid "Ordering must be between 0 and 999"
-msgstr ""
-
-msgid "Ordering updated successfully"
-msgstr ""
-
-msgid "Ordering must be a valid number"
-msgstr ""
-
-msgid "Category cannot be empty"
-msgstr ""
-
-msgid "Category updated successfully"
 msgstr ""
