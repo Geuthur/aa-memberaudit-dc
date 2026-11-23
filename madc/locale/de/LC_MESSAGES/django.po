@@ -9,7 +9,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: https://weblate.geuthur.de/projects/alliance-auth/aa-"
 "memberaudit-dc/\n"
 "POT-Creation-Date: 2026-11-20 21:08+0100\n"
-"PO-Revision-Date: 2026-10-25 13:06+0000\n"
+"PO-Revision-Date: 2026-11-23 06:20+0000\n"
 "Last-Translator: Geuthur <devgeuthur@gmail.com>\n"
 "Language-Team: German <https://weblate.geuthur.de/projects/allianceauth/aa-"
 "memberaudit-dc/de/>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.15.1\n"
+"X-Generator: Weblate 2026.11.2\n"
 
 msgid "Permission Denied"
 msgstr "Zugriff verweigert"
@@ -30,27 +30,27 @@ msgid "Doctrines"
 msgstr "Doktrinen"
 
 msgid "Corporation Doctrines"
-msgstr ""
+msgstr "Corporation-Doktrinen"
 
 msgid "Overview"
-msgstr ""
+msgstr "Übersicht"
 
 msgid "Manage"
-msgstr ""
+msgstr "Verwalten"
 
 msgid "Name cannot be empty"
 msgstr "Name darf nicht leer sein"
 
 #, python-brace-format
 msgid "Name can have at most {max} characters"
-msgstr ""
+msgstr "Der Name darf höchstens {max} Zeichen haben"
 
 msgid "Skill list with this name already exists"
 msgstr "Skill Liste mit diesem Namen existiert bereits"
 
 #, python-brace-format
 msgid "Category can have at most {max} characters"
-msgstr ""
+msgstr "Die Kategorie darf höchstens {max} Zeichen haben"
 
 msgid "Ordering must be between 0 and 999"
 msgstr "Die Reihenfolge muss zwischen 0 und 999 liegen"
@@ -60,7 +60,7 @@ msgstr "Ihr Skill Plan ist leer. Bitte fügen Sie Skills hinzu."
 
 #, python-brace-format
 msgid "Skilllist: {name} deleted"
-msgstr ""
+msgstr "Skillliste {name} gelöscht"
 
 msgid "Doctrine Checker"
 msgstr "Doktrin Prüfer"
@@ -86,19 +86,21 @@ msgstr ""
 "anderen Namen."
 
 msgid "Can access this app, Memberaudit Doctrine Checker."
-msgstr ""
+msgstr "Kann auf diese App zugreifen, Memberaudit Doctrine Checker."
 
 msgid "Can view Characters from own Corporation, Memberaudit Doctrine Checker."
 msgstr ""
+"Kann Charaktere der eigenen Corporation sehen, Memberaudit Doctrine Checker."
 
 msgid "Can view Characters from own Alliance, Memberaudit Doctrine Checker."
 msgstr ""
+"Kann Charaktere der eigenen Allianz sehen, Memberaudit Doctrine Checker."
 
 msgid "Can manage this app, Memberaudit Doctrine Checker."
-msgstr ""
+msgstr "Kann diese App verwalten, Memberaudit Doctrine Checker."
 
 msgid "Gives full access to this app, Memberaudit Doctrine Checker."
-msgstr ""
+msgstr "Gibt vollen Zugriff auf diese App, Memberaudit Doctrine Checker."
 
 #, python-brace-format
 msgid "{skill} is not a valid skill."
